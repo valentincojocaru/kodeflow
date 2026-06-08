@@ -1,0 +1,2 @@
+- [KodeFlow deploy setup](kodeflow-deploy.md) — push.sh + GitHub Actions + VPS, tot fluxul de deploy configurat
+- [Git restrictions in agent](git-restrictions.md) — git remote add/set-url/reset sunt blocate pentru agent, doar userul le poate rula în Shell
