@@ -276,7 +276,7 @@ const Hero = () => {
   const { springX, springY } = useMagneticCursor();
 
   return (
-    <section className="relative min-h-[100dvh] flex items-center pt-20 overflow-hidden">
+    <section className="relative min-h-[100dvh] flex items-center pt-16 sm:pt-20 pb-16 sm:pb-0 overflow-hidden">
       <div className="absolute inset-0 bg-[radial-gradient(ellipse_90%_70%_at_50%_-15%,rgba(184,80,255,0.28),transparent)]" />
       {/* Side ambient blobs — CSS animations (GPU-only, zero JS overhead) */}
       <div className="hero-blob-left absolute -left-56 top-1/4 w-[520px] h-[520px] rounded-full blur-[90px] pointer-events-none"
@@ -287,9 +287,9 @@ const Hero = () => {
         style={{ background: "radial-gradient(ellipse, rgba(140,60,255,0.09), transparent)" }} />
       <div className="absolute bottom-0 inset-x-0 h-52 bg-gradient-to-t from-black/60 to-transparent" />
 
-      <div className="container mx-auto px-6 grid lg:grid-cols-2 gap-12 items-center relative z-10">
+      <div className="container mx-auto px-4 sm:px-6 grid lg:grid-cols-2 gap-12 items-center relative z-10">
         {/* Left */}
-        <div className="flex flex-col gap-7">
+        <div className="flex flex-col gap-5 sm:gap-7">
           <motion.div
             className="shimmer-badge inline-flex items-center gap-2.5 px-4 py-2 rounded-full w-fit text-sm font-medium"
             style={{ background: "rgba(184,80,255,0.07)", border: "1px solid rgba(184,80,255,0.25)", color: "rgba(200,130,255,0.95)", boxShadow: "0 0 20px rgba(184,80,255,0.12), inset 0 1px 0 rgba(255,255,255,0.06)" }}
@@ -300,7 +300,7 @@ const Hero = () => {
             Available for new projects
           </motion.div>
 
-          <h1 className="text-[clamp(2.6rem,5.5vw,4.8rem)] font-bold leading-[1.07] tracking-tight">
+          <h1 className="text-[clamp(2.2rem,7vw,4.8rem)] font-bold leading-[1.07] tracking-tight">
             {["Build Faster.", "Build Smarter.", "Dominate."].map((line, i) => (
               <motion.span key={i} className="block"
                 initial={{ opacity: 0, y: 55, filter: "blur(14px)" }}
@@ -320,17 +320,17 @@ const Hero = () => {
             I'm Kode — a full-stack engineer who ships what agencies charge <span className="text-foreground font-semibold">10x more</span> for. Modern web products, built at machine speed, with human precision.
           </motion.p>
 
-          <motion.div className="flex flex-wrap gap-4"
+          <motion.div className="flex flex-wrap gap-3 sm:gap-4"
             initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 1.05 }}>
             <MagneticButton>
               <Button size="lg" asChild
-                className="h-12 px-8 text-base font-semibold bg-gradient-to-r from-primary to-fuchsia-500 text-white hover:from-fuchsia-500 hover:to-primary shadow-[0_0_40px_rgba(184,80,255,0.55)] hover:shadow-[0_0_65px_rgba(184,80,255,0.85)] transition-all duration-300">
+                className="h-11 sm:h-12 px-6 sm:px-8 text-sm sm:text-base font-semibold bg-gradient-to-r from-primary to-fuchsia-500 text-white hover:from-fuchsia-500 hover:to-primary shadow-[0_0_40px_rgba(184,80,255,0.55)] hover:shadow-[0_0_65px_rgba(184,80,255,0.85)] transition-all duration-300">
                 <a href="#contact">Start a Project <ArrowRight className="ml-2 h-4 w-4" /></a>
               </Button>
             </MagneticButton>
             <MagneticButton>
               <Button size="lg" variant="outline" asChild
-                className="h-12 px-8 text-base border-white/10 bg-white/[0.025] hover:bg-white/[0.06] backdrop-blur-sm transition-all duration-300">
+                className="h-11 sm:h-12 px-6 sm:px-8 text-sm sm:text-base border-white/10 bg-white/[0.025] hover:bg-white/[0.06] backdrop-blur-sm transition-all duration-300">
                 <a href="#work">View Work</a>
               </Button>
             </MagneticButton>
@@ -369,9 +369,9 @@ const Hero = () => {
           </motion.div>
         </div>
 
-        {/* Right — Live Dev Station */}
+        {/* Right — Live Dev Station (desktop only) */}
         <motion.div
-          className="relative flex items-center justify-center"
+          className="hidden lg:flex relative items-center justify-center"
           initial={{ opacity: 0, x: 40 }}
           animate={{ opacity: 1, x: 0 }}
           transition={{ duration: 1.1, delay: 0.4, ease: [0.22, 1, 0.36, 1] }}>
@@ -410,11 +410,11 @@ const About = () => {
   ];
 
   return (
-    <section id="about" className="py-40 relative overflow-hidden">
+    <section id="about" className="py-20 sm:py-32 lg:py-40 relative overflow-hidden">
       <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_80%_50%,rgba(240,80,200,0.09),transparent_55%)]" />
       <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_10%_80%,rgba(184,80,255,0.07),transparent_50%)]" />
-      <div className="container mx-auto px-6 relative z-10">
-        <div className="grid lg:grid-cols-2 gap-24 items-center">
+      <div className="container mx-auto px-4 sm:px-6 relative z-10">
+        <div className="grid lg:grid-cols-2 gap-12 lg:gap-24 items-center">
           <motion.div initial={{ opacity: 0, x: -40 }} whileInView={{ opacity: 1, x: 0 }}
             viewport={{ once: true }} transition={{ duration: 0.9, ease: [0.22, 1, 0.36, 1] }}>
             <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-accent/30 text-accent text-xs font-medium tracking-[0.2em] uppercase mb-8">
@@ -484,9 +484,9 @@ const Process = () => {
   ];
 
   return (
-    <section id="process" className="py-40 relative overflow-hidden">
+    <section id="process" className="py-20 sm:py-32 lg:py-40 relative overflow-hidden">
       <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_30%_50%,rgba(184,80,255,0.07),transparent_55%)]" />
-      <div className="container mx-auto px-6 relative z-10">
+      <div className="container mx-auto px-4 sm:px-6 relative z-10">
         <motion.div className="text-center max-w-2xl mx-auto mb-20"
           initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}>
           <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-primary/25 text-primary text-xs font-medium tracking-[0.2em] uppercase mb-6">
@@ -555,14 +555,14 @@ const Services = () => {
   ];
 
   return (
-    <section id="services" className="py-40 relative">
+    <section id="services" className="py-20 sm:py-32 lg:py-40 relative">
       <div className="absolute inset-0 bg-black/45" />
       <div className="absolute inset-0 bg-[linear-gradient(rgba(184,80,255,0.028)_1px,transparent_1px),linear-gradient(90deg,rgba(184,80,255,0.028)_1px,transparent_1px)] bg-[size:55px_55px]" />
       <div className="absolute top-0 inset-x-0 h-32 bg-gradient-to-b from-black/60 to-transparent" />
       <div className="absolute bottom-0 inset-x-0 h-32 bg-gradient-to-t from-black/60 to-transparent" />
       <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_50%_50%,rgba(184,80,255,0.05),transparent_65%)]" />
 
-      <div className="container mx-auto px-6 relative z-10">
+      <div className="container mx-auto px-4 sm:px-6 relative z-10">
         <motion.div className="text-center max-w-2xl mx-auto mb-20"
           initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}>
           <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-primary/25 text-primary text-xs font-medium tracking-[0.2em] uppercase mb-6">
@@ -656,9 +656,9 @@ const Work = () => {
   ];
 
   return (
-    <section id="work" className="py-40 relative overflow-hidden">
+    <section id="work" className="py-20 sm:py-32 lg:py-40 relative overflow-hidden">
       <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_20%_60%,rgba(184,80,255,0.06),transparent_55%)]" />
-      <div className="container mx-auto px-6 relative z-10">
+      <div className="container mx-auto px-4 sm:px-6 relative z-10">
         <div className="flex flex-col md:flex-row md:items-end justify-between mb-16 gap-6">
           <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}>
             <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-accent/25 text-accent text-xs font-medium tracking-[0.2em] uppercase mb-5">
@@ -746,11 +746,11 @@ const Pricing = () => {
   ];
 
   return (
-    <section id="pricing" className="py-40 relative">
+    <section id="pricing" className="py-20 sm:py-32 lg:py-40 relative">
       <div className="absolute inset-0 bg-black/42" />
       <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_50%_100%,rgba(184,80,255,0.1),transparent_60%)]" />
 
-      <div className="container mx-auto px-6 relative z-10">
+      <div className="container mx-auto px-4 sm:px-6 relative z-10">
         <motion.div className="text-center max-w-2xl mx-auto mb-20"
           initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}>
           <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-primary/25 text-primary text-xs font-medium tracking-[0.2em] uppercase mb-6">
@@ -866,11 +866,11 @@ const Contact = () => {
   };
 
   return (
-    <section id="contact" className="py-40 relative overflow-hidden">
+    <section id="contact" className="py-20 sm:py-32 lg:py-40 relative overflow-hidden">
       <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_50%_55%,rgba(184,80,255,0.11),transparent_65%)]" />
       <div className="absolute inset-0 bg-[linear-gradient(rgba(184,80,255,0.018)_1px,transparent_1px),linear-gradient(90deg,rgba(184,80,255,0.018)_1px,transparent_1px)] bg-[size:60px_60px]" />
 
-      <div className="container mx-auto px-6 relative z-10 max-w-2xl">
+      <div className="container mx-auto px-4 sm:px-6 relative z-10 max-w-2xl">
         <motion.div className="text-center mb-14"
           initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}>
           <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-primary/25 text-primary text-xs font-medium tracking-[0.2em] uppercase mb-6">
@@ -1109,13 +1109,13 @@ const Booking = () => {
   };
 
   return (
-    <section className="py-40 relative overflow-hidden">
+    <section className="py-20 sm:py-32 lg:py-40 relative overflow-hidden">
       <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_50%_50%,rgba(184,80,255,0.07),transparent_65%)]" />
       <div className="absolute inset-0 bg-[linear-gradient(rgba(184,80,255,0.018)_1px,transparent_1px),linear-gradient(90deg,rgba(184,80,255,0.018)_1px,transparent_1px)] bg-[size:70px_70px]" />
       <div className="absolute top-0 inset-x-0 h-32 bg-gradient-to-b from-black/60 to-transparent" />
       <div className="absolute bottom-0 inset-x-0 h-32 bg-gradient-to-t from-black/60 to-transparent" />
 
-      <div className="container mx-auto px-6 relative z-10 max-w-3xl">
+      <div className="container mx-auto px-4 sm:px-6 relative z-10 max-w-3xl">
         <motion.div className="text-center max-w-2xl mx-auto mb-16"
           initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}>
           <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-primary/25 text-primary text-xs font-medium tracking-[0.2em] uppercase mb-6">
@@ -1324,14 +1324,14 @@ const Comparison = () => {
   ];
 
   return (
-    <section className="py-40 relative overflow-hidden">
+    <section className="py-20 sm:py-32 lg:py-40 relative overflow-hidden">
       <div className="absolute inset-0 bg-black/42" />
       <div className="absolute inset-0 bg-[linear-gradient(rgba(184,80,255,0.022)_1px,transparent_1px),linear-gradient(90deg,rgba(184,80,255,0.022)_1px,transparent_1px)] bg-[size:60px_60px]" />
       <div className="absolute top-0 inset-x-0 h-32 bg-gradient-to-b from-black/60 to-transparent" />
       <div className="absolute bottom-0 inset-x-0 h-32 bg-gradient-to-t from-black/60 to-transparent" />
       <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_50%_50%,rgba(240,80,200,0.06),transparent_60%)]" />
 
-      <div className="container mx-auto px-6 relative z-10 max-w-4xl">
+      <div className="container mx-auto px-4 sm:px-6 relative z-10 max-w-4xl">
         <motion.div className="text-center max-w-2xl mx-auto mb-20"
           initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}>
           <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-accent/25 text-accent text-xs font-medium tracking-[0.2em] uppercase mb-6">

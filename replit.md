@@ -65,12 +65,14 @@ Mergi pe github.com/valentincojocaru/kodeflow → Settings → Secrets → Actio
 ## Ce s-a modificat (pentru agentul următor)
 
 ### Fundal animat — `src/components/CodeBackground.tsx`
-- Canvas transparent (`alpha: true`), `position: fixed`, `z-index: 1`, `pointer-events: none`
-- Desenează linii reale de cod TypeScript/React care curg în jos (Matrix-style) pe mai multe coloane
-- Syntax highlighting: keywords violet (#c084fc), strings auriu (#fbbf24), types albastru (#60a5fa), comenzi shell roz (#f472b6), output terminal verde (#4ade80)
-- Opacitate text: 0.75–0.97 per stream; stream-urile pornesc imediat vizibile pe ecran
+- Canvas transparent, `position: fixed`, `z-index: 1`, `pointer-events: none`
+- Efect de **typing** (cod scris caracter cu caracter), NU Matrix scrolling
+- 2 sesiuni pe mobile, 3 pe tablet, 4 pe desktop — poziționate în cadrane diferite
+- Fiecare sesiune tastează linii de cod una câte una, cu cursor clipitor `|` la capăt
+- Sintaxă colorată în timp real pe măsură ce se tastează; după ~8-10 linii, sesiunea se resetează
+- Opacitate per sesiune: 0.13–0.20 — foarte subtilă ca fundal
+- Folosit și în `admin.tsx` și `dashboard.tsx` (client portal + admin panel)
 - Body-ul păstrează `bg-background` (hsl 258 35% 11%) ca fundal solid — canvas-ul transparent desenează codul deasupra lui
-- NU folosi `alpha: false` pe ctx și NU desena `fillRect` ca background — body-ul face asta
 
 ### Hero dreapta — `src/components/HeroDevStation.tsx` (NOU, înlocuiește AIBrainField + BrainHUD)
 - IDE window floating cu 3D mouse tilt (framer-motion `useTransform`)

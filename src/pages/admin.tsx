@@ -12,6 +12,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
+import CodeBackground from "@/components/CodeBackground";
 
 const STATUS_OPTIONS = ["pending", "planning", "in_progress", "review", "completed", "cancelled"];
 const PRIORITY_OPTIONS = ["low", "normal", "high", "urgent"];
@@ -143,6 +144,7 @@ export default function Admin() {
 
   return (
     <div className="min-h-screen bg-[#060410] text-foreground relative overflow-hidden">
+      <CodeBackground />
       <div className="fixed inset-0 bg-[radial-gradient(ellipse_80%_50%_at_20%_-10%,rgba(184,85,255,0.1),transparent)] pointer-events-none" />
       <div className="fixed inset-0 bg-[radial-gradient(ellipse_40%_50%_at_90%_90%,rgba(240,80,200,0.05),transparent)] pointer-events-none" />
       <div className="fixed inset-0 bg-[linear-gradient(rgba(184,85,255,0.012)_1px,transparent_1px),linear-gradient(90deg,rgba(184,85,255,0.012)_1px,transparent_1px)] bg-[size:72px_72px] pointer-events-none" />

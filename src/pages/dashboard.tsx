@@ -10,6 +10,7 @@ import {
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
+import CodeBackground from "@/components/CodeBackground";
 
 const STATUS_META: Record<string, { label: string; color: string; bg: string; glow: string; icon: React.ReactNode }> = {
   pending:     { label: "Pending Review",  color: "#f59e0b", bg: "rgba(245,158,11,0.08)",  glow: "rgba(245,158,11,0.2)",  icon: <Clock size={11} /> },
@@ -96,6 +97,7 @@ export default function Dashboard() {
 
   return (
     <div className="min-h-screen bg-[#060410] text-foreground relative overflow-hidden">
+      <CodeBackground />
       {/* Background layers */}
       <div className="fixed inset-0 bg-[radial-gradient(ellipse_80%_50%_at_50%_-10%,rgba(184,85,255,0.12),transparent)] pointer-events-none" />
       <div className="fixed inset-0 bg-[radial-gradient(ellipse_40%_60%_at_80%_80%,rgba(240,80,200,0.06),transparent)] pointer-events-none" />
