@@ -12,7 +12,7 @@ import {
   Menu, X, Sparkles, Star, Shield, Clock, MessageSquare, Settings, Blocks,
   TrendingUp, Award, Users, ExternalLink, ChevronRight, BadgeCheck, Minus
 } from "lucide-react";
-import ThreeBackground from "@/components/ThreeBackground";
+import CodeBackground from "@/components/CodeBackground";
 import AIBrainField from "@/components/AIBrainField";
 import BrainHUD from "@/components/BrainHUD";
 import IntroScreen from "@/components/IntroScreen";
@@ -105,8 +105,8 @@ function Marquee({ reverse = false }: { reverse?: boolean }) {
   const items = [...TECHS, ...TECHS];
   return (
     <div className="relative overflow-hidden py-3">
-      <div className="absolute left-0 top-0 bottom-0 w-32 z-10 bg-gradient-to-r from-[#080612] to-transparent" />
-      <div className="absolute right-0 top-0 bottom-0 w-32 z-10 bg-gradient-to-l from-[#080612] to-transparent" />
+      <div className="absolute left-0 top-0 bottom-0 w-32 z-10 bg-gradient-to-r from-black/60 to-transparent" />
+      <div className="absolute right-0 top-0 bottom-0 w-32 z-10 bg-gradient-to-l from-black/60 to-transparent" />
       <motion.div className="flex gap-4 w-max"
         animate={{ x: reverse ? ["-50%", "0%"] : ["0%", "-50%"] }}
         transition={{ duration: 30, repeat: Infinity, ease: "linear" }}>
@@ -286,7 +286,7 @@ const Hero = () => {
         style={{ background: "radial-gradient(circle, rgba(240,80,200,0.4), transparent)" }} />
       <div className="hero-blob-center absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[700px] h-[300px] rounded-full blur-[100px] pointer-events-none"
         style={{ background: "radial-gradient(ellipse, rgba(140,60,255,0.09), transparent)" }} />
-      <div className="absolute bottom-0 inset-x-0 h-52 bg-gradient-to-t from-[#080612] to-transparent" />
+      <div className="absolute bottom-0 inset-x-0 h-52 bg-gradient-to-t from-black/60 to-transparent" />
 
       <div className="container mx-auto px-6 grid lg:grid-cols-2 gap-12 items-center relative z-10">
         {/* Left */}
@@ -600,10 +600,10 @@ const Services = () => {
 
   return (
     <section id="services" className="py-40 relative">
-      <div className="absolute inset-0 bg-black/65" />
+      <div className="absolute inset-0 bg-black/45" />
       <div className="absolute inset-0 bg-[linear-gradient(rgba(184,80,255,0.028)_1px,transparent_1px),linear-gradient(90deg,rgba(184,80,255,0.028)_1px,transparent_1px)] bg-[size:55px_55px]" />
-      <div className="absolute top-0 inset-x-0 h-32 bg-gradient-to-b from-[#080612] to-transparent" />
-      <div className="absolute bottom-0 inset-x-0 h-32 bg-gradient-to-t from-[#080612] to-transparent" />
+      <div className="absolute top-0 inset-x-0 h-32 bg-gradient-to-b from-black/60 to-transparent" />
+      <div className="absolute bottom-0 inset-x-0 h-32 bg-gradient-to-t from-black/60 to-transparent" />
       <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_50%_50%,rgba(184,80,255,0.05),transparent_65%)]" />
 
       <div className="container mx-auto px-6 relative z-10">
@@ -791,7 +791,7 @@ const Pricing = () => {
 
   return (
     <section id="pricing" className="py-40 relative">
-      <div className="absolute inset-0 bg-black/60" />
+      <div className="absolute inset-0 bg-black/42" />
       <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_50%_100%,rgba(184,80,255,0.1),transparent_60%)]" />
 
       <div className="container mx-auto px-6 relative z-10">
@@ -981,7 +981,7 @@ const StatsBar = () => {
   ];
   return (
     <section className="py-20 relative overflow-hidden">
-      <div className="absolute inset-0 bg-[#060410]" />
+      <div className="absolute inset-0 bg-black/70" />
       <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_50%_50%,rgba(184,80,255,0.06),transparent_65%)]" />
       <div className="absolute top-0 inset-x-0 h-px bg-gradient-to-r from-transparent via-primary/30 to-transparent" />
       <div className="absolute bottom-0 inset-x-0 h-px bg-gradient-to-r from-transparent via-primary/30 to-transparent" />
@@ -1156,8 +1156,8 @@ const Booking = () => {
     <section className="py-40 relative overflow-hidden">
       <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_50%_50%,rgba(184,80,255,0.07),transparent_65%)]" />
       <div className="absolute inset-0 bg-[linear-gradient(rgba(184,80,255,0.018)_1px,transparent_1px),linear-gradient(90deg,rgba(184,80,255,0.018)_1px,transparent_1px)] bg-[size:70px_70px]" />
-      <div className="absolute top-0 inset-x-0 h-32 bg-gradient-to-b from-[#080612] to-transparent" />
-      <div className="absolute bottom-0 inset-x-0 h-32 bg-gradient-to-t from-[#080612] to-transparent" />
+      <div className="absolute top-0 inset-x-0 h-32 bg-gradient-to-b from-black/60 to-transparent" />
+      <div className="absolute bottom-0 inset-x-0 h-32 bg-gradient-to-t from-black/60 to-transparent" />
 
       <div className="container mx-auto px-6 relative z-10 max-w-3xl">
         <motion.div className="text-center max-w-2xl mx-auto mb-16"
@@ -1369,10 +1369,10 @@ const Comparison = () => {
 
   return (
     <section className="py-40 relative overflow-hidden">
-      <div className="absolute inset-0 bg-black/60" />
+      <div className="absolute inset-0 bg-black/42" />
       <div className="absolute inset-0 bg-[linear-gradient(rgba(184,80,255,0.022)_1px,transparent_1px),linear-gradient(90deg,rgba(184,80,255,0.022)_1px,transparent_1px)] bg-[size:60px_60px]" />
-      <div className="absolute top-0 inset-x-0 h-32 bg-gradient-to-b from-[#080612] to-transparent" />
-      <div className="absolute bottom-0 inset-x-0 h-32 bg-gradient-to-t from-[#080612] to-transparent" />
+      <div className="absolute top-0 inset-x-0 h-32 bg-gradient-to-b from-black/60 to-transparent" />
+      <div className="absolute bottom-0 inset-x-0 h-32 bg-gradient-to-t from-black/60 to-transparent" />
       <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_50%_50%,rgba(240,80,200,0.06),transparent_60%)]" />
 
       <div className="container mx-auto px-6 relative z-10 max-w-4xl">
@@ -1510,10 +1510,10 @@ function SectionDivider() {
 
 export default function Home() {
   return (
-    <div className="min-h-screen bg-[#080612] text-foreground" style={{ fontFeatureSettings: '"ss01","ss02"' }}>
+    <div className="min-h-screen bg-transparent text-foreground" style={{ fontFeatureSettings: '"ss01","ss02"' }}>
       <IntroScreen />
       <ScrollProgress />
-      <ThreeBackground />
+      <CodeBackground />
       <NoiseOverlay />
       <div className="relative z-10">
         <Navbar />
