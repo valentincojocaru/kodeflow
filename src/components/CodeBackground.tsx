@@ -1,103 +1,97 @@
 import { useEffect, useRef } from "react";
 
-// ─── Real code lines to stream ─────────────────────────────────────────────
+// ─── Real code lines ────────────────────────────────────────────────────────
 
 const CODE_LINES = [
-  "const server = express()",
-  "app.use(cors({ origin: '*' }))",
-  "router.get('/api/projects', authenticate, async (req, res) => {",
-  "  const data = await db.select().from(projects)",
-  "  return res.json({ data, ok: true })",
-  "})",
   "import { useState, useEffect, useCallback } from 'react'",
+  "import { motion, AnimatePresence } from 'framer-motion'",
+  "import { useQuery } from '@tanstack/react-query'",
+  "import express from 'express'",
+  "import { db } from '../db/client'",
+  "import { eq, desc } from 'drizzle-orm'",
+  "const server = express()",
+  "app.use(cors({ origin: process.env.ORIGIN }))",
   "const [loading, setLoading] = useState(false)",
-  "const { data } = useQuery({ queryKey: ['users'], queryFn: fetchUsers })",
+  "const [data, setData] = useState<Project[]>([])",
+  "router.get('/api/projects', authenticate, async (req, res) => {",
+  "  const rows = await db.select().from(projects)",
+  "  return res.json({ data: rows, ok: true })",
+  "})",
   "export default function Dashboard({ userId }: Props) {",
-  "  return <motion.div animate={{ opacity: 1 }}>",
-  "interface Project { id: string; name: string; stack: string[] }",
-  "const schema = z.object({ name: z.string().min(1), budget: z.number() })",
+  "  const { data, isLoading } = useQuery({",
+  "    queryKey: ['projects', userId],",
+  "    queryFn: () => fetchProjects(userId),",
+  "    staleTime: 5 * 60 * 1000,",
+  "  })",
+  "interface Project {",
+  "  id: string; name: string",
+  "  stack: string[]; budget: number",
+  "  status: 'active' | 'done' | 'paused'",
+  "}",
+  "const schema = z.object({",
+  "  name: z.string().min(1).max(100),",
+  "  budget: z.number().min(0),",
+  "})",
   "await db.insert(projects).values({ name, userId, createdAt: new Date() })",
-  "const token = jwt.sign({ id: user.id }, process.env.JWT_SECRET!)",
+  "  .returning({ id: projects.id })",
+  "const token = jwt.sign({ id: user.id }, SECRET, { expiresIn: '7d' })",
+  "const hash = await bcrypt.hash(password, 12)",
+  "await redis.setex(`session:${id}`, 3600, JSON.stringify(data))",
+  "type ApiResponse<T> = { data: T; ok: boolean; error?: string }",
+  "  initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}",
+  "  transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}",
+  "  whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.97 }}",
+  "ws.on('message', (data) => handleMessage(JSON.parse(data.toString())))",
+  "const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!)",
+  "return () => { ws.close(); clearInterval(heartbeat) }",
+  "export const users = pgTable('users', {",
+  "  id: text('id').primaryKey().$defaultFn(() => createId()),",
+  "  email: text('email').notNull().unique(),",
+  "  role: text('role').notNull().default('client'),",
+  "})",
+  "$ pnpm run build",
+  "✓ TypeScript — 0 errors, 0 warnings",
+  "✓ Bundle: 87 KB gzip — built in 1.24s",
+  "$ pnpm run deploy",
+  "▸ Pushing to Vercel edge network...",
+  "▸ Warming 23 CDN regions...",
+  "✓ Live → kodeflow.dev",
+  "$ git push origin main --force",
+  "→ GitHub Actions triggered",
+  "→ SSH: root@62.171.167.115 — deploy.sh",
+  "→ PM2 restarted — uptime 99.9%",
+  "const cleanup = () => { ws.close(); clearInterval(ping) }",
   "  .where(eq(projects.userId, req.user!.id))",
   "  .orderBy(desc(projects.createdAt)).limit(50)",
-  "export const users = pgTable('users', { id: text('id').primaryKey() })",
-  "const res = await fetch('/api/projects', { headers: authHeaders })",
-  "useEffect(() => { fetchMetrics().then(setData) }, [userId])",
-  "if (!session) redirect('/login')",
-  "const hash = await bcrypt.hash(password, 12)",
-  "ws.on('message', (data) => handleMessage(JSON.parse(data)))",
-  "  .returning({ id: projects.id, name: projects.name })",
-  "const stripe = new Stripe(process.env.STRIPE_KEY!)",
-  "await redis.setex(`cache:${key}`, 300, JSON.stringify(data))",
-  "type ApiResponse<T> = { data: T; ok: boolean; error?: string }",
-  "const [selected, setSelected] = useState<string | null>(null)",
-  "  initial={{ y: 20, opacity: 0 }} animate={{ y: 0, opacity: 1 }}",
-  "export async function POST(req: Request) {",
-  "  const body = await req.json()",
-  "  const parsed = schema.safeParse(body)",
-  "  if (!parsed.success) return NextResponse.json({ error: parsed.error }, { status: 400 })",
-  "pnpm run build && pnpm run deploy",
-  "✓ TypeScript — 0 errors",
-  "✓ Bundle: 87kb gzip — built in 1.24s",
-  "✓ Deployed → kodeflow.dev",
-  "▸ Warming 23 CDN edge regions...",
-  "▸ SSL certificate renewed",
-  "▸ PM2 restarted — uptime 99.9%",
-  "const cleanup = () => { ws.close(); clearInterval(ping) }",
-  "return () => cleanup()",
-  "  const rotX = useSpring(useTransform(y, [-0.5, 0.5], [8, -8]))",
-  "  style={{ transformStyle: 'preserve-3d', perspective: '1200px' }}",
-  "  className=\"grid grid-cols-3 gap-6 items-center\"",
-  "git add . && git commit -m 'feat: stripe integration'",
-  "git push origin main --force",
-  "→ GitHub Actions triggered",
-  "→ SSH: root@62.171.167.115",
-  "→ deploy.sh executing...",
-  "  const emit = useCallback((ev: string, payload: unknown) => {",
-  "    socket.emit(ev, payload)",
-  "  }, [socket])",
-  "export { router as projectsRouter }",
-  "app.listen(PORT, () => console.log(`✓ API ready on :${PORT}`))",
   "const middleware = [authenticate, rateLimit, validateBody(schema)]",
-  "  whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.97 }}",
 ];
 
-// ─── Token type detection for color ───────────────────────────────────────
+// ─── Tokenizer ──────────────────────────────────────────────────────────────
 
-const KW = new Set(["const","let","var","function","return","if","else","async","await",
-  "import","export","default","class","interface","type","from","new","this",
-  "true","false","null","undefined","void","typeof","instanceof","extends"]);
+const KW = new Set([
+  "import","export","from","default","const","let","var","function","return",
+  "if","else","async","await","class","interface","type","new","this",
+  "true","false","null","undefined","void","typeof","extends","for","of","in",
+]);
 
-type Segment = { text: string; color: string; width: number };
+type Seg = { text: string; color: string };
 
-function tokenizeLine(line: string, ctx: CanvasRenderingContext2D): Segment[] {
-  const segments: Segment[] = [];
+function tokenize(line: string): Seg[] {
+  // Shell/terminal lines
+  if (line.startsWith("$ "))   return [{ text: line, color: "#f472b6" }];
+  if (line.startsWith("✓ "))   return [{ text: line, color: "#4ade80" }];
+  if (line.startsWith("▸ "))   return [{ text: line, color: "#94a3b8" }];
+  if (line.startsWith("→ "))   return [{ text: line, color: "#a78bfa" }];
+  if (line.startsWith("//"))   return [{ text: line, color: "#3d7a56" }];
 
-  // Comments / shell output lines
-  if (line.startsWith("//")) {
-    const w = ctx.measureText(line).width;
-    return [{ text: line, color: "#3d6b4f", width: w }];
-  }
-  if (line.startsWith("✓") || line.startsWith("▸") || line.startsWith("→")) {
-    const color = line.startsWith("✓") ? "#22c55e" : line.startsWith("▸") ? "#94a3b8" : "#a78bfa";
-    const w = ctx.measureText(line).width;
-    return [{ text: line, color, width: w }];
-  }
-  if (line.startsWith("git ") || line.startsWith("pnpm ")) {
-    const w = ctx.measureText(line).width;
-    return [{ text: line, color: "#f472b6" }];
-  }
-
+  const segs: Seg[] = [];
   const regex = /("(?:\\.|[^"\\])*"|'(?:\\.|[^'\\])*'|`(?:\\.|[^`\\])*`|\b[\w$]+\b|[^\w\s$"'`]+|\s+)/g;
   let m: RegExpExecArray | null;
   while ((m = regex.exec(line)) !== null) {
     const t = m[0];
-    if (/^\s+$/.test(t)) {
-      segments.push({ text: t, color: "transparent", width: ctx.measureText(t).width });
-      continue;
-    }
+    if (/^\s+$/.test(t)) { segs.push({ text: t, color: "" }); continue; }
     let color: string;
-    if ((t.startsWith('"') || t.startsWith("'") || t.startsWith("`")) && t.length > 1) {
+    if ((t[0] === '"' || t[0] === "'" || t[0] === "`") && t.length > 1) {
       color = "#fbbf24";
     } else if (KW.has(t)) {
       color = "#c084fc";
@@ -107,29 +101,27 @@ function tokenizeLine(line: string, ctx: CanvasRenderingContext2D): Segment[] {
       color = "#f9a8d4";
     } else if (["=>","===","!==","&&","||","??","?.","..."].includes(t)) {
       color = "#67e8f9";
-    } else if (t === "{" || t === "}" || t === "(" || t === ")") {
+    } else if ("{}" .includes(t) && t.length === 1) {
       color = "#a78bfa";
     } else if (t === "<" || t === ">") {
       color = "#f472b6";
     } else {
       color = "#94a3b8";
     }
-    segments.push({ text: t, color, width: ctx.measureText(t).width });
+    segs.push({ text: t, color });
   }
-  return segments;
+  return segs;
 }
 
-// ─── Column stream ──────────────────────────────────────────────────────────
+// ─── Stream state ───────────────────────────────────────────────────────────
 
 interface Stream {
   x: number;
   y: number;
   speed: number;
-  lineIndex: number;
+  startLineIdx: number;
   opacity: number;
-  lineHeight: number;
-  visibleLines: number;   // how many lines show at once
-  cachedSegments: Segment[][];
+  numLines: number;
 }
 
 export default function CodeBackground() {
@@ -138,7 +130,8 @@ export default function CodeBackground() {
   useEffect(() => {
     const canvas = canvasRef.current;
     if (!canvas) return;
-    const ctx = canvas.getContext("2d", { alpha: true });
+    // alpha: false so canvas is opaque — we paint the bg ourselves
+    const ctx = canvas.getContext("2d", { alpha: false });
     if (!ctx) return;
 
     let W = window.innerWidth;
@@ -146,103 +139,91 @@ export default function CodeBackground() {
     canvas.width = W;
     canvas.height = H;
 
-    const FONT_SIZE = 11.5;
-    const LINE_H = FONT_SIZE * 1.72;
-    ctx.font = `${FONT_SIZE}px "JetBrains Mono", "Fira Code", monospace`;
+    const FS = 12;
+    const LH = FS * 1.8;
+    ctx.font = `${FS}px "JetBrains Mono", monospace`;
 
-    // Pre-cache all tokenized lines
-    const allSegments: Segment[][] = CODE_LINES.map(l => tokenizeLine(l, ctx));
+    // Pre-tokenize every line
+    const tokenized = CODE_LINES.map(l => tokenize(l));
 
-    function createStream(xPos: number, opacityOverride?: number): Stream {
-      const startLine = Math.floor(Math.random() * CODE_LINES.length);
-      const visibleLines = 14 + Math.floor(Math.random() * 12); // 14-25 lines visible
+    // Measure avg char width for column layout
+    const CW = ctx.measureText("m").width;
+    const COL_WIDTH = Math.floor(W / 3.2); // ~3 columns on screen
+
+    function makeStream(xBase: number, initialY?: number): Stream {
       return {
-        x: xPos,
-        y: -Math.random() * H * 0.8,
-        speed: 0.5 + Math.random() * 1.1,
-        lineIndex: startLine,
-        opacity: opacityOverride ?? (0.25 + Math.random() * 0.38),
-        lineHeight: LINE_H,
-        visibleLines,
-        cachedSegments: [],
+        x: xBase + Math.random() * 30 - 15,
+        y: initialY ?? -Math.random() * H, // start within one screen height above
+        speed: 0.6 + Math.random() * 0.9,
+        startLineIdx: Math.floor(Math.random() * CODE_LINES.length),
+        opacity: 0.55 + Math.random() * 0.35, // 0.55–0.90
+        numLines: 16 + Math.floor(Math.random() * 14), // 16-29 lines per stream
       };
     }
 
-    // Build streams — one per "column" across screen width
-    const COL_W = 360;
-    const NUM_COLS = Math.max(3, Math.ceil(W / COL_W));
+    // Create streams — multiple per column for density
     const streams: Stream[] = [];
-
-    for (let i = 0; i < NUM_COLS; i++) {
-      const xBase = i * COL_W + Math.random() * 40 - 20;
-      // Stagger start positions so they don't all appear at once
-      const s = createStream(xBase, 0.18 + Math.random() * 0.35);
-      s.y = -Math.random() * H * 2.5; // deep stagger
-      streams.push(s);
+    const numCols = Math.max(3, Math.ceil(W / COL_WIDTH));
+    for (let c = 0; c < numCols; c++) {
+      const xBase = c * COL_WIDTH;
+      // 2 streams per column, offset vertically
+      streams.push(makeStream(xBase, -Math.random() * H));
+      if (W > 900) {
+        streams.push(makeStream(xBase + COL_WIDTH * 0.5, -Math.random() * H * 0.5));
+      }
     }
 
-    // Helper: draw one stream (scrolling block of lines)
     function drawStream(s: Stream) {
-      const totalLineHeight = s.visibleLines * LINE_H;
+      for (let li = 0; li < s.numLines; li++) {
+        const lineY = s.y + li * LH;
+        if (lineY < -LH || lineY > H + LH) continue;
 
-      // Build line list from CODE_LINES starting at lineIndex
-      const numToShow = s.visibleLines;
+        // Fade: bright in middle, fades at top (head) and bottom (tail)
+        const normPos = li / s.numLines;
+        const headFade = Math.min(1, li / 4);
+        const tailFade = Math.min(1, (s.numLines - li) / 5);
+        const posAlpha = headFade * tailFade;
 
-      for (let li = 0; li < numToShow; li++) {
-        const lineDataIndex = (s.lineIndex + li) % CODE_LINES.length;
-        const yPos = s.y + li * LINE_H;
+        // Leading edge (top of stream) = brightest
+        const isHead = li < 2;
+        const alpha = isHead
+          ? Math.min(1, s.opacity * 1.15)
+          : s.opacity * posAlpha;
 
-        if (yPos < -LINE_H * 2 || yPos > H + LINE_H) continue;
+        if (alpha < 0.04) continue;
 
-        // Fade alpha: bright in middle, fade at head and tail
-        const progress = li / numToShow;
-        // Head fade (first few lines)
-        const headFade = Math.min(1, li / 3);
-        // Tail fade (last few lines)
-        const tailFade = Math.min(1, (numToShow - li) / 4);
-        const fadeAlpha = headFade * tailFade;
+        const lineIdx = (s.startLineIdx + li) % CODE_LINES.length;
+        const segs = tokenized[lineIdx];
 
-        // Leading line (last in the list = bottom) is brightest
-        const isLeading = li === numToShow - 1;
-        const lineAlpha = isLeading
-          ? Math.min(1, s.opacity * 1.4)
-          : s.opacity * fadeAlpha;
-
-        if (lineAlpha < 0.01) continue;
-
-        const segs = allSegments[lineDataIndex];
-        let xCursor = s.x;
-
+        let xCur = s.x;
         for (const seg of segs) {
-          if (seg.color === "transparent") {
-            xCursor += seg.width;
+          if (!seg.color) {
+            xCur += ctx.measureText(seg.text).width;
             continue;
           }
-          // Leading line: everything near-white for glow effect
-          const color = isLeading ? "#e8e0ff" : seg.color;
-          ctx.globalAlpha = Math.min(1, lineAlpha);
+          const color = isHead ? "#ddd6fe" : seg.color;
+          ctx.globalAlpha = alpha;
           ctx.fillStyle = color;
-          ctx.fillText(seg.text, xCursor, yPos);
-          xCursor += seg.width;
+          ctx.fillText(seg.text, xCur, lineY);
+          xCur += ctx.measureText(seg.text).width;
         }
       }
 
-      // Advance stream
+      // Scroll
       s.y += s.speed;
 
-      // Reset when fully off screen
-      if (s.y + s.visibleLines * LINE_H > H + 120) {
-        s.y = -s.visibleLines * LINE_H - Math.random() * H * 0.5;
-        s.lineIndex = Math.floor(Math.random() * CODE_LINES.length);
-        s.speed = 0.5 + Math.random() * 1.1;
-        s.opacity = 0.18 + Math.random() * 0.38;
-        s.visibleLines = 14 + Math.floor(Math.random() * 12);
+      // Reset when stream fully exits bottom
+      if (s.y > H + s.numLines * LH + 40) {
+        const col = Math.floor(s.x / COL_WIDTH);
+        Object.assign(s, makeStream(col * COL_WIDTH, -s.numLines * LH - Math.random() * 200));
       }
     }
 
-    let rafId: number;
-    let lastTime = 0;
-    const TARGET_MS = 1000 / 30; // 30fps — smooth and efficient
+    const BG_COLOR = "hsl(258, 35%, 8%)"; // slightly darker than --background
+
+    let raf: number;
+    let last = 0;
+    const FPS = 1000 / 28;
 
     let paused = false;
     const onVis = () => { paused = document.hidden; };
@@ -256,31 +237,31 @@ export default function CodeBackground() {
         H = window.innerHeight;
         canvas.width = W;
         canvas.height = H;
-        ctx.font = `${FONT_SIZE}px "JetBrains Mono", "Fira Code", monospace`;
+        ctx.font = `${FS}px "JetBrains Mono", monospace`;
       }, 200);
     };
     window.addEventListener("resize", onResize, { passive: true });
 
     const draw = (now: number) => {
-      rafId = requestAnimationFrame(draw);
-      if (paused) return;
-      if (now - lastTime < TARGET_MS) return;
-      lastTime = now;
+      raf = requestAnimationFrame(draw);
+      if (paused || now - last < FPS) return;
+      last = now;
 
-      ctx.clearRect(0, 0, W, H);
-      ctx.font = `${FONT_SIZE}px "JetBrains Mono", "Fira Code", monospace`;
+      // Paint background first (opaque canvas)
+      ctx.globalAlpha = 1;
+      ctx.fillStyle = BG_COLOR;
+      ctx.fillRect(0, 0, W, H);
 
-      for (const s of streams) {
-        drawStream(s);
-      }
+      // Draw all streams
+      ctx.font = `${FS}px "JetBrains Mono", monospace`;
+      for (const s of streams) drawStream(s);
 
       ctx.globalAlpha = 1;
     };
 
-    rafId = requestAnimationFrame(draw);
-
+    raf = requestAnimationFrame(draw);
     return () => {
-      cancelAnimationFrame(rafId);
+      cancelAnimationFrame(raf);
       clearTimeout(resizeTimer);
       window.removeEventListener("resize", onResize);
       document.removeEventListener("visibilitychange", onVis);
@@ -291,7 +272,6 @@ export default function CodeBackground() {
     <canvas
       ref={canvasRef}
       className="fixed inset-0 z-0 pointer-events-none"
-      style={{ opacity: 0.75 }}
     />
   );
 }
