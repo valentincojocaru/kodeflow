@@ -62,6 +62,28 @@ Mergi pe github.com/valentincojocaru/kodeflow → Settings → Secrets → Actio
 - Frontend-ul (React) e în GitHub repo, nu în Replit workspace. La modificări CSS/frontend, descarcă fișierele din GitHub înainte.
 - `git remote set-url` și `git remote add` nu sunt permise agentului — push.sh le face în Shell.
 
+## Ce s-a modificat (pentru agentul următor)
+
+### Fundal animat — `src/components/CodeBackground.tsx`
+- Canvas transparent (`alpha: true`), `position: fixed`, `z-index: 1`, `pointer-events: none`
+- Desenează linii reale de cod TypeScript/React care curg în jos (Matrix-style) pe mai multe coloane
+- Syntax highlighting: keywords violet (#c084fc), strings auriu (#fbbf24), types albastru (#60a5fa), comenzi shell roz (#f472b6), output terminal verde (#4ade80)
+- Opacitate text: 0.75–0.97 per stream; stream-urile pornesc imediat vizibile pe ecran
+- Body-ul păstrează `bg-background` (hsl 258 35% 11%) ca fundal solid — canvas-ul transparent desenează codul deasupra lui
+- NU folosi `alpha: false` pe ctx și NU desena `fillRect` ca background — body-ul face asta
+
+### Hero dreapta — `src/components/HeroDevStation.tsx` (NOU, înlocuiește AIBrainField + BrainHUD)
+- IDE window floating cu 3D mouse tilt (framer-motion `useTransform`)
+- Tabs animate: `api.ts` și `Dashboard.tsx` — se schimbă automat la 8s
+- Cod live-typed cu syntax highlighting real + cursor animat
+- Terminal panel jos cu output animat `pnpm run build` → deploy → live
+- 4 carduri floating cu metrici (Build: 1.24s, Bundle: 87KB, Lighthouse: 99, Response: 61ms)
+- Strip git commit animat jos
+- Import în `src/pages/home.tsx` — înlocuiește AIBrainField și BrainHUD
+
+### index.css
+- Body păstrează `bg-background` (NU face transparent — canvas-ul depinde de el)
+
 ## User preferences
 
 - Limbă: română în conversații
