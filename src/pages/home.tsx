@@ -1467,7 +1467,6 @@ function SectionDivider() {
 export default function Home() {
   return (
     <div className="min-h-screen bg-transparent text-foreground" style={{ fontFeatureSettings: '"ss01","ss02"' }}>
-      <IntroScreen />
       <ScrollProgress />
       <CodeBackground />
       <NoiseOverlay />

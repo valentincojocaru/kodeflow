@@ -134,12 +134,12 @@ function makeSession(index: number, total: number, W: number, H: number, now: nu
     completedLines: [],
     typed: "",
     targetLineIdx: startLine,
-    nextCharAt: now + index * 600 + Math.random() * 400,
+    nextCharAt: now + index * 200 + Math.random() * 150,
     nextCursorAt: now + 530,
     cursorOn: true,
     state: "typing",
     stateUntil: 0,
-    opacity: randBetween(0.13, 0.20),
+    opacity: randBetween(0.38, 0.55),
     maxLines: Math.floor(randBetween(6, 10)),
     charDelay: () => {
       const r = Math.random();
@@ -158,11 +158,11 @@ export default function CodeBackground() {
     if (!canvas) return;
     const ctx = canvas.getContext("2d")!;
 
-    const FS = 11.5;
-    const LH = FS * 1.9;
+    const FS = 13;
+    const LH = FS * 2;
     const CURSOR = "|";
     const isMobile = window.innerWidth < 640;
-    const numSessions = isMobile ? 2 : window.innerWidth < 1024 ? 3 : 4;
+    const numSessions = isMobile ? 2 : window.innerWidth < 1024 ? 3 : 5;
 
     let W = window.innerWidth;
     let H = window.innerHeight;
@@ -178,7 +178,7 @@ export default function CodeBackground() {
       sessions.push(makeSession(i, numSessions, W, H, now));
     }
 
-    function drawSegs(segs: Seg[], x: number, y: number, alpha: number, maxW: number) {
+    function drawSegs(segs: Seg[], x: number, y: number, alpha: number, maxW: number, glow = false) {
       let xCur = x;
       for (const seg of segs) {
         if (!seg.color) {
@@ -188,11 +188,16 @@ export default function CodeBackground() {
         }
         ctx.globalAlpha = alpha;
         ctx.fillStyle = seg.color;
+        if (glow) {
+          ctx.shadowColor = seg.color;
+          ctx.shadowBlur = 8;
+        }
         const w = ctx.measureText(seg.text).width;
         if (xCur + w > x + maxW) break;
         ctx.fillText(seg.text, xCur, y);
         xCur += w;
       }
+      if (glow) ctx.shadowBlur = 0;
     }
 
     function drawSession(s: Session, now: number) {
@@ -211,19 +216,23 @@ export default function CodeBackground() {
           : 1;
         const alpha = s.opacity * fadeRatio;
         if (alpha < 0.02) return;
-        drawSegs(line.segs, s.x, lineY, alpha, maxLineWidth);
+        const isRecent = age <= 2;
+        drawSegs(line.segs, s.x, lineY, alpha, maxLineWidth, isRecent);
       });
 
       const currentY = s.y + s.completedLines.length * LH;
       if (currentY > 0 && currentY < H && s.typed.length > 0) {
         const partialSegs = tokenize(s.typed);
-        drawSegs(partialSegs, s.x, currentY, s.opacity, maxLineWidth);
+        drawSegs(partialSegs, s.x, currentY, s.opacity, maxLineWidth, true);
 
         if (s.state === "typing" && s.cursorOn) {
           const typedWidth = ctx.measureText(s.typed).width;
           ctx.globalAlpha = s.opacity;
+          ctx.shadowColor = "#c084fc";
+          ctx.shadowBlur = 12;
           ctx.fillStyle = "#c084fc";
           ctx.fillText(CURSOR, s.x + typedWidth, currentY);
+          ctx.shadowBlur = 0;
         }
       }
 
