@@ -637,7 +637,7 @@ const About = () => (
               <div className="text-5xl font-black text-orange-500 mb-3 group-hover:scale-110 transition-transform origin-left">
                 <AnimatedCounter to={stat.num} />{stat.suffix}
               </div>
-              <div className="font-medium text-white">{stat.text}</div>
+              <div className="font-medium text-gray-700">{stat.text}</div>
             </motion.div>
           ))}
         </div>
