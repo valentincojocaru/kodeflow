@@ -1,338 +1,135 @@
 import { useEffect, useRef } from "react";
 
-// ─── Real code lines for authentic look ────────────────────────────────────
+// ─── Real code lines to stream ─────────────────────────────────────────────
 
-const CODE_PANELS = [
-  [
-    "import React, { useState, useEffect } from 'react'",
-    "import { motion, AnimatePresence } from 'framer-motion'",
-    "import { useQuery } from '@tanstack/react-query'",
-    "import { db } from '@/lib/database'",
-    "",
-    "interface Project {",
-    "  id: string",
-    "  name: string",
-    "  stack: string[]",
-    "  budget: number",
-    "  deadline: Date",
-    "  status: 'active' | 'done' | 'paused'",
-    "}",
-    "",
-    "const Dashboard: React.FC = () => {",
-    "  const [selected, setSelected] = useState<string | null>(null)",
-    "  const [filter, setFilter] = useState<'all' | 'active'>('all')",
-    "",
-    "  const { data, isLoading } = useQuery({",
-    "    queryKey: ['projects', filter],",
-    "    queryFn: () => fetchProjects({ filter }),",
-    "    staleTime: 5 * 60 * 1000,",
-    "  })",
-    "",
-    "  useEffect(() => {",
-    "    document.title = `KodeFlow — ${data?.length ?? 0} Projects`",
-    "  }, [data])",
-    "",
-    "  const handleSelect = (id: string) => {",
-    "    setSelected(prev => prev === id ? null : id)",
-    "  }",
-    "",
-    "  if (isLoading) return <Spinner />",
-    "",
-    "  return (",
-    "    <motion.div",
-    "      className=\"grid grid-cols-3 gap-6\"",
-    "      initial={{ opacity: 0, y: 20 }}",
-    "      animate={{ opacity: 1, y: 0 }}",
-    "    >",
-    "      <AnimatePresence>",
-    "        {data?.map(project => (",
-    "          <ProjectCard",
-    "            key={project.id}",
-    "            project={project}",
-    "            isSelected={selected === project.id}",
-    "            onClick={() => handleSelect(project.id)}",
-    "          />",
-    "        ))}",
-    "      </AnimatePresence>",
-    "    </motion.div>",
-    "  )",
-    "}",
-    "",
-    "export default Dashboard",
-  ],
-  [
-    "import express from 'express'",
-    "import { db } from '../db/client'",
-    "import { authenticate } from '../middleware/auth'",
-    "import { z } from 'zod'",
-    "import { eq, desc } from 'drizzle-orm'",
-    "import { projects, users } from '../db/schema'",
-    "",
-    "const router = express.Router()",
-    "",
-    "const createSchema = z.object({",
-    "  name: z.string().min(1).max(100),",
-    "  description: z.string().optional(),",
-    "  stack: z.array(z.string()),",
-    "  budget: z.number().min(0),",
-    "})",
-    "",
-    "// GET /api/projects",
-    "router.get('/', authenticate, async (req, res) => {",
-    "  try {",
-    "    const items = await db",
-    "      .select()",
-    "      .from(projects)",
-    "      .where(eq(projects.userId, req.user!.id))",
-    "      .orderBy(desc(projects.createdAt))",
-    "      .limit(50)",
-    "",
-    "    return res.json({ data: items, count: items.length })",
-    "  } catch (err) {",
-    "    console.error('[projects] GET error:', err)",
-    "    return res.status(500).json({ error: 'Internal server error' })",
-    "  }",
-    "})",
-    "",
-    "// POST /api/projects",
-    "router.post('/', authenticate, async (req, res) => {",
-    "  const parsed = createSchema.safeParse(req.body)",
-    "  if (!parsed.success) {",
-    "    return res.status(400).json({ error: parsed.error.flatten() })",
-    "  }",
-    "",
-    "  const { name, description, stack, budget } = parsed.data",
-    "",
-    "  const [project] = await db",
-    "    .insert(projects)",
-    "    .values({",
-    "      name,",
-    "      description: description ?? null,",
-    "      stack,",
-    "      budget,",
-    "      userId: req.user!.id,",
-    "      createdAt: new Date(),",
-    "    })",
-    "    .returning()",
-    "",
-    "  return res.status(201).json({ data: project })",
-    "})",
-    "",
-    "export default router",
-  ],
-  [
-    "import { pgTable, text, integer, timestamp, boolean } from 'drizzle-orm/pg-core'",
-    "import { createId } from '@paralleldrive/cuid2'",
-    "",
-    "export const users = pgTable('users', {",
-    "  id: text('id').primaryKey().$defaultFn(() => createId()),",
-    "  email: text('email').notNull().unique(),",
-    "  name: text('name').notNull(),",
-    "  role: text('role', { enum: ['admin', 'client'] }).notNull().default('client'),",
-    "  createdAt: timestamp('created_at').notNull().defaultNow(),",
-    "  updatedAt: timestamp('updated_at').notNull().defaultNow(),",
-    "})",
-    "",
-    "export const projects = pgTable('projects', {",
-    "  id: text('id').primaryKey().$defaultFn(() => createId()),",
-    "  name: text('name').notNull(),",
-    "  description: text('description'),",
-    "  stack: text('stack').array().notNull().default([]),",
-    "  budget: integer('budget').notNull().default(0),",
-    "  status: text('status', {",
-    "    enum: ['draft', 'active', 'review', 'done'],",
-    "  }).notNull().default('draft'),",
-    "  userId: text('user_id').notNull().references(() => users.id),",
-    "  deadline: timestamp('deadline'),",
-    "  createdAt: timestamp('created_at').notNull().defaultNow(),",
-    "})",
-    "",
-    "export const invoices = pgTable('invoices', {",
-    "  id: text('id').primaryKey().$defaultFn(() => createId()),",
-    "  projectId: text('project_id').notNull().references(() => projects.id),",
-    "  amount: integer('amount').notNull(),",
-    "  currency: text('currency').notNull().default('USD'),",
-    "  paid: boolean('paid').notNull().default(false),",
-    "  dueDate: timestamp('due_date').notNull(),",
-    "  createdAt: timestamp('created_at').notNull().defaultNow(),",
-    "})",
-  ],
-  [
-    "import { type ClassValue, clsx } from 'clsx'",
-    "import { twMerge } from 'tailwind-merge'",
-    "import { format, formatDistanceToNow } from 'date-fns'",
-    "",
-    "export function cn(...inputs: ClassValue[]) {",
-    "  return twMerge(clsx(inputs))",
-    "}",
-    "",
-    "export function formatDate(date: Date | string): string {",
-    "  return format(new Date(date), 'MMM d, yyyy')",
-    "}",
-    "",
-    "export function timeAgo(date: Date | string): string {",
-    "  return formatDistanceToNow(new Date(date), { addSuffix: true })",
-    "}",
-    "",
-    "export async function fetchWithAuth<T>(",
-    "  url: string,",
-    "  options?: RequestInit",
-    "): Promise<T> {",
-    "  const token = localStorage.getItem('token')",
-    "  const res = await fetch(url, {",
-    "    ...options,",
-    "    headers: {",
-    "      'Content-Type': 'application/json',",
-    "      ...(token ? { Authorization: `Bearer ${token}` } : {}),",
-    "      ...options?.headers,",
-    "    },",
-    "  })",
-    "  if (!res.ok) {",
-    "    const err = await res.json().catch(() => ({}))",
-    "    throw new Error(err.message ?? `HTTP ${res.status}`)",
-    "  }",
-    "  return res.json() as Promise<T>",
-    "}",
-    "",
-    "export const STACK_OPTIONS = [",
-    "  'React', 'Next.js', 'TypeScript', 'Node.js',",
-    "  'PostgreSQL', 'Redis', 'Docker', 'AWS',",
-    "  'Stripe', 'Vercel', 'Tailwind', 'Prisma',",
-    "] as const",
-    "",
-    "export type Stack = typeof STACK_OPTIONS[number]",
-  ],
-  [
-    "'use client'",
-    "",
-    "import { useEffect, useRef, useCallback } from 'react'",
-    "import { useRouter } from 'next/navigation'",
-    "import { signIn, signOut, useSession } from 'next-auth/react'",
-    "",
-    "export function useAuth() {",
-    "  const { data: session, status } = useSession()",
-    "  const router = useRouter()",
-    "",
-    "  const login = useCallback(async (provider: 'github' | 'google') => {",
-    "    await signIn(provider, { callbackUrl: '/dashboard' })",
-    "  }, [])",
-    "",
-    "  const logout = useCallback(async () => {",
-    "    await signOut({ redirect: false })",
-    "    router.push('/')",
-    "  }, [router])",
-    "",
-    "  return {",
-    "    user: session?.user ?? null,",
-    "    isLoading: status === 'loading',",
-    "    isAuthenticated: status === 'authenticated',",
-    "    login,",
-    "    logout,",
-    "  }",
-    "}",
-    "",
-    "export function useWebSocket(url: string) {",
-    "  const wsRef = useRef<WebSocket | null>(null)",
-    "",
-    "  useEffect(() => {",
-    "    const ws = new WebSocket(url)",
-    "    wsRef.current = ws",
-    "",
-    "    ws.onopen = () => console.log('[ws] connected')",
-    "    ws.onerror = (e) => console.error('[ws] error', e)",
-    "",
-    "    return () => {",
-    "      ws.close(1000, 'component unmounted')",
-    "    }",
-    "  }, [url])",
-    "",
-    "  return wsRef",
-    "}",
-  ],
+const CODE_LINES = [
+  "const server = express()",
+  "app.use(cors({ origin: '*' }))",
+  "router.get('/api/projects', authenticate, async (req, res) => {",
+  "  const data = await db.select().from(projects)",
+  "  return res.json({ data, ok: true })",
+  "})",
+  "import { useState, useEffect, useCallback } from 'react'",
+  "const [loading, setLoading] = useState(false)",
+  "const { data } = useQuery({ queryKey: ['users'], queryFn: fetchUsers })",
+  "export default function Dashboard({ userId }: Props) {",
+  "  return <motion.div animate={{ opacity: 1 }}>",
+  "interface Project { id: string; name: string; stack: string[] }",
+  "const schema = z.object({ name: z.string().min(1), budget: z.number() })",
+  "await db.insert(projects).values({ name, userId, createdAt: new Date() })",
+  "const token = jwt.sign({ id: user.id }, process.env.JWT_SECRET!)",
+  "  .where(eq(projects.userId, req.user!.id))",
+  "  .orderBy(desc(projects.createdAt)).limit(50)",
+  "export const users = pgTable('users', { id: text('id').primaryKey() })",
+  "const res = await fetch('/api/projects', { headers: authHeaders })",
+  "useEffect(() => { fetchMetrics().then(setData) }, [userId])",
+  "if (!session) redirect('/login')",
+  "const hash = await bcrypt.hash(password, 12)",
+  "ws.on('message', (data) => handleMessage(JSON.parse(data)))",
+  "  .returning({ id: projects.id, name: projects.name })",
+  "const stripe = new Stripe(process.env.STRIPE_KEY!)",
+  "await redis.setex(`cache:${key}`, 300, JSON.stringify(data))",
+  "type ApiResponse<T> = { data: T; ok: boolean; error?: string }",
+  "const [selected, setSelected] = useState<string | null>(null)",
+  "  initial={{ y: 20, opacity: 0 }} animate={{ y: 0, opacity: 1 }}",
+  "export async function POST(req: Request) {",
+  "  const body = await req.json()",
+  "  const parsed = schema.safeParse(body)",
+  "  if (!parsed.success) return NextResponse.json({ error: parsed.error }, { status: 400 })",
+  "pnpm run build && pnpm run deploy",
+  "✓ TypeScript — 0 errors",
+  "✓ Bundle: 87kb gzip — built in 1.24s",
+  "✓ Deployed → kodeflow.dev",
+  "▸ Warming 23 CDN edge regions...",
+  "▸ SSL certificate renewed",
+  "▸ PM2 restarted — uptime 99.9%",
+  "const cleanup = () => { ws.close(); clearInterval(ping) }",
+  "return () => cleanup()",
+  "  const rotX = useSpring(useTransform(y, [-0.5, 0.5], [8, -8]))",
+  "  style={{ transformStyle: 'preserve-3d', perspective: '1200px' }}",
+  "  className=\"grid grid-cols-3 gap-6 items-center\"",
+  "git add . && git commit -m 'feat: stripe integration'",
+  "git push origin main --force",
+  "→ GitHub Actions triggered",
+  "→ SSH: root@62.171.167.115",
+  "→ deploy.sh executing...",
+  "  const emit = useCallback((ev: string, payload: unknown) => {",
+  "    socket.emit(ev, payload)",
+  "  }, [socket])",
+  "export { router as projectsRouter }",
+  "app.listen(PORT, () => console.log(`✓ API ready on :${PORT}`))",
+  "const middleware = [authenticate, rateLimit, validateBody(schema)]",
+  "  whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.97 }}",
 ];
 
-const FILE_NAMES = [
-  "Dashboard.tsx",
-  "projects.router.ts",
-  "schema.ts",
-  "utils.ts",
-  "hooks.ts",
-];
+// ─── Token type detection for color ───────────────────────────────────────
 
-// ─── Syntax token colors ───────────────────────────────────────────────────
+const KW = new Set(["const","let","var","function","return","if","else","async","await",
+  "import","export","default","class","interface","type","from","new","this",
+  "true","false","null","undefined","void","typeof","instanceof","extends"]);
 
-const KEYWORDS = new Set([
-  "import","export","from","default","const","let","var","function",
-  "return","if","else","try","catch","async","await","new","this",
-  "class","interface","type","extends","implements","enum","namespace",
-  "true","false","null","undefined","void","never","any","as","in","of",
-  "for","while","do","switch","case","break","continue","throw","typeof","instanceof",
-  "'use client'",
-]);
+type Segment = { text: string; color: string; width: number };
 
-function tokenizeLine(line: string): Array<{ text: string; color: string }> {
-  if (line.trim() === "") return [{ text: " ", color: "transparent" }];
+function tokenizeLine(line: string, ctx: CanvasRenderingContext2D): Segment[] {
+  const segments: Segment[] = [];
 
-  const tokens: Array<{ text: string; color: string }> = [];
-
-  // Comments
-  const commentIdx = line.indexOf("//");
-  if (commentIdx !== -1) {
-    const before = line.slice(0, commentIdx);
-    const comment = line.slice(commentIdx);
-    if (before) tokens.push(...tokenizeLine(before));
-    tokens.push({ text: comment, color: "#4a7c59" });
-    return tokens;
+  // Comments / shell output lines
+  if (line.startsWith("//")) {
+    const w = ctx.measureText(line).width;
+    return [{ text: line, color: "#3d6b4f", width: w }];
+  }
+  if (line.startsWith("✓") || line.startsWith("▸") || line.startsWith("→")) {
+    const color = line.startsWith("✓") ? "#22c55e" : line.startsWith("▸") ? "#94a3b8" : "#a78bfa";
+    const w = ctx.measureText(line).width;
+    return [{ text: line, color, width: w }];
+  }
+  if (line.startsWith("git ") || line.startsWith("pnpm ")) {
+    const w = ctx.measureText(line).width;
+    return [{ text: line, color: "#f472b6" }];
   }
 
-  // Simple tokenizer via regex
   const regex = /("(?:\\.|[^"\\])*"|'(?:\\.|[^'\\])*'|`(?:\\.|[^`\\])*`|\b[\w$]+\b|[^\w\s$"'`]+|\s+)/g;
-  let match;
-  while ((match = regex.exec(line)) !== null) {
-    const t = match[0];
-    let color: string;
-
+  let m: RegExpExecArray | null;
+  while ((m = regex.exec(line)) !== null) {
+    const t = m[0];
     if (/^\s+$/.test(t)) {
-      tokens.push({ text: t, color: "transparent" });
+      segments.push({ text: t, color: "transparent", width: ctx.measureText(t).width });
       continue;
     }
-
-    if ((t.startsWith('"') && t.endsWith('"')) ||
-        (t.startsWith("'") && t.endsWith("'")) ||
-        (t.startsWith("`") && t.endsWith("`"))) {
-      color = "#e8a87c";
-    } else if (KEYWORDS.has(t)) {
+    let color: string;
+    if ((t.startsWith('"') || t.startsWith("'") || t.startsWith("`")) && t.length > 1) {
+      color = "#fbbf24";
+    } else if (KW.has(t)) {
       color = "#c084fc";
     } else if (/^[A-Z][A-Za-z0-9]*$/.test(t)) {
       color = "#60a5fa";
     } else if (/^\d+$/.test(t)) {
       color = "#f9a8d4";
-    } else if (["=>", "===", "!==", "&&", "||", "??", "?.", "...", ":", "->"].includes(t)) {
+    } else if (["=>","===","!==","&&","||","??","?.","..."].includes(t)) {
       color = "#67e8f9";
-    } else if (["{", "}", "(", ")", "[", "]"].includes(t)) {
+    } else if (t === "{" || t === "}" || t === "(" || t === ")") {
       color = "#a78bfa";
     } else if (t === "<" || t === ">") {
       color = "#f472b6";
-    } else if (t.startsWith(".") && t.length > 1) {
-      color = "#34d399";
     } else {
-      color = "#cbd5e1";
+      color = "#94a3b8";
     }
-
-    tokens.push({ text: t, color });
+    segments.push({ text: t, color, width: ctx.measureText(t).width });
   }
-
-  return tokens;
+  return segments;
 }
 
-interface Panel {
+// ─── Column stream ──────────────────────────────────────────────────────────
+
+interface Stream {
   x: number;
   y: number;
-  width: number;
-  scrollY: number;
   speed: number;
-  codeIndex: number;
+  lineIndex: number;
   opacity: number;
+  lineHeight: number;
+  visibleLines: number;   // how many lines show at once
+  cachedSegments: Segment[][];
 }
 
 export default function CodeBackground() {
@@ -349,32 +146,103 @@ export default function CodeBackground() {
     canvas.width = W;
     canvas.height = H;
 
-    const FONT_SIZE = 12.5;
-    const LINE_H = FONT_SIZE * 1.65;
-    const CHAR_W = FONT_SIZE * 0.62;
-    const PANEL_PAD = 14;
-    const PANEL_W = 340;
-    const HEADER_H = 28;
+    const FONT_SIZE = 11.5;
+    const LINE_H = FONT_SIZE * 1.72;
+    ctx.font = `${FONT_SIZE}px "JetBrains Mono", "Fira Code", monospace`;
 
-    // Pre-tokenize all panels
-    const tokenizedPanels = CODE_PANELS.map(lines => lines.map(tokenizeLine));
+    // Pre-cache all tokenized lines
+    const allSegments: Segment[][] = CODE_LINES.map(l => tokenizeLine(l, ctx));
 
-    // Create panels — distribute across screen
-    const panels: Panel[] = [
-      { x: 10,  y: 0,   width: PANEL_W, scrollY: 0, speed: 0.35, codeIndex: 0, opacity: 0.38 },
-      { x: 380, y: 0,   width: PANEL_W, scrollY: -200, speed: 0.25, codeIndex: 1, opacity: 0.28 },
-      { x: W - PANEL_W - 10, y: 0, width: PANEL_W, scrollY: -400, speed: 0.4, codeIndex: 2, opacity: 0.32 },
-      { x: Math.max(740, W - PANEL_W * 2 - 30), y: 0, width: PANEL_W, scrollY: -100, speed: 0.22, codeIndex: 3, opacity: 0.22 },
-    ];
+    function createStream(xPos: number, opacityOverride?: number): Stream {
+      const startLine = Math.floor(Math.random() * CODE_LINES.length);
+      const visibleLines = 14 + Math.floor(Math.random() * 12); // 14-25 lines visible
+      return {
+        x: xPos,
+        y: -Math.random() * H * 0.8,
+        speed: 0.5 + Math.random() * 1.1,
+        lineIndex: startLine,
+        opacity: opacityOverride ?? (0.25 + Math.random() * 0.38),
+        lineHeight: LINE_H,
+        visibleLines,
+        cachedSegments: [],
+      };
+    }
 
-    // If screen is wide enough, add a 5th panel
-    if (W > 1400) {
-      panels.push({ x: W / 2 - PANEL_W / 2, y: 0, width: PANEL_W, scrollY: -600, speed: 0.18, codeIndex: 4, opacity: 0.16 });
+    // Build streams — one per "column" across screen width
+    const COL_W = 360;
+    const NUM_COLS = Math.max(3, Math.ceil(W / COL_W));
+    const streams: Stream[] = [];
+
+    for (let i = 0; i < NUM_COLS; i++) {
+      const xBase = i * COL_W + Math.random() * 40 - 20;
+      // Stagger start positions so they don't all appear at once
+      const s = createStream(xBase, 0.18 + Math.random() * 0.35);
+      s.y = -Math.random() * H * 2.5; // deep stagger
+      streams.push(s);
+    }
+
+    // Helper: draw one stream (scrolling block of lines)
+    function drawStream(s: Stream) {
+      const totalLineHeight = s.visibleLines * LINE_H;
+
+      // Build line list from CODE_LINES starting at lineIndex
+      const numToShow = s.visibleLines;
+
+      for (let li = 0; li < numToShow; li++) {
+        const lineDataIndex = (s.lineIndex + li) % CODE_LINES.length;
+        const yPos = s.y + li * LINE_H;
+
+        if (yPos < -LINE_H * 2 || yPos > H + LINE_H) continue;
+
+        // Fade alpha: bright in middle, fade at head and tail
+        const progress = li / numToShow;
+        // Head fade (first few lines)
+        const headFade = Math.min(1, li / 3);
+        // Tail fade (last few lines)
+        const tailFade = Math.min(1, (numToShow - li) / 4);
+        const fadeAlpha = headFade * tailFade;
+
+        // Leading line (last in the list = bottom) is brightest
+        const isLeading = li === numToShow - 1;
+        const lineAlpha = isLeading
+          ? Math.min(1, s.opacity * 1.4)
+          : s.opacity * fadeAlpha;
+
+        if (lineAlpha < 0.01) continue;
+
+        const segs = allSegments[lineDataIndex];
+        let xCursor = s.x;
+
+        for (const seg of segs) {
+          if (seg.color === "transparent") {
+            xCursor += seg.width;
+            continue;
+          }
+          // Leading line: everything near-white for glow effect
+          const color = isLeading ? "#e8e0ff" : seg.color;
+          ctx.globalAlpha = Math.min(1, lineAlpha);
+          ctx.fillStyle = color;
+          ctx.fillText(seg.text, xCursor, yPos);
+          xCursor += seg.width;
+        }
+      }
+
+      // Advance stream
+      s.y += s.speed;
+
+      // Reset when fully off screen
+      if (s.y + s.visibleLines * LINE_H > H + 120) {
+        s.y = -s.visibleLines * LINE_H - Math.random() * H * 0.5;
+        s.lineIndex = Math.floor(Math.random() * CODE_LINES.length);
+        s.speed = 0.5 + Math.random() * 1.1;
+        s.opacity = 0.18 + Math.random() * 0.38;
+        s.visibleLines = 14 + Math.floor(Math.random() * 12);
+      }
     }
 
     let rafId: number;
     let lastTime = 0;
-    const TARGET_MS = 1000 / 24; // 24fps — smooth enough, very low CPU
+    const TARGET_MS = 1000 / 30; // 30fps — smooth and efficient
 
     let paused = false;
     const onVis = () => { paused = document.hidden; };
@@ -388,91 +256,10 @@ export default function CodeBackground() {
         H = window.innerHeight;
         canvas.width = W;
         canvas.height = H;
-        panels[2].x = W - PANEL_W - 10;
+        ctx.font = `${FONT_SIZE}px "JetBrains Mono", "Fira Code", monospace`;
       }, 200);
     };
     window.addEventListener("resize", onResize, { passive: true });
-
-    const drawPanel = (p: Panel) => {
-      const lines = tokenizedPanels[p.codeIndex];
-      const totalContentH = lines.length * LINE_H;
-
-      // Wrap scroll
-      if (p.scrollY > totalContentH) p.scrollY = -H;
-
-      ctx.save();
-      ctx.globalAlpha = p.opacity;
-
-      // Header bar
-      ctx.fillStyle = "rgba(30, 20, 60, 0.55)";
-      ctx.fillRect(p.x, 0, p.width, HEADER_H);
-
-      // Dot indicators
-      const dotColors = ["#ef4444", "#f59e0b", "#22c55e"];
-      dotColors.forEach((c, i) => {
-        ctx.beginPath();
-        ctx.arc(p.x + PANEL_PAD + i * 14, HEADER_H / 2, 4, 0, Math.PI * 2);
-        ctx.fillStyle = c;
-        ctx.globalAlpha = p.opacity * 0.7;
-        ctx.fill();
-      });
-
-      // File name
-      ctx.globalAlpha = p.opacity * 0.6;
-      ctx.font = `${FONT_SIZE - 0.5}px "JetBrains Mono", monospace`;
-      ctx.fillStyle = "#94a3b8";
-      ctx.fillText(FILE_NAMES[p.codeIndex], p.x + PANEL_PAD + 50, HEADER_H / 2 + 4);
-
-      // Code area clip
-      ctx.beginPath();
-      ctx.rect(p.x, HEADER_H, p.width, H - HEADER_H);
-      ctx.clip();
-
-      // Render lines
-      ctx.font = `${FONT_SIZE}px "JetBrains Mono", "Fira Code", monospace`;
-      const startLine = Math.floor(-p.scrollY / LINE_H) - 1;
-      const endLine = startLine + Math.ceil((H - HEADER_H) / LINE_H) + 2;
-
-      for (let li = Math.max(0, startLine); li < Math.min(lines.length, endLine); li++) {
-        const lineY = HEADER_H + p.scrollY + li * LINE_H + FONT_SIZE;
-        if (lineY < HEADER_H - LINE_H || lineY > H + LINE_H) continue;
-
-        // Line number
-        ctx.globalAlpha = p.opacity * 0.22;
-        ctx.fillStyle = "#64748b";
-        ctx.fillText(String(li + 1).padStart(3, " "), p.x + 4, lineY);
-
-        // Tokens
-        let xCursor = p.x + PANEL_PAD + CHAR_W * 4;
-        const toks = lines[li];
-        for (const tok of toks) {
-          if (tok.color === "transparent") {
-            xCursor += tok.text.length * CHAR_W;
-            continue;
-          }
-          ctx.globalAlpha = p.opacity * 0.88;
-          ctx.fillStyle = tok.color;
-          ctx.fillText(tok.text, xCursor, lineY);
-          xCursor += ctx.measureText(tok.text).width;
-        }
-      }
-
-      // Fade top & bottom of panel
-      const fadeT = ctx.createLinearGradient(p.x, HEADER_H, p.x, HEADER_H + 60);
-      fadeT.addColorStop(0, "rgba(7,4,20,0.7)");
-      fadeT.addColorStop(1, "transparent");
-      ctx.globalAlpha = 1;
-      ctx.fillStyle = fadeT;
-      ctx.fillRect(p.x, HEADER_H, p.width, 60);
-
-      const fadeB = ctx.createLinearGradient(p.x, H - 80, p.x, H);
-      fadeB.addColorStop(0, "transparent");
-      fadeB.addColorStop(1, "rgba(7,4,20,0.9)");
-      ctx.fillStyle = fadeB;
-      ctx.fillRect(p.x, H - 80, p.width, 80);
-
-      ctx.restore();
-    };
 
     const draw = (now: number) => {
       rafId = requestAnimationFrame(draw);
@@ -481,11 +268,13 @@ export default function CodeBackground() {
       lastTime = now;
 
       ctx.clearRect(0, 0, W, H);
+      ctx.font = `${FONT_SIZE}px "JetBrains Mono", "Fira Code", monospace`;
 
-      for (const p of panels) {
-        p.scrollY += p.speed;
-        drawPanel(p);
+      for (const s of streams) {
+        drawStream(s);
       }
+
+      ctx.globalAlpha = 1;
     };
 
     rafId = requestAnimationFrame(draw);
@@ -502,7 +291,7 @@ export default function CodeBackground() {
     <canvas
       ref={canvasRef}
       className="fixed inset-0 z-0 pointer-events-none"
-      style={{ opacity: 1 }}
+      style={{ opacity: 0.75 }}
     />
   );
 }
