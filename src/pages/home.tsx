@@ -239,9 +239,9 @@ const Navbar = () => {
   const openHire = useContext(HireModalCtx);
   const [open, setOpen] = useState(false);
   const { scrollY } = useScroll();
-  const navBg = useTransform(scrollY, [0, 60], ["rgba(26,26,26,0)", "rgba(22,22,22,0.96)"]);
-  const navBorder = useTransform(scrollY, [0, 60], ["rgba(255,255,255,0)", "rgba(255,255,255,0.06)"]);
-  const navBlur = useTransform(scrollY, [0, 60], ["blur(0px)", "blur(18px)"]);
+  const navBg = useTransform(scrollY, [0, 60], ["rgba(8,8,8,0)", "rgba(6,6,6,0.97)"]);
+  const navBorder = useTransform(scrollY, [0, 60], ["rgba(255,255,255,0)", "rgba(255,255,255,0.05)"]);
+  const navBlur = useTransform(scrollY, [0, 60], ["blur(0px)", "blur(24px)"]);
 
   const links = ["About", "Services", "Process", "Work", "Pricing"];
 
@@ -342,8 +342,8 @@ const Hero = () => {
   const openHire = useContext(HireModalCtx);
   const heroRef = useRef<HTMLElement>(null);
   const { scrollYProgress } = useScroll({ target: heroRef, offset: ["start start", "end start"] });
-  const heroY = useTransform(scrollYProgress, [0, 1], ["0%", "40%"]);
-  const heroOpacity = useTransform(scrollYProgress, [0, 0.8], [1, 0]);
+  const heroY = useTransform(scrollYProgress, [0, 1], ["0%", "30%"]);
+  const heroOpacity = useTransform(scrollYProgress, [0, 0.7], [1, 0]);
 
   const btnRef = useRef<HTMLAnchorElement>(null);
   const { x: btnX, y: btnY } = useMagnetic(btnRef as React.RefObject<HTMLElement>);
@@ -356,28 +356,28 @@ const Hero = () => {
           initial={{ opacity: 0, scale: 0.9 }}
           animate={{ opacity: 1, scale: 1 }}
           transition={{ duration: 0.5 }}
-          className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-orange-500/10 border border-orange-500/25 text-orange-400 text-sm font-medium mb-8 overflow-hidden relative"
+          className="inline-flex items-center gap-2.5 px-4 py-2 rounded-full bg-orange-500/8 border border-orange-500/20 text-orange-300 text-sm font-medium mb-10 overflow-hidden relative shimmer-badge"
         >
-          <div className="w-2 h-2 rounded-full bg-orange-500 animate-pulse" />
-          Available for projects
-          <motion.div
-            className="absolute inset-0 bg-gradient-to-r from-transparent via-white/50 to-transparent skew-x-12"
-            animate={{ x: ["-100%", "200%"] }}
-            transition={{ duration: 2, repeat: Infinity, repeatDelay: 3 }}
-          />
+          <span className="relative flex h-2 w-2">
+            <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-orange-400 opacity-75"></span>
+            <span className="relative inline-flex rounded-full h-2 w-2 bg-orange-500"></span>
+          </span>
+          Available for new projects
         </motion.div>
 
-        <h1 className="text-6xl md:text-8xl font-black tracking-tighter leading-[1.05] mb-8">
+        <h1 className="text-6xl md:text-[5.5rem] lg:text-[6.5rem] font-black tracking-[-0.03em] leading-[1.0] mb-8">
           {["Build Faster.", "Build Smarter.", null].map((line, i) => (
             <div key={i} className="overflow-hidden">
               <motion.div
-                initial={{ y: "100%", filter: "blur(10px)" }}
+                initial={{ y: "105%", filter: "blur(12px)" }}
                 animate={{ y: 0, filter: "blur(0px)" }}
-                transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1], delay: 0.1 * i }}
+                transition={{ duration: 0.9, ease: [0.16, 1, 0.3, 1], delay: 0.08 * i }}
               >
                 {i === 2 ? (
-                  <span className="text-transparent bg-clip-text bg-gradient-to-r from-orange-500 to-amber-400">Dominate.</span>
-                ) : line}
+                  <span className="text-transparent bg-clip-text bg-gradient-to-r from-orange-400 via-amber-300 to-orange-500">Dominate.</span>
+                ) : (
+                  <span className="text-white/90">{line}</span>
+                )}
               </motion.div>
             </div>
           ))}
@@ -387,28 +387,28 @@ const Hero = () => {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, delay: 0.4 }}
-          className="text-xl md:text-2xl text-gray-400 mb-10 max-w-2xl leading-relaxed font-light"
+          className="text-lg md:text-xl text-white/40 mb-12 max-w-xl leading-relaxed font-light tracking-wide"
         >
-          I'm a freelance full-stack engineer building fast, scalable, and premium web applications for ambitious brands.
+          Freelance full-stack engineer building fast, scalable, and premium web applications for ambitious brands.
         </motion.p>
 
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, delay: 0.5 }}
-          className="flex flex-col sm:flex-row gap-6 items-start sm:items-center"
+          className="flex flex-col sm:flex-row gap-4 items-start sm:items-center"
         >
           <motion.button
             ref={btnRef as any}
             style={{ x: btnX, y: btnY }}
             onClick={openHire}
-            className="bg-orange-600 text-white px-8 py-4 rounded-full font-semibold flex items-center justify-center gap-2 transition-shadow hover:shadow-xl hover:shadow-orange-500/30 hover:bg-orange-700"
+            className="relative bg-orange-500 text-white px-8 py-4 rounded-full font-semibold flex items-center gap-2.5 transition-all hover:bg-orange-400 shadow-[0_0_40px_rgba(249,115,22,0.35)] hover:shadow-[0_0_60px_rgba(249,115,22,0.5)] group"
           >
-            Start a Project <ArrowRight className="w-5 h-5" />
+            Start a Project <ArrowRight className="w-4 h-4 group-hover:translate-x-0.5 transition-transform" />
           </motion.button>
-          <a href="#work" className="text-gray-300 hover:text-white font-semibold flex items-center justify-center group relative overflow-hidden px-4 py-2">
-            <span className="relative z-10">View My Work</span>
-            <span className="absolute bottom-0 left-0 w-full h-0.5 bg-white transform origin-left scale-x-0 transition-transform duration-300 group-hover:scale-x-100" />
+          <a href="#work" className="text-white/50 hover:text-white/90 font-medium flex items-center gap-2 transition-colors px-2 py-4 group">
+            <span>View My Work</span>
+            <ChevronRight className="w-4 h-4 opacity-0 -translate-x-2 group-hover:opacity-100 group-hover:translate-x-0 transition-all" />
           </a>
         </motion.div>
 
@@ -464,20 +464,20 @@ const TECHS = ["React", "TypeScript", "Node.js", "Python", "Next.js", "PostgreSQ
   "Tailwind CSS", "OpenAI API", "AWS", "Vite", "Redis", "Stripe", "Docker", "Framer Motion"];
 
 const TechStack = () => (
-  <div className="border-y border-white/[0.06] bg-[#1e1e1e] py-6 overflow-hidden flex relative z-10">
+  <div className="border-y border-white/[0.04] bg-[#0d0d0d] py-5 overflow-hidden flex relative z-10">
     <motion.div
-      className="flex gap-16 whitespace-nowrap px-4 font-mono text-sm text-gray-400 uppercase tracking-wider font-bold"
+      className="flex gap-16 whitespace-nowrap px-4 font-mono text-xs text-white/25 uppercase tracking-[0.18em] font-semibold"
       animate={{ x: ["0%", "-50%"] }}
       transition={{ duration: 22, repeat: Infinity, ease: "linear" }}
     >
       {[...Array(2)].map((_, i) => (
         <React.Fragment key={i}>
-          {TECHS.map((t, j) => <span key={j}>{t} •&nbsp;</span>)}
+          {TECHS.map((t, j) => <span key={j}>{t}<span className="text-orange-500/40 mx-8">·</span></span>)}
         </React.Fragment>
       ))}
     </motion.div>
-    <div className="absolute top-0 bottom-0 left-0 w-32 bg-gradient-to-r from-[#1e1e1e] to-transparent z-10 pointer-events-none" />
-    <div className="absolute top-0 bottom-0 right-0 w-32 bg-gradient-to-l from-[#1e1e1e] to-transparent z-10 pointer-events-none" />
+    <div className="absolute top-0 bottom-0 left-0 w-32 bg-gradient-to-r from-[#0d0d0d] to-transparent z-10 pointer-events-none" />
+    <div className="absolute top-0 bottom-0 right-0 w-32 bg-gradient-to-l from-[#0d0d0d] to-transparent z-10 pointer-events-none" />
   </div>
 );
 
@@ -491,7 +491,7 @@ const StatsBar = () => {
     { num: 99, suffix: ".9%", label: "Uptime Average", icon: <TrendingUp size={18} /> },
   ];
   return (
-    <div className="bg-[#141414] py-14 px-6 relative z-10">
+    <div className="bg-[#060606] py-16 px-6 relative z-10 border-y border-white/[0.04]">
       <div className="max-w-6xl mx-auto grid grid-cols-2 lg:grid-cols-4 gap-8">
         {stats.map((s, i) => (
           <motion.div key={i}
@@ -501,13 +501,13 @@ const StatsBar = () => {
             transition={{ duration: 0.5, delay: i * 0.1 }}
             className="flex flex-col items-center text-center group"
           >
-            <div className="w-12 h-12 rounded-xl bg-orange-500/10 border border-orange-500/20 flex items-center justify-center mb-4 text-orange-400 group-hover:bg-orange-500/20 transition-all duration-300">
+            <div className="w-11 h-11 rounded-2xl bg-white/[0.04] border border-white/[0.07] flex items-center justify-center mb-5 text-orange-400/70 group-hover:border-orange-500/30 group-hover:text-orange-400 transition-all duration-300">
               {s.icon}
             </div>
-            <div className="text-5xl font-black text-white tracking-tighter mb-1">
+            <div className="text-4xl lg:text-5xl font-black tracking-tighter mb-1.5 text-transparent bg-clip-text bg-gradient-to-b from-white to-white/50">
               <AnimatedNumber target={s.num} suffix={s.suffix} />
             </div>
-            <div className="text-sm font-medium text-gray-400">{s.label}</div>
+            <div className="text-xs font-medium text-white/30 uppercase tracking-widest">{s.label}</div>
           </motion.div>
         ))}
       </div>
@@ -599,27 +599,30 @@ function LiveTerminal() {
 
 const About = () => (
   <section id="about" className="py-32 px-6 max-w-6xl mx-auto relative z-10">
-    <div className="grid md:grid-cols-2 gap-16 items-center">
+    <div className="grid md:grid-cols-2 gap-20 items-center">
       <motion.div
         initial={{ opacity: 0, y: 50 }}
         whileInView={{ opacity: 1, y: 0 }}
         viewport={{ once: true, margin: "-100px" }}
         transition={{ duration: 0.8 }}
       >
-        <h2 className="text-4xl md:text-5xl font-black mb-8 tracking-tighter leading-tight text-white">
+        <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/[0.04] border border-white/[0.08] text-white/40 text-[11px] font-semibold tracking-[0.15em] uppercase mb-8">
+          About
+        </div>
+        <h2 className="text-4xl md:text-5xl font-black mb-8 tracking-[-0.02em] leading-[1.1] text-white">
           The difference is in the details.
         </h2>
-        <p className="text-xl text-gray-400 mb-6 leading-relaxed">
+        <p className="text-base text-white/40 mb-5 leading-[1.8]">
           When you hire me, you don't get an account manager or a junior dev learning on your dime. You get me directly — building your product from architecture to deployment.
         </p>
-        <p className="text-xl text-gray-400 leading-relaxed">
+        <p className="text-base text-white/40 leading-[1.8]">
           I specialize in taking complex requirements and turning them into intuitive, blazing-fast applications that your users will actually love using.
         </p>
       </motion.div>
 
-      <div className="space-y-8">
+      <div className="space-y-6">
         <LiveTerminal />
-        <div className="grid grid-cols-2 gap-6">
+        <div className="grid grid-cols-2 gap-4">
           {[
             { num: 10, suffix: "x", text: "Faster delivery" },
             { num: 100, suffix: "%", text: "Direct communication" },
@@ -631,13 +634,13 @@ const About = () => (
               initial={{ opacity: 0, y: 30 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true, margin: "-50px" }}
-              transition={{ duration: 0.5, delay: i * 0.1 }}
-              className="bg-white p-8 rounded-3xl border border-white/[0.06] shadow-sm hover:shadow-md transition-shadow group"
+              transition={{ duration: 0.5, delay: i * 0.08 }}
+              className="bg-white/[0.03] p-6 rounded-2xl border border-white/[0.06] hover:border-orange-500/20 hover:bg-white/[0.05] transition-all duration-300 group"
             >
-              <div className="text-5xl font-black text-orange-500 mb-3 group-hover:scale-110 transition-transform origin-left">
+              <div className="text-4xl font-black text-transparent bg-clip-text bg-gradient-to-r from-orange-400 to-amber-300 mb-2 group-hover:scale-105 transition-transform origin-left">
                 <AnimatedCounter to={stat.num} />{stat.suffix}
               </div>
-              <div className="font-medium text-gray-700">{stat.text}</div>
+              <div className="text-sm font-medium text-white/35">{stat.text}</div>
             </motion.div>
           ))}
         </div>
@@ -657,7 +660,7 @@ const Process = () => {
   ];
 
   return (
-    <section id="process" className="py-32 px-6 bg-[#1e1e1e] relative z-10">
+    <section id="process" className="py-32 px-6 bg-[#050505] relative z-10">
       <div className="max-w-6xl mx-auto">
         <motion.div
           initial={{ opacity: 0, y: 30 }}
@@ -665,8 +668,11 @@ const Process = () => {
           viewport={{ once: true }}
           className="mb-20 text-center"
         >
-          <h2 className="text-5xl font-black mb-6 tracking-tighter text-white">How we work</h2>
-          <p className="text-2xl text-gray-400 max-w-2xl mx-auto font-light">A streamlined process focused on shipping.</p>
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/[0.04] border border-white/[0.08] text-white/40 text-[11px] font-semibold tracking-[0.15em] uppercase mb-6">
+            Process
+          </div>
+          <h2 className="text-4xl md:text-5xl font-black mb-5 tracking-[-0.02em] text-white">How we work</h2>
+          <p className="text-base text-white/35 max-w-xl mx-auto">A streamlined process focused on shipping fast without cutting corners.</p>
         </motion.div>
 
         <div className="grid md:grid-cols-4 gap-8 relative">
@@ -683,21 +689,21 @@ const Process = () => {
           {steps.map((phase, i) => (
             <motion.div
               key={i}
-              initial={{ opacity: 0, scale: 0.9 }}
-              whileInView={{ opacity: 1, scale: 1 }}
+              initial={{ opacity: 0, y: 24 }}
+              whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
-              transition={{ duration: 0.5, delay: i * 0.15 }}
-              className="relative group z-10"
+              transition={{ duration: 0.5, delay: i * 0.1 }}
+              className="relative group z-10 p-6 rounded-2xl border border-white/[0.05] hover:border-orange-500/15 hover:bg-white/[0.02] transition-all duration-300"
             >
-              <div className="w-12 h-12 rounded-xl bg-orange-600 flex items-center justify-center mb-6 text-white shadow-lg shadow-orange-500/30">
+              <div className="w-10 h-10 rounded-xl bg-white/[0.05] border border-white/[0.08] flex items-center justify-center mb-6 text-orange-400/80 group-hover:border-orange-500/30 group-hover:text-orange-400 transition-all">
                 {phase.icon}
               </div>
-              <div className="text-6xl font-black text-white/[0.05] mb-4 select-none group-hover:text-orange-100 transition-colors">{phase.step}</div>
-              <div className="flex items-center gap-2 mb-2">
-                <h3 className="text-xl font-bold tracking-tight text-white">{phase.title}</h3>
-                <span className="text-[10px] text-gray-500 border border-white/[0.08] px-2 py-0.5 rounded-full font-mono">{phase.time}</span>
+              <div className="text-5xl font-black text-white/[0.04] mb-4 select-none group-hover:text-orange-500/10 transition-colors">{phase.step}</div>
+              <div className="flex items-center gap-2 mb-2.5">
+                <h3 className="text-base font-bold tracking-tight text-white">{phase.title}</h3>
+                <span className="text-[9px] text-white/20 border border-white/[0.06] px-2 py-0.5 rounded-full font-mono">{phase.time}</span>
               </div>
-              <p className="text-gray-400 leading-relaxed text-sm">{phase.desc}</p>
+              <p className="text-white/30 leading-relaxed text-sm">{phase.desc}</p>
             </motion.div>
           ))}
         </div>
@@ -721,7 +727,7 @@ const Services = () => {
   ];
 
   return (
-    <section id="services" className="py-32 px-6 relative z-10 bg-[#1c1c1c]">
+    <section id="services" className="py-32 px-6 relative z-10 bg-[#080808]">
       <div className="max-w-6xl mx-auto">
         <motion.div
           initial={{ opacity: 0, y: 30 }}
@@ -729,25 +735,28 @@ const Services = () => {
           viewport={{ once: true }}
           className="mb-20"
         >
-          <h2 className="text-5xl font-black mb-6 tracking-tighter text-white">Expertise</h2>
-          <p className="text-2xl text-gray-400 max-w-2xl font-light">What I can build for you.</p>
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/[0.04] border border-white/[0.08] text-white/40 text-[11px] font-semibold tracking-[0.15em] uppercase mb-6">
+            Services
+          </div>
+          <h2 className="text-4xl md:text-5xl font-black mb-5 tracking-[-0.02em] text-white">Expertise</h2>
+          <p className="text-base text-white/35 max-w-sm">What I can build for you.</p>
         </motion.div>
 
-        <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+        <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-4">
           {services.map((service, i) => (
             <motion.div
               key={i}
-              initial={{ opacity: 0, y: 50 }}
+              initial={{ opacity: 0, y: 40 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true, margin: "-50px" }}
-              transition={{ duration: 0.6, delay: (i % 4) * 0.1 }}
-              className="p-8 rounded-3xl bg-[#252525] border border-white/[0.07] hover:border-orange-200 hover:shadow-xl hover:shadow-orange-500/5 hover:-translate-y-2 transition-all duration-300 group"
+              transition={{ duration: 0.5, delay: (i % 4) * 0.08 }}
+              className="p-7 rounded-2xl bg-white/[0.02] border border-white/[0.05] hover:border-orange-500/20 hover:bg-white/[0.04] hover:-translate-y-1 transition-all duration-300 group"
             >
-              <div className="mb-6 bg-orange-500/10 w-16 h-16 rounded-2xl flex items-center justify-center shadow-sm group-hover:scale-110 transition-transform">
-                {service.icon}
+              <div className="mb-5 w-12 h-12 rounded-xl bg-white/[0.04] border border-white/[0.07] flex items-center justify-center group-hover:border-orange-500/25 transition-all">
+                <div className="text-orange-400/70 group-hover:text-orange-400 transition-colors">{service.icon}</div>
               </div>
-              <h3 className="text-lg font-bold mb-3 tracking-tight text-white">{service.title}</h3>
-              <p className="text-gray-400 leading-relaxed text-sm">{service.desc}</p>
+              <h3 className="text-sm font-bold mb-2 tracking-tight text-white/80">{service.title}</h3>
+              <p className="text-white/30 leading-relaxed text-xs">{service.desc}</p>
             </motion.div>
           ))}
         </div>
@@ -766,7 +775,7 @@ const Work = () => {
   ];
 
   return (
-    <section id="work" className="py-32 px-6 bg-[#1e1e1e] relative z-10">
+    <section id="work" className="py-32 px-6 bg-[#050505] relative z-10">
       <div className="max-w-6xl mx-auto">
         <motion.div
           initial={{ opacity: 0, y: 30 }}
@@ -775,8 +784,11 @@ const Work = () => {
           className="flex flex-col md:flex-row justify-between items-start md:items-end mb-20 gap-6"
         >
           <div>
-            <h2 className="text-5xl font-black mb-6 tracking-tighter text-white">Selected Work</h2>
-            <p className="text-2xl text-gray-400 font-light">Recent projects I've built.</p>
+            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/[0.04] border border-white/[0.08] text-white/40 text-[11px] font-semibold tracking-[0.15em] uppercase mb-6">
+              Work
+            </div>
+            <h2 className="text-4xl md:text-5xl font-black mb-4 tracking-[-0.02em] text-white">Selected Work</h2>
+            <p className="text-base text-white/35">Recent projects I've built.</p>
           </div>
           <a href="#" className="flex items-center gap-2 font-semibold text-orange-400 hover:text-orange-300 group pb-2 border-b border-orange-200 hover:border-orange-600 transition-colors">
             View GitHub <ChevronRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
@@ -787,32 +799,33 @@ const Work = () => {
           {projects.map((project, i) => (
             <motion.div
               key={i}
-              initial={{ opacity: 0, y: 50 }}
+              initial={{ opacity: 0, y: 40 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true, margin: "-50px" }}
-              transition={{ duration: 0.6, delay: i * 0.1 }}
+              transition={{ duration: 0.5, delay: i * 0.08 }}
               className="group cursor-pointer"
             >
-              <div className="aspect-[4/3] rounded-3xl mb-8 overflow-hidden relative shadow-sm group-hover:shadow-xl transition-shadow duration-500">
-                <div className={`absolute inset-0 bg-gradient-to-br ${project.gradient} transition-transform duration-700 group-hover:scale-105`} />
+              <div className="aspect-[4/3] rounded-2xl mb-7 overflow-hidden relative border border-white/[0.06] group-hover:border-white/[0.12] transition-all duration-500">
+                <div className={`absolute inset-0 bg-gradient-to-br ${project.gradient} opacity-60 transition-transform duration-700 group-hover:scale-105`} />
+                <div className="absolute inset-0 bg-[#080808]/40" />
                 <div className="absolute inset-0 flex items-center justify-center">
-                  <div className="w-3/4 h-3/4 bg-white/20 backdrop-blur-md rounded-2xl border border-white/30 shadow-lg flex items-center justify-center transform group-hover:-translate-y-4 transition-transform duration-500">
-                    <span className="font-mono text-sm text-white font-medium px-4 py-2 bg-black/20 rounded-full">Coming Soon</span>
+                  <div className="w-3/4 h-3/4 bg-white/[0.06] backdrop-blur-xl rounded-xl border border-white/10 shadow-lg flex items-center justify-center transform group-hover:-translate-y-3 transition-transform duration-500">
+                    <span className="font-mono text-xs text-white/50 font-medium px-4 py-2 bg-white/[0.05] rounded-full border border-white/[0.08]">Coming Soon</span>
                   </div>
                 </div>
-                <div className="absolute top-4 right-4 bg-black/40 backdrop-blur-sm text-white text-xs font-bold px-3 py-1 rounded-full">
+                <div className="absolute top-4 right-4 bg-black/60 backdrop-blur-sm text-white/60 text-[10px] font-bold px-3 py-1 rounded-full border border-white/[0.08]">
                   {project.stat}
                 </div>
               </div>
-              <div className="flex items-center gap-3 mb-3">
-                <div className="h-[1px] w-8 bg-orange-600" />
-                <div className="text-sm font-bold text-orange-600 uppercase tracking-widest">{project.tag}</div>
+              <div className="flex items-center gap-2 mb-2.5">
+                <div className="h-px w-6 bg-orange-500/50" />
+                <div className="text-[10px] font-bold text-orange-400/60 uppercase tracking-[0.15em]">{project.tag}</div>
               </div>
-              <h3 className="text-2xl font-bold group-hover:text-orange-600 transition-colors tracking-tight text-white mb-3">{project.title}</h3>
-              <p className="text-gray-400 text-sm leading-relaxed mb-4">{project.desc}</p>
+              <h3 className="text-lg font-bold group-hover:text-orange-400 transition-colors tracking-tight text-white/80 mb-2">{project.title}</h3>
+              <p className="text-white/30 text-xs leading-relaxed mb-4">{project.desc}</p>
               <div className="flex flex-wrap gap-1.5">
                 {project.tech.map(t => (
-                  <span key={t} className="px-2.5 py-1 rounded-lg text-xs font-medium border border-white/[0.08] text-gray-500 bg-white/[0.02]">{t}</span>
+                  <span key={t} className="px-2 py-0.5 rounded-md text-[10px] font-medium border border-white/[0.06] text-white/25 bg-white/[0.02]">{t}</span>
                 ))}
               </div>
             </motion.div>
@@ -837,7 +850,7 @@ const Comparison = () => {
   ];
 
   return (
-    <section className="py-32 px-6 bg-[#1c1c1c] relative z-10">
+    <section className="py-32 px-6 bg-[#0a0a0a] relative z-10">
       <div className="max-w-4xl mx-auto">
         <motion.div
           initial={{ opacity: 0, y: 30 }}
@@ -845,10 +858,13 @@ const Comparison = () => {
           viewport={{ once: true }}
           className="text-center mb-20"
         >
-          <h2 className="text-5xl font-black mb-6 tracking-tighter text-white">
-            pyKode <span className="text-orange-600">vs The Rest</span>
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/[0.04] border border-white/[0.08] text-white/40 text-[11px] font-semibold tracking-[0.15em] uppercase mb-6">
+            Comparison
+          </div>
+          <h2 className="text-4xl md:text-5xl font-black mb-5 tracking-[-0.02em] text-white">
+            pyKode <span className="text-transparent bg-clip-text bg-gradient-to-r from-orange-400 to-amber-300">vs The Rest</span>
           </h2>
-          <p className="text-xl text-gray-400 font-light">Stop paying 10x more for slower results and junior code.</p>
+          <p className="text-base text-white/35">Stop paying 10x more for slower results and junior code.</p>
         </motion.div>
 
         <motion.div initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}>
@@ -927,7 +943,7 @@ const Pricing = () => {
   ];
 
   return (
-    <section id="pricing" className="py-32 px-6 bg-[#1e1e1e] relative z-10">
+    <section id="pricing" className="py-32 px-6 bg-[#060606] relative z-10">
       <div className="max-w-5xl mx-auto">
         <motion.div
           initial={{ opacity: 0, y: 30 }}
@@ -935,8 +951,11 @@ const Pricing = () => {
           viewport={{ once: true }}
           className="mb-20 text-center"
         >
-          <h2 className="text-5xl font-black mb-6 tracking-tighter text-white">Transparent Pricing</h2>
-          <p className="text-2xl text-gray-400 font-light">Simple, predictable rates for high-quality engineering.</p>
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/[0.04] border border-white/[0.08] text-white/40 text-[11px] font-semibold tracking-[0.15em] uppercase mb-6">
+            Pricing
+          </div>
+          <h2 className="text-4xl md:text-5xl font-black mb-5 tracking-[-0.02em] text-white">Transparent Pricing</h2>
+          <p className="text-base text-white/35">Simple, predictable rates for high-quality engineering.</p>
         </motion.div>
 
         <div className="grid md:grid-cols-3 gap-8 items-center">
@@ -974,38 +993,36 @@ const Pricing = () => {
                 viewport={{ once: true }}
                 transition={{ duration: 0.5, delay: i * 0.1 }}
                 style={tier.popular ? { rotateX: tiltY as any, rotateY: tiltX as any, transformStyle: "preserve-3d" } : {}}
-                className={`rounded-[2rem] p-10 flex flex-col relative ${
+                className={`rounded-2xl p-8 flex flex-col relative ${
                   tier.popular
-                    ? "bg-[#111111] text-white shadow-2xl shadow-black/25 md:scale-105 z-10"
-                    : "bg-[#1f1f1f] border border-white/[0.07] shadow-sm"
+                    ? "bg-white/[0.04] border border-orange-500/30 md:scale-105 z-10 shadow-[0_0_60px_rgba(249,115,22,0.08)]"
+                    : "bg-white/[0.02] border border-white/[0.06]"
                 }`}
               >
                 {tier.popular && (
-                  <div className="absolute -top-4 left-1/2 -translate-x-1/2 bg-orange-600 text-white px-6 py-1.5 rounded-full text-sm font-bold tracking-widest uppercase shadow-lg shadow-orange-500/30">
+                  <div className="absolute -top-3.5 left-1/2 -translate-x-1/2 bg-orange-500 text-white px-5 py-1 rounded-full text-[10px] font-bold tracking-[0.12em] uppercase shadow-lg shadow-orange-500/30">
                     Most Popular
                   </div>
                 )}
-                <h3 className={`text-xl font-bold mb-4 ${tier.popular ? "text-gray-300" : "text-gray-400"}`}>{tier.name}</h3>
-                <div className="mb-6 flex items-baseline gap-2">
-                  <span className={`text-5xl font-black tracking-tighter ${tier.popular ? "text-orange-400" : "text-white"}`}>{tier.price}</span>
-                  <span className={tier.popular ? "text-gray-400 text-sm" : "text-gray-500 text-sm"}>/ {tier.period}</span>
+                <h3 className="text-sm font-bold mb-4 text-white/50 uppercase tracking-[0.12em]">{tier.name}</h3>
+                <div className="mb-5 flex items-baseline gap-2">
+                  <span className={`text-4xl font-black tracking-tighter ${tier.popular ? "text-transparent bg-clip-text bg-gradient-to-r from-orange-400 to-amber-300" : "text-white"}`}>{tier.price}</span>
+                  <span className="text-white/25 text-sm">/ {tier.period}</span>
                 </div>
-                <p className={`mb-8 text-sm leading-relaxed ${tier.popular ? "text-gray-400" : "text-gray-400"}`}>{tier.desc}</p>
-                <ul className="space-y-4 mb-10 flex-grow">
+                <p className="mb-7 text-xs leading-relaxed text-white/35">{tier.desc}</p>
+                <ul className="space-y-3 mb-8 flex-grow">
                   {tier.features.map((f, j) => (
-                    <li key={j} className="flex items-start gap-3">
-                      <div className={`mt-0.5 p-1 rounded-full shrink-0 ${tier.popular ? "bg-orange-500/20 text-orange-400" : "bg-orange-100 text-orange-600"}`}>
-                        <CheckCircle2 className="w-3 h-3" strokeWidth={3} />
-                      </div>
-                      <span className={`font-medium text-sm ${tier.popular ? "text-gray-300" : "text-gray-300"}`}>{f}</span>
+                    <li key={j} className="flex items-start gap-2.5">
+                      <CheckCircle2 className={`w-3.5 h-3.5 mt-0.5 shrink-0 ${tier.popular ? "text-orange-400" : "text-white/25"}`} strokeWidth={2.5} />
+                      <span className={`text-xs ${tier.popular ? "text-white/60" : "text-white/30"}`}>{f}</span>
                     </li>
                   ))}
                 </ul>
                 <a href="#contact"
-                  className={`w-full py-4 rounded-2xl font-bold transition-all duration-300 text-center text-sm ${
+                  className={`w-full py-3 rounded-xl font-semibold transition-all duration-300 text-center text-sm ${
                     tier.popular
-                      ? "bg-orange-600 text-white hover:bg-orange-500 shadow-lg shadow-orange-500/25"
-                      : "bg-white/[0.06] text-white hover:bg-gray-200"
+                      ? "bg-orange-500 text-white hover:bg-orange-400 shadow-[0_0_30px_rgba(249,115,22,0.3)]"
+                      : "bg-white/[0.05] text-white/50 hover:bg-white/[0.08] border border-white/[0.07]"
                   }`}>
                   {tier.name === "Custom" ? "Contact Me" : "Get Started"}
                 </a>
@@ -1091,14 +1108,17 @@ const Booking = () => {
   };
 
   return (
-    <section className="py-32 px-6 bg-[#1c1c1c] relative z-10">
+    <section className="py-32 px-6 bg-[#0a0a0a] relative z-10">
       <div className="max-w-3xl mx-auto">
         <motion.div className="text-center mb-16"
           initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}>
-          <h2 className="text-5xl font-black mb-6 tracking-tighter text-white">
-            Pick a slot. <span className="text-orange-600">Let's talk.</span>
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/[0.04] border border-white/[0.08] text-white/40 text-[11px] font-semibold tracking-[0.15em] uppercase mb-6">
+            Book a Session
+          </div>
+          <h2 className="text-4xl md:text-5xl font-black mb-5 tracking-[-0.02em] text-white">
+            Pick a slot. <span className="text-transparent bg-clip-text bg-gradient-to-r from-orange-400 to-amber-300">Let's talk.</span>
           </h2>
-          <p className="text-xl text-gray-400 font-light">Select a day and time, share project details — I'll reply within 2 hours.</p>
+          <p className="text-base text-white/35">Select a day and time, share project details — I'll reply within 2 hours.</p>
         </motion.div>
 
         <div className="flex items-center justify-center gap-3 mb-10">
@@ -1121,10 +1141,10 @@ const Booking = () => {
         <AnimatePresence mode="wait">
           {step === "pick" && (
             <motion.div key="pick" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -16 }}>
-              <div className="bg-[#222222] rounded-3xl border border-white/[0.07] p-8">
+              <div className="bg-white/[0.02] rounded-2xl border border-white/[0.06] p-8">
                 <div className="flex items-center justify-between mb-6">
-                  <p className="text-sm font-semibold text-white">Pick a day — next week</p>
-                  <span className="text-xs text-gray-400 border border-white/[0.08] px-2 py-0.5 rounded-full font-mono">EET · UTC+2</span>
+                  <p className="text-sm font-semibold text-white/70">Pick a day — next week</p>
+                  <span className="text-xs text-white/25 border border-white/[0.06] px-2 py-0.5 rounded-full font-mono">EET · UTC+2</span>
                 </div>
 
                 <div className="grid grid-cols-5 gap-2 mb-8">
@@ -1182,48 +1202,48 @@ const Booking = () => {
 
           {step === "form" && (
             <motion.div key="form" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -16 }}>
-              <div className="bg-[#222222] rounded-3xl border border-white/[0.07]">
+              <div className="bg-white/[0.02] rounded-2xl border border-white/[0.06]">
                 <form onSubmit={handleSend} className="p-8">
-                  <div className="flex items-center gap-3 mb-8 p-4 rounded-2xl bg-orange-500/10 border border-orange-500/20">
-                    <div className="w-9 h-9 rounded-lg bg-orange-500/15 border border-orange-500/25 flex items-center justify-center flex-shrink-0">
-                      <Clock size={16} className="text-orange-600" />
+                  <div className="flex items-center gap-3 mb-8 p-3.5 rounded-xl bg-orange-500/[0.06] border border-orange-500/15">
+                    <div className="w-8 h-8 rounded-lg bg-orange-500/10 border border-orange-500/20 flex items-center justify-center flex-shrink-0">
+                      <Clock size={14} className="text-orange-400" />
                     </div>
                     <div>
-                      <p className="text-xs text-gray-500 uppercase tracking-wider">Selected slot</p>
-                      <p className="text-sm font-bold text-white">{selectedDay}, {dayDates.find(d => d.label === selectedDay)?.date} {dayDates.find(d => d.label === selectedDay)?.month} · {selectedSlot}</p>
+                      <p className="text-[10px] text-white/25 uppercase tracking-wider">Selected slot</p>
+                      <p className="text-sm font-semibold text-white/70">{selectedDay}, {dayDates.find(d => d.label === selectedDay)?.date} {dayDates.find(d => d.label === selectedDay)?.month} · {selectedSlot}</p>
                     </div>
                     <button type="button" onClick={() => setStep("pick")}
-                      className="ml-auto text-xs text-orange-400 hover:text-orange-300 border border-orange-500/30 hover:border-orange-500/60 px-2 py-1 rounded-lg transition-all">
+                      className="ml-auto text-[11px] text-orange-400/70 hover:text-orange-400 border border-orange-500/20 hover:border-orange-500/40 px-2.5 py-1 rounded-lg transition-all">
                       Change
                     </button>
                   </div>
 
                   <div className="space-y-5">
                     <div>
-                      <label className="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2 block">Your Name</label>
+                      <label className="text-[10px] font-semibold text-white/25 uppercase tracking-[0.12em] mb-2 block">Your Name</label>
                       <Input value={form.name} onChange={e => setForm(f => ({ ...f, name: e.target.value }))}
                         placeholder="John Smith" required
-                        className="border-white/[0.08] focus:border-orange-400 h-11 bg-[#1e1e1e] text-white" />
+                        className="border-white/[0.06] focus:border-orange-500/40 h-11 bg-white/[0.03] text-white placeholder:text-white/15" />
                     </div>
                     <div>
-                      <label className="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2 block">Email Address</label>
+                      <label className="text-[10px] font-semibold text-white/25 uppercase tracking-[0.12em] mb-2 block">Email Address</label>
                       <Input type="email" value={form.email} onChange={e => setForm(f => ({ ...f, email: e.target.value }))}
                         placeholder="john@company.com" required
-                        className="border-white/[0.08] focus:border-orange-400 h-11 bg-[#1e1e1e] text-white" />
+                        className="border-white/[0.06] focus:border-orange-500/40 h-11 bg-white/[0.03] text-white placeholder:text-white/15" />
                     </div>
                     <div>
-                      <label className="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2 block">About the Project</label>
+                      <label className="text-[10px] font-semibold text-white/25 uppercase tracking-[0.12em] mb-2 block">About the Project</label>
                       <Textarea value={form.brief} onChange={e => setForm(f => ({ ...f, brief: e.target.value }))}
                         placeholder="What do you want to build? Timeline, budget, stack preferences..." required rows={4}
-                        className="border-white/[0.08] focus:border-orange-400 bg-[#1e1e1e] text-white resize-none" />
+                        className="border-white/[0.06] focus:border-orange-500/40 bg-white/[0.03] text-white placeholder:text-white/15 resize-none" />
                     </div>
                   </div>
 
                   <button type="submit" disabled={sending || !form.name || !form.email || !form.brief}
-                    className="w-full mt-7 py-4 rounded-2xl font-bold text-sm bg-orange-600 hover:bg-orange-700 text-white disabled:opacity-40 disabled:cursor-not-allowed transition-all flex items-center justify-center gap-2 shadow-lg shadow-orange-500/20">
+                    className="w-full mt-7 py-3.5 rounded-xl font-semibold text-sm bg-orange-500 hover:bg-orange-400 text-white disabled:opacity-40 disabled:cursor-not-allowed transition-all flex items-center justify-center gap-2 shadow-[0_0_30px_rgba(249,115,22,0.25)]">
                     {sending
                       ? <motion.span animate={{ opacity: [1, 0.4, 1] }} transition={{ duration: 0.8, repeat: Infinity }}>Sending...</motion.span>
-                      : <><Send className="w-4 h-4" />Send Session Request</>}
+                      : <><Send className="w-3.5 h-3.5" />Send Session Request</>}
                   </button>
                 </form>
               </div>
@@ -1232,7 +1252,7 @@ const Booking = () => {
 
           {step === "done" && (
             <motion.div key="done" initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} className="text-center">
-              <div className="bg-[#222222] rounded-3xl border border-white/[0.07]">
+              <div className="bg-white/[0.02] rounded-2xl border border-white/[0.06]">
                 <div className="p-12 flex flex-col items-center gap-6">
                   <motion.div className="w-20 h-20 rounded-full bg-green-500/10 border border-green-500/20 flex items-center justify-center"
                     initial={{ scale: 0 }} animate={{ scale: 1 }} transition={{ type: "spring", stiffness: 200, damping: 15 }}>
@@ -1304,67 +1324,68 @@ const Contact = () => {
   };
 
   return (
-    <section id="contact" className="py-32 bg-[#111111] text-white px-6 relative z-10 overflow-hidden">
-      <div className="absolute top-0 right-0 w-[600px] h-[600px] bg-orange-600/8 rounded-full blur-[120px] pointer-events-none -translate-y-1/2 translate-x-1/3" />
+    <section id="contact" className="py-32 bg-[#040404] text-white px-6 relative z-10 overflow-hidden">
+      <div className="absolute top-0 right-0 w-[700px] h-[700px] bg-orange-500/[0.04] rounded-full blur-[140px] pointer-events-none -translate-y-1/2 translate-x-1/2" />
 
       <div className="max-w-5xl mx-auto grid md:grid-cols-2 gap-20 relative z-10">
         <motion.div
-          initial={{ opacity: 0, x: -50 }}
+          initial={{ opacity: 0, x: -40 }}
           whileInView={{ opacity: 1, x: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.8 }}
         >
-          <h2 className="text-5xl md:text-7xl font-black mb-8 tracking-tighter leading-tight">
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/[0.04] border border-white/[0.08] text-white/40 text-[11px] font-semibold tracking-[0.15em] uppercase mb-8">
+            Contact
+          </div>
+          <h2 className="text-4xl md:text-6xl font-black mb-7 tracking-[-0.03em] leading-[1.05]">
             Let's build<br />
-            <span className="text-transparent bg-clip-text bg-gradient-to-r from-orange-400 to-amber-300">something great.</span>
+            <span className="text-transparent bg-clip-text bg-gradient-to-r from-orange-400 via-amber-300 to-orange-400">something great.</span>
           </h2>
-          <p className="text-xl text-gray-400 mb-12 font-light leading-relaxed">
+          <p className="text-base text-white/35 mb-12 leading-[1.8]">
             Have a project in mind? Fill out the form and I'll get back to you within 24 hours.
           </p>
-          <div className="space-y-8">
-            <div className="flex items-center gap-6 group cursor-pointer">
-              <div className="w-16 h-16 rounded-full bg-white/5 border border-white/10 flex items-center justify-center group-hover:bg-orange-500/20 group-hover:border-orange-500/50 transition-all duration-300">
-                <Terminal className="w-6 h-6 text-orange-400" />
-              </div>
-              <div>
-                <div className="text-sm font-semibold text-gray-400 uppercase tracking-widest mb-1">Email me</div>
-                <div className="text-2xl font-bold group-hover:text-orange-400 transition-colors">hello@pykode.dev</div>
-              </div>
+          <div className="flex items-center gap-4 group cursor-pointer">
+            <div className="w-11 h-11 rounded-xl bg-white/[0.04] border border-white/[0.07] flex items-center justify-center group-hover:border-orange-500/30 transition-all duration-300">
+              <Terminal className="w-4 h-4 text-orange-400/70 group-hover:text-orange-400 transition-colors" />
+            </div>
+            <div>
+              <div className="text-[10px] font-semibold text-white/25 uppercase tracking-[0.15em] mb-0.5">Email me</div>
+              <div className="text-base font-semibold text-white/60 group-hover:text-orange-400 transition-colors">hello@pykode.dev</div>
             </div>
           </div>
         </motion.div>
 
         <motion.div
-          initial={{ opacity: 0, x: 50 }}
+          initial={{ opacity: 0, x: 40 }}
           whileInView={{ opacity: 1, x: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.8 }}
-          className="bg-white/5 p-10 rounded-[2rem] border border-white/10 backdrop-blur-sm"
+          className="bg-white/[0.02] p-8 rounded-2xl border border-white/[0.06]"
         >
-          <form className="space-y-6" onSubmit={handleSubmit}>
+          <form className="space-y-5" onSubmit={handleSubmit}>
             <div>
-              <label className="block text-sm font-bold text-gray-400 uppercase tracking-widest mb-3">Name</label>
+              <label className="block text-[10px] font-semibold text-white/25 uppercase tracking-[0.15em] mb-2">Name</label>
               <input type="text" value={form.name} onChange={e => setForm(f => ({ ...f, name: e.target.value }))}
-                className="w-full bg-black/50 border border-white/10 rounded-2xl px-5 py-4 text-white placeholder-gray-600 focus:outline-none focus:border-orange-500 transition-colors focus:bg-white/5"
+                className="w-full bg-white/[0.03] border border-white/[0.07] rounded-xl px-4 py-3.5 text-white/80 placeholder-white/15 focus:outline-none focus:border-orange-500/40 transition-colors text-sm"
                 placeholder="John Doe" required />
             </div>
             <div>
-              <label className="block text-sm font-bold text-gray-400 uppercase tracking-widest mb-3">Email</label>
+              <label className="block text-[10px] font-semibold text-white/25 uppercase tracking-[0.15em] mb-2">Email</label>
               <input type="email" value={form.email} onChange={e => setForm(f => ({ ...f, email: e.target.value }))}
-                className="w-full bg-black/50 border border-white/10 rounded-2xl px-5 py-4 text-white placeholder-gray-600 focus:outline-none focus:border-orange-500 transition-colors focus:bg-white/5"
+                className="w-full bg-white/[0.03] border border-white/[0.07] rounded-xl px-4 py-3.5 text-white/80 placeholder-white/15 focus:outline-none focus:border-orange-500/40 transition-colors text-sm"
                 placeholder="john@example.com" required />
             </div>
             <div>
-              <label className="block text-sm font-bold text-gray-400 uppercase tracking-widest mb-3">Message</label>
+              <label className="block text-[10px] font-semibold text-white/25 uppercase tracking-[0.15em] mb-2">Message</label>
               <textarea rows={4} value={form.message} onChange={e => setForm(f => ({ ...f, message: e.target.value }))}
-                className="w-full bg-black/50 border border-white/10 rounded-2xl px-5 py-4 text-white placeholder-gray-600 focus:outline-none focus:border-orange-500 transition-colors focus:bg-white/5 resize-none"
+                className="w-full bg-white/[0.03] border border-white/[0.07] rounded-xl px-4 py-3.5 text-white/80 placeholder-white/15 focus:outline-none focus:border-orange-500/40 transition-colors resize-none text-sm"
                 placeholder="Tell me about your project..." required></textarea>
             </div>
             <button type="submit" disabled={isSubmitting}
-              className="w-full bg-orange-600 hover:bg-orange-500 text-white font-bold py-5 rounded-2xl flex items-center justify-center gap-3 transition-all duration-300 shadow-lg shadow-orange-600/20 hover:shadow-orange-600/40 mt-4 group disabled:opacity-60">
+              className="w-full bg-orange-500 hover:bg-orange-400 text-white font-semibold py-4 rounded-xl flex items-center justify-center gap-2.5 transition-all duration-300 shadow-[0_0_40px_rgba(249,115,22,0.25)] hover:shadow-[0_0_50px_rgba(249,115,22,0.35)] mt-2 group disabled:opacity-50 text-sm">
               {isSubmitting
                 ? <motion.span animate={{ opacity: [1, 0.4, 1] }} transition={{ duration: 0.9, repeat: Infinity }}>Sending...</motion.span>
-                : <><Send className="w-5 h-5 group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform" />Send Message</>}
+                : <><Send className="w-3.5 h-3.5 group-hover:translate-x-0.5 transition-transform" />Send Message</>}
             </button>
           </form>
         </motion.div>
@@ -1376,17 +1397,17 @@ const Contact = () => {
 // ─── Footer ───────────────────────────────────────────────────────────────
 
 const Footer = () => (
-  <footer className="bg-[#111111] pt-10 pb-16 px-6 text-gray-500 text-sm border-t border-white/10 relative z-10">
+  <footer className="bg-[#030303] pt-12 pb-16 px-6 relative z-10 border-t border-white/[0.04]">
     <div className="max-w-6xl mx-auto flex flex-col md:flex-row justify-between items-center gap-6">
-      <div className="font-bold text-2xl text-white tracking-tighter">
-        py<span className="text-orange-500">Kode</span>
+      <div className="font-black text-xl text-white/80 tracking-[-0.02em]">
+        py<span className="text-orange-400">Kode</span>
       </div>
-      <div className="font-medium">© {new Date().getFullYear()} pyKode. All rights reserved.</div>
-      <div className="flex items-center gap-4">
-        {[{ icon: <Github size={17} />, label: "GitHub" }, { icon: <Twitter size={17} />, label: "Twitter" }, { icon: <Linkedin size={17} />, label: "LinkedIn" }].map(s => (
+      <div className="text-xs font-medium text-white/20 tracking-wide">© {new Date().getFullYear()} pyKode. All rights reserved.</div>
+      <div className="flex items-center gap-3">
+        {[{ icon: <Github size={15} />, label: "GitHub" }, { icon: <Twitter size={15} />, label: "Twitter" }, { icon: <Linkedin size={15} />, label: "LinkedIn" }].map(s => (
           <motion.a key={s.label} href="#"
-            className="w-9 h-9 rounded-lg border border-white/[0.07] bg-white/[0.03] flex items-center justify-center text-gray-500 hover:text-orange-400 hover:border-orange-500/40 hover:bg-orange-500/8 transition-all duration-300"
-            whileHover={{ scale: 1.15, y: -2 }} whileTap={{ scale: 0.88 }}>
+            className="w-8 h-8 rounded-lg border border-white/[0.06] bg-white/[0.02] flex items-center justify-center text-white/20 hover:text-orange-400 hover:border-orange-500/30 hover:bg-orange-500/5 transition-all duration-300"
+            whileHover={{ scale: 1.1, y: -1 }} whileTap={{ scale: 0.9 }}>
             {s.icon}<span className="sr-only">{s.label}</span>
           </motion.a>
         ))}
@@ -1427,7 +1448,7 @@ const FAQ_ITEMS = [
 const FAQ = () => {
   const [openIdx, setOpenIdx] = useState<number | null>(null);
   return (
-    <section id="faq" className="py-32 px-6 bg-[#1c1c1c] relative z-10">
+    <section id="faq" className="py-32 px-6 bg-[#080808] relative z-10">
       <div className="max-w-3xl mx-auto">
         <motion.div
           initial={{ opacity: 0, y: 30 }}
@@ -1436,41 +1457,41 @@ const FAQ = () => {
           transition={{ duration: 0.7 }}
           className="text-center mb-16"
         >
-          <span className="inline-block px-4 py-1.5 rounded-full bg-orange-500/10 border border-orange-500/20 text-orange-400 text-xs font-bold tracking-widest uppercase mb-6">FAQ</span>
-          <h2 className="text-4xl md:text-6xl font-black tracking-tighter mb-5">
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/[0.04] border border-white/[0.08] text-white/40 text-[11px] font-semibold tracking-[0.15em] uppercase mb-6">FAQ</div>
+          <h2 className="text-4xl md:text-5xl font-black tracking-[-0.02em] mb-5">
             Common <span className="text-transparent bg-clip-text bg-gradient-to-r from-orange-400 to-amber-300">questions</span>
           </h2>
-          <p className="text-gray-400 text-lg">Everything you need to know before we start working together.</p>
+          <p className="text-white/35 text-base">Everything you need to know before we start working together.</p>
         </motion.div>
 
-        <div className="space-y-3">
+        <div className="space-y-2">
           {FAQ_ITEMS.map((item, i) => (
             <motion.div
               key={i}
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
-              transition={{ duration: 0.5, delay: i * 0.06 }}
-              className={`rounded-2xl border transition-all duration-300 overflow-hidden ${
+              transition={{ duration: 0.5, delay: i * 0.05 }}
+              className={`rounded-xl border transition-all duration-300 overflow-hidden ${
                 openIdx === i
-                  ? "bg-[#222222] border-orange-500/25"
-                  : "bg-[#1f1f1f] border-white/[0.06] hover:border-white/[0.10]"
+                  ? "bg-white/[0.04] border-orange-500/20"
+                  : "bg-white/[0.02] border-white/[0.05] hover:border-white/[0.09]"
               }`}
             >
               <button
                 className="w-full flex items-center justify-between px-7 py-5 text-left gap-4"
                 onClick={() => setOpenIdx(openIdx === i ? null : i)}
               >
-                <span className={`font-semibold text-[15px] leading-snug transition-colors ${openIdx === i ? "text-white" : "text-gray-200"}`}>
+                <span className={`font-semibold text-sm leading-snug transition-colors ${openIdx === i ? "text-white/90" : "text-white/50"}`}>
                   {item.q}
                 </span>
                 <motion.div
                   animate={{ rotate: openIdx === i ? 45 : 0 }}
                   transition={{ duration: 0.2 }}
-                  className={`flex-shrink-0 w-7 h-7 rounded-full flex items-center justify-center border transition-colors ${
+                  className={`flex-shrink-0 w-6 h-6 rounded-full flex items-center justify-center border transition-colors ${
                     openIdx === i
-                      ? "bg-orange-500/15 border-orange-500/30 text-orange-400"
-                      : "border-white/[0.08] text-gray-500"
+                      ? "bg-orange-500/10 border-orange-500/25 text-orange-400"
+                      : "border-white/[0.07] text-white/20"
                   }`}
                 >
                   <ChevronRight size={14} className="rotate-90" />
@@ -1485,7 +1506,7 @@ const FAQ = () => {
                     exit={{ height: 0, opacity: 0 }}
                     transition={{ duration: 0.28, ease: [0.16, 1, 0.3, 1] }}
                   >
-                    <p className="px-7 pb-6 text-gray-400 text-sm leading-relaxed">
+                    <p className="px-7 pb-6 text-white/30 text-sm leading-[1.8]">
                       {item.a}
                     </p>
                   </motion.div>
@@ -1504,19 +1525,19 @@ const FAQ = () => {
 const AmbientBlobs = () => (
   <div className="fixed inset-0 overflow-hidden pointer-events-none z-0">
     <motion.div
-      className="absolute top-[-10%] right-[-5%] w-[600px] h-[600px] rounded-full bg-orange-400/15 blur-[100px]"
-      animate={{ scale: [1, 1.2, 1], x: [0, -50, 0], y: [0, 50, 0] }}
-      transition={{ duration: 15, repeat: Infinity, ease: "easeInOut" }}
+      className="absolute top-[-15%] right-[-10%] w-[700px] h-[700px] rounded-full bg-orange-500/[0.055] blur-[130px]"
+      animate={{ scale: [1, 1.15, 1], x: [0, -40, 0], y: [0, 40, 0] }}
+      transition={{ duration: 20, repeat: Infinity, ease: "easeInOut" }}
     />
     <motion.div
-      className="absolute bottom-[30%] left-[-10%] w-[500px] h-[500px] rounded-full bg-amber-400/15 blur-[100px]"
-      animate={{ scale: [1, 1.3, 1], x: [0, 50, 0], y: [0, -30, 0] }}
-      transition={{ duration: 18, repeat: Infinity, ease: "easeInOut", delay: 2 }}
+      className="absolute bottom-[20%] left-[-15%] w-[600px] h-[600px] rounded-full bg-amber-500/[0.04] blur-[120px]"
+      animate={{ scale: [1, 1.2, 1], x: [0, 40, 0], y: [0, -25, 0] }}
+      transition={{ duration: 24, repeat: Infinity, ease: "easeInOut", delay: 3 }}
     />
     <motion.div
-      className="absolute top-[60%] right-[-5%] w-[400px] h-[400px] rounded-full bg-orange-300/10 blur-[80px]"
-      animate={{ scale: [1, 1.15, 1], y: [0, -40, 0] }}
-      transition={{ duration: 12, repeat: Infinity, ease: "easeInOut", delay: 4 }}
+      className="absolute top-[55%] right-[-8%] w-[450px] h-[450px] rounded-full bg-orange-400/[0.03] blur-[100px]"
+      animate={{ scale: [1, 1.12, 1], y: [0, -35, 0] }}
+      transition={{ duration: 16, repeat: Infinity, ease: "easeInOut", delay: 6 }}
     />
   </div>
 );
@@ -1528,7 +1549,7 @@ export default function Home() {
   return (
     <HireModalCtx.Provider value={() => setHireOpen(true)}>
       <HireModal open={hireOpen} onClose={() => setHireOpen(false)} />
-      <div className="min-h-screen bg-[#1c1c1c] text-white" style={{ fontFeatureSettings: '"ss01","ss02"' }}>
+      <div className="min-h-screen bg-[#080808] text-white" style={{ fontFeatureSettings: '"ss01","ss02"' }}>
         <ScrollProgress />
         <AmbientBlobs />
         <div className="relative z-10">

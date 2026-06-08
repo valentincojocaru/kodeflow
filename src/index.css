@@ -75,8 +75,8 @@
   --elevate-2: rgba(255,255,255, .06);
 
   /* Premium charcoal grey + orange theme */
-  --background: 0 0% 10%;
-  --foreground: 0 0% 95%;
+  --background: 0 0% 5%;
+  --foreground: 0 0% 96%;
 
   --border: 0 0% 17%;
   --card: 0 0% 13%;
