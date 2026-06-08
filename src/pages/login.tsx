@@ -45,15 +45,15 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="min-h-screen bg-[#080612] flex items-center justify-center px-4 relative overflow-hidden">
+    <div className="min-h-screen bg-[#141414] flex items-center justify-center px-4 relative overflow-hidden">
       {/* Background */}
-      <div className="absolute inset-0 bg-[radial-gradient(ellipse_80%_60%_at_50%_-10%,rgba(184,80,255,0.25),transparent)]" />
-      <div className="absolute inset-0 bg-[linear-gradient(rgba(184,80,255,0.02)_1px,transparent_1px),linear-gradient(90deg,rgba(184,80,255,0.02)_1px,transparent_1px)] bg-[size:60px_60px]" />
+      <div className="absolute inset-0 bg-[radial-gradient(ellipse_80%_60%_at_50%_-10%,rgba(249,115,22,0.18),transparent)]" />
+      <div className="absolute inset-0 bg-[linear-gradient(rgba(249,115,22,0.015)_1px,transparent_1px),linear-gradient(90deg,rgba(249,115,22,0.015)_1px,transparent_1px)] bg-[size:60px_60px]" />
       <motion.div className="absolute top-1/4 -left-48 w-96 h-96 rounded-full blur-[120px]"
-        style={{ background: "rgba(184,80,255,0.18)" }}
+        style={{ background: "rgba(249,115,22,0.15)" }}
         animate={{ scale: [1, 1.2, 1] }} transition={{ duration: 8, repeat: Infinity }} />
       <motion.div className="absolute bottom-1/4 -right-48 w-96 h-96 rounded-full blur-[120px]"
-        style={{ background: "rgba(240,80,200,0.14)" }}
+        style={{ background: "rgba(234,88,12,0.12)" }}
         animate={{ scale: [1, 1.2, 1] }} transition={{ duration: 10, repeat: Infinity, delay: 2 }} />
 
       {/* Back to home */}
@@ -68,13 +68,13 @@ export default function LoginPage() {
 
         {/* Card */}
         <div className="relative rounded-2xl p-[1px]"
-          style={{ background: "linear-gradient(135deg, rgba(184,80,255,0.5), rgba(240,80,200,0.3), rgba(184,80,255,0.1))" }}>
-          <div className="rounded-[15px] bg-[#0a0618]/98 backdrop-blur-xl overflow-hidden">
+          style={{ background: "linear-gradient(135deg, rgba(249,115,22,0.5), rgba(234,88,12,0.3), rgba(249,115,22,0.1))" }}>
+          <div className="rounded-[15px] bg-[#181818]/98 backdrop-blur-xl overflow-hidden">
 
             {/* Header */}
             <div className="px-8 pt-8 pb-6">
               <div className="flex items-center gap-2 mb-6">
-                <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-primary to-fuchsia-500 flex items-center justify-center">
+                <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-orange-500 to-orange-600 flex items-center justify-center">
                   <Zap size={17} className="text-white" />
                 </div>
                 <div>
@@ -87,7 +87,7 @@ export default function LoginPage() {
               <div className="flex gap-1 p-1 rounded-xl bg-white/[0.04] border border-white/[0.06] mb-6">
                 {(["login", "register"] as Tab[]).map((t) => (
                   <button key={t} onClick={() => { setTab(t); setError(""); }}
-                    className={`flex-1 py-2 text-sm font-semibold rounded-lg transition-all duration-200 ${tab === t ? "bg-gradient-to-r from-primary to-fuchsia-500 text-white shadow-[0_0_20px_rgba(184,80,255,0.4)]" : "text-muted-foreground hover:text-foreground"}`}>
+                    className={`flex-1 py-2 text-sm font-semibold rounded-lg transition-all duration-200 ${tab === t ? "bg-gradient-to-r from-orange-500 to-orange-600 text-white shadow-[0_0_20px_rgba(249,115,22,0.4)]" : "text-muted-foreground hover:text-foreground"}`}>
                     {t === "login" ? "Sign In" : "Create Account"}
                   </button>
                 ))}
@@ -134,7 +134,7 @@ export default function LoginPage() {
                         className="bg-white/[0.03] border-white/[0.08] focus:border-primary/50 pl-9 pr-9 h-11" required />
                     </Field>
                     <Button type="submit" disabled={loading}
-                      className="w-full h-11 mt-2 font-semibold bg-gradient-to-r from-primary to-fuchsia-500 text-white shadow-[0_0_30px_rgba(184,80,255,0.35)] hover:shadow-[0_0_50px_rgba(184,80,255,0.6)] transition-all">
+                      className="w-full h-11 mt-2 font-semibold bg-gradient-to-r from-orange-500 to-orange-600 text-white shadow-[0_0_30px_rgba(249,115,22,0.3)] hover:shadow-[0_0_50px_rgba(249,115,22,0.5)] transition-all">
                       {loading ? <motion.span animate={{ opacity: [1, 0.5, 1] }} transition={{ duration: 0.8, repeat: Infinity }}>Signing in...</motion.span>
                         : <><ArrowRight className="mr-2 h-4 w-4" />Sign In</>}
                     </Button>
@@ -175,7 +175,7 @@ export default function LoginPage() {
                         className="bg-white/[0.03] border-white/[0.08] focus:border-primary/50 pl-9 h-10" />
                     </Field>
                     <Button type="submit" disabled={loading}
-                      className="w-full h-11 mt-1 font-semibold bg-gradient-to-r from-primary to-fuchsia-500 text-white shadow-[0_0_30px_rgba(184,80,255,0.35)] hover:shadow-[0_0_50px_rgba(184,80,255,0.6)] transition-all">
+                      className="w-full h-11 mt-1 font-semibold bg-gradient-to-r from-orange-500 to-orange-600 text-white shadow-[0_0_30px_rgba(249,115,22,0.3)] hover:shadow-[0_0_50px_rgba(249,115,22,0.5)] transition-all">
                       {loading ? <motion.span animate={{ opacity: [1, 0.5, 1] }} transition={{ duration: 0.8, repeat: Infinity }}>Creating account...</motion.span>
                         : <><ArrowRight className="mr-2 h-4 w-4" />Create Account</>}
                     </Button>

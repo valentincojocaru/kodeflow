@@ -96,27 +96,27 @@ export default function Dashboard() {
   ];
 
   return (
-    <div className="min-h-screen bg-[#060410] text-foreground relative overflow-hidden">
+    <div className="min-h-screen bg-[#141414] text-foreground relative overflow-hidden">
       <CodeBackground />
       {/* Background layers */}
-      <div className="fixed inset-0 bg-[radial-gradient(ellipse_80%_50%_at_50%_-10%,rgba(184,85,255,0.12),transparent)] pointer-events-none" />
-      <div className="fixed inset-0 bg-[radial-gradient(ellipse_40%_60%_at_80%_80%,rgba(240,80,200,0.06),transparent)] pointer-events-none" />
-      <div className="fixed inset-0 bg-[linear-gradient(rgba(184,85,255,0.012)_1px,transparent_1px),linear-gradient(90deg,rgba(184,85,255,0.012)_1px,transparent_1px)] bg-[size:72px_72px] pointer-events-none" />
+      <div className="fixed inset-0 bg-[radial-gradient(ellipse_80%_50%_at_50%_-10%,rgba(249,115,22,0.12),transparent)] pointer-events-none" />
+      <div className="fixed inset-0 bg-[radial-gradient(ellipse_40%_60%_at_80%_80%,rgba(234,88,12,0.06),transparent)] pointer-events-none" />
+      <div className="fixed inset-0 bg-[linear-gradient(rgba(249,115,22,0.012)_1px,transparent_1px),linear-gradient(90deg,rgba(249,115,22,0.012)_1px,transparent_1px)] bg-[size:72px_72px] pointer-events-none" />
 
       {/* Sidebar */}
       <aside className="fixed left-0 top-0 h-full w-60 z-30 flex flex-col">
-        <div className="absolute inset-0 bg-[#0a0618]/90 backdrop-blur-2xl border-r border-white/[0.04]" />
+        <div className="absolute inset-0 bg-[#1a1a1a]/90 backdrop-blur-2xl border-r border-white/[0.04]" />
         <div className="absolute inset-y-0 right-0 w-px bg-gradient-to-b from-transparent via-primary/20 to-transparent" />
 
         <div className="relative flex flex-col h-full">
           {/* Logo */}
           <div className="px-5 pt-6 pb-5">
             <a href="/" className="flex items-center gap-2.5 group mb-6">
-              <div className="w-8 h-8 rounded-xl bg-gradient-to-br from-[#b855ff] to-[#f050c8] flex items-center justify-center shadow-lg shadow-primary/30 group-hover:shadow-primary/50 transition-shadow">
+              <div className="w-8 h-8 rounded-xl bg-gradient-to-br from-[#f97316] to-[#ea580c] flex items-center justify-center shadow-lg shadow-orange-500/30 group-hover:shadow-orange-500/50 transition-shadow">
                 <Sparkles size={13} className="text-white" />
               </div>
               <span className="font-black text-sm tracking-tight">
-                <span className="bg-gradient-to-r from-primary to-fuchsia-400 bg-clip-text text-transparent">py</span>
+                <span className="bg-gradient-to-r from-orange-500 to-orange-400 bg-clip-text text-transparent">py</span>
                 <span className="text-white">Kode</span>
               </span>
             </a>
@@ -125,7 +125,7 @@ export default function Dashboard() {
             <div className="p-3 rounded-2xl bg-gradient-to-br from-white/[0.04] to-white/[0.01] border border-white/[0.06] backdrop-blur-sm">
               <div className="flex items-center gap-3">
                 <div className="relative flex-shrink-0">
-                  <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-primary to-fuchsia-500 flex items-center justify-center text-sm font-black text-white shadow-md shadow-primary/30">
+                  <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-orange-500 to-orange-600 flex items-center justify-center text-sm font-black text-white shadow-md shadow-orange-500/30">
                     {user?.name?.[0]?.toUpperCase()}
                   </div>
                   <div className="absolute -bottom-0.5 -right-0.5 w-3 h-3 rounded-full bg-emerald-400 border-2 border-[#0a0618]" />
@@ -135,7 +135,7 @@ export default function Dashboard() {
                   <p className="text-[10px] text-muted-foreground/50 truncate">{user?.company || user?.email}</p>
                 </div>
                 <div className="flex-shrink-0">
-                  <span className="text-[9px] font-bold px-1.5 py-0.5 rounded-full bg-primary/15 text-primary border border-primary/20">CLIENT</span>
+                  <span className="text-[9px] font-bold px-1.5 py-0.5 rounded-full bg-orange-500/15 text-primary border border-orange-500/20">CLIENT</span>
                 </div>
               </div>
             </div>
@@ -152,12 +152,12 @@ export default function Dashboard() {
                     : "text-muted-foreground/60 hover:text-white/80 hover:bg-white/[0.03]"
                 }`}>
                 {tab === item.id && !selected && (
-                  <motion.div layoutId="nav-pill" className="absolute inset-0 rounded-xl bg-gradient-to-r from-primary/20 to-fuchsia-500/10 border border-primary/20" />
+                  <motion.div layoutId="nav-pill" className="absolute inset-0 rounded-xl bg-gradient-to-r from-primary/20 to-fuchsia-500/10 border border-orange-500/20" />
                 )}
                 <span className={`relative z-10 ${tab === item.id && !selected ? "text-primary" : ""}`}>{item.icon}</span>
                 <span className="relative z-10 flex-1 text-left">{item.label}</span>
                 {item.badge ? (
-                  <span className="relative z-10 text-[9px] font-black px-1.5 py-0.5 rounded-full bg-primary text-white min-w-[18px] text-center">{item.badge}</span>
+                  <span className="relative z-10 text-[9px] font-black px-1.5 py-0.5 rounded-full bg-orange-500 text-white min-w-[18px] text-center">{item.badge}</span>
                 ) : null}
               </button>
             ))}
@@ -193,7 +193,7 @@ export default function Dashboard() {
 
             <motion.div key="projects" initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }} transition={{ duration: 0.25 }}>
               {/* Header */}
-              <div className="px-8 py-5 border-b border-white/[0.04] bg-[#060410]/80 backdrop-blur-xl sticky top-0 z-20">
+              <div className="px-8 py-5 border-b border-white/[0.04] bg-[#141414]/80 backdrop-blur-xl sticky top-0 z-20">
                 <div className="flex items-center justify-between">
                   <div>
                     <h1 className="text-xl font-black tracking-tight">My Projects</h1>
@@ -209,7 +209,7 @@ export default function Dashboard() {
               {/* Stats */}
               <div className="px-8 pt-6 pb-4 grid grid-cols-3 gap-4">
                 {[
-                  { label: "Total Projects",  value: projects.length,                                              icon: <Layers size={15} />,      color: "#b855ff", sub: "all time" },
+                  { label: "Total Projects",  value: projects.length,                                              icon: <Layers size={15} />,      color: "#f97316", sub: "all time" },
                   { label: "In Progress",     value: projects.filter(p => p.status === "in_progress").length,     icon: <Zap size={15} />,         color: "#34d399", sub: "active now" },
                   { label: "Completed",       value: projects.filter(p => p.status === "completed").length,       icon: <CheckCircle2 size={15} />, color: "#4ade80", sub: "delivered" },
                 ].map((s, i) => (
@@ -290,7 +290,7 @@ export default function Dashboard() {
           ) : tab === "messages" ? (
 
             <motion.div key="messages" initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }} transition={{ duration: 0.25 }}>
-              <div className="px-8 py-5 border-b border-white/[0.04] bg-[#060410]/80 backdrop-blur-xl sticky top-0 z-20">
+              <div className="px-8 py-5 border-b border-white/[0.04] bg-[#141414]/80 backdrop-blur-xl sticky top-0 z-20">
                 <h1 className="text-xl font-black tracking-tight">Messages</h1>
                 <p className="text-xs text-muted-foreground/50 mt-0.5">Project updates and notes from your developer</p>
               </div>
@@ -298,8 +298,8 @@ export default function Dashboard() {
               <div className="px-8 py-6 space-y-3 max-w-3xl">
                 {allUpdates.length === 0 && (
                   <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="text-center py-24">
-                    <div className="w-16 h-16 rounded-2xl bg-primary/8 border border-primary/15 flex items-center justify-center mx-auto mb-4">
-                      <Bell size={22} className="text-primary/60" />
+                    <div className="w-16 h-16 rounded-2xl bg-orange-500/8 border border-orange-500/15 flex items-center justify-center mx-auto mb-4">
+                      <Bell size={22} className="text-orange-500/60" />
                     </div>
                     <h3 className="text-base font-bold mb-1.5">No messages yet</h3>
                     <p className="text-muted-foreground/50 text-xs">Updates from your developer will appear here.</p>
@@ -312,7 +312,7 @@ export default function Dashboard() {
                     <motion.div key={u.id} initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.04 }}
                       className="flex gap-3.5 p-4 rounded-2xl border border-white/[0.05] bg-white/[0.018] hover:bg-white/[0.025] transition-colors">
                       <div className="w-8 h-8 rounded-xl flex items-center justify-center text-[11px] font-black text-white flex-shrink-0 shadow-lg"
-                        style={{ background: isAdmin ? "linear-gradient(135deg,#b855ff,#f050c8)" : "#1e293b", boxShadow: isAdmin ? "0 4px 12px rgba(184,85,255,0.3)" : "none" }}>
+                        style={{ background: isAdmin ? "linear-gradient(135deg,#f97316,#ea580c)" : "#1e293b", boxShadow: isAdmin ? "0 4px 12px rgba(249,115,22,0.3)" : "none" }}>
                         {isAdmin ? "K" : u.author_name?.[0]?.toUpperCase()}
                       </div>
                       <div className="flex-1 min-w-0">
@@ -336,7 +336,7 @@ export default function Dashboard() {
           ) : (
 
             <motion.div key="invoices" initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }} transition={{ duration: 0.25 }}>
-              <div className="px-8 py-5 border-b border-white/[0.04] bg-[#060410]/80 backdrop-blur-xl sticky top-0 z-20">
+              <div className="px-8 py-5 border-b border-white/[0.04] bg-[#141414]/80 backdrop-blur-xl sticky top-0 z-20">
                 <h1 className="text-xl font-black tracking-tight">Invoices</h1>
                 <p className="text-xs text-muted-foreground/50 mt-0.5">Billing history and payment status</p>
               </div>
@@ -344,7 +344,7 @@ export default function Dashboard() {
               <div className="px-8 py-6 space-y-6">
                 <div className="grid grid-cols-3 gap-4">
                   {[
-                    { label: "Total Invoiced", value: `$${totalInvoiced.toFixed(2)}`,    icon: <BarChart3 size={15} />,    color: "#b855ff", sub: "all invoices" },
+                    { label: "Total Invoiced", value: `$${totalInvoiced.toFixed(2)}`,    icon: <BarChart3 size={15} />,    color: "#f97316", sub: "all invoices" },
                     { label: "Total Paid",     value: `$${totalPaid.toFixed(2)}`,        icon: <CheckCircle2 size={15} />, color: "#34d399", sub: "cleared" },
                     { label: "Pending",        value: `${pendingInvoices}`,              icon: <Clock size={15} />,        color: "#f59e0b", sub: `invoice${pendingInvoices !== 1 ? "s" : ""} due` },
                   ].map((s, i) => (
@@ -364,8 +364,8 @@ export default function Dashboard() {
 
                 {allInvoices.length === 0 ? (
                   <div className="text-center py-20">
-                    <div className="w-16 h-16 rounded-2xl bg-primary/8 border border-primary/15 flex items-center justify-center mx-auto mb-4">
-                      <Receipt size={22} className="text-primary/60" />
+                    <div className="w-16 h-16 rounded-2xl bg-orange-500/8 border border-orange-500/15 flex items-center justify-center mx-auto mb-4">
+                      <Receipt size={22} className="text-orange-500/60" />
                     </div>
                     <h3 className="text-base font-bold mb-1.5">No invoices yet</h3>
                     <p className="text-muted-foreground/50 text-xs">Your invoices will appear here once created.</p>
@@ -410,7 +410,7 @@ function ProjectDetail({ project: p, onBack, message, setMessage, onSend, sendin
   const sm = STATUS_META[p.status] || STATUS_META.pending;
   return (
     <motion.div initial={{ opacity: 0, x: 24 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -24 }} transition={{ duration: 0.3 }}>
-      <div className="px-8 py-4 border-b border-white/[0.04] bg-[#060410]/80 backdrop-blur-xl sticky top-0 z-20 flex items-center gap-4">
+      <div className="px-8 py-4 border-b border-white/[0.04] bg-[#141414]/80 backdrop-blur-xl sticky top-0 z-20 flex items-center gap-4">
         <button onClick={onBack} className="flex items-center gap-1.5 text-xs text-muted-foreground/60 hover:text-primary transition-colors font-medium">
           <ArrowLeft size={13} /> Back
         </button>
@@ -446,7 +446,7 @@ function ProjectDetail({ project: p, onBack, message, setMessage, onSend, sendin
               </div>
               <div className="h-1.5 rounded-full bg-white/[0.04] overflow-hidden">
                 <motion.div className="h-full rounded-full"
-                  style={{ background: `linear-gradient(to right, #b855ff, #f050c8)` }}
+                  style={{ background: `linear-gradient(to right, #f97316, #ea580c)` }}
                   initial={{ width: 0 }} animate={{ width: `${p.progress}%` }} transition={{ duration: 1.4, ease: "easeOut" }} />
               </div>
             </div>
@@ -465,7 +465,7 @@ function ProjectDetail({ project: p, onBack, message, setMessage, onSend, sendin
               <div className="flex flex-wrap gap-2">
                 {p.live_url && (
                   <a href={p.live_url} target="_blank" rel="noopener"
-                    className="flex items-center gap-2 px-4 py-2 rounded-xl bg-primary/10 border border-primary/20 text-primary text-xs font-bold hover:bg-primary/18 transition-all">
+                    className="flex items-center gap-2 px-4 py-2 rounded-xl bg-primary/10 border border-orange-500/20 text-primary text-xs font-bold hover:bg-primary/18 transition-all">
                     <ExternalLink size={11} /> Live Site
                   </a>
                 )}
@@ -512,7 +512,7 @@ function ProjectDetail({ project: p, onBack, message, setMessage, onSend, sendin
                 placeholder="Ask a question or leave a note for the developer..."
                 className="bg-white/[0.02] border-white/[0.06] focus:border-primary/30 resize-none text-xs" rows={3} />
               <Button onClick={onSend} disabled={sending || !message.trim()} size="sm"
-                className="mt-2 bg-gradient-to-r from-primary to-fuchsia-500 text-white text-xs font-bold shadow-lg shadow-primary/20 hover:shadow-primary/30 transition-shadow">
+                className="mt-2 bg-gradient-to-r from-orange-500 to-orange-600 text-white text-xs font-bold shadow-lg shadow-orange-500/20 hover:shadow-orange-500/30 transition-shadow">
                 {sending ? "Sending..." : <><Send size={11} className="mr-1.5" />Send Note</>}
               </Button>
             </div>
@@ -549,7 +549,7 @@ function ProjectDetail({ project: p, onBack, message, setMessage, onSend, sendin
           <GlassCard title="Need Help?">
             <p className="text-[11px] text-muted-foreground/50 mb-3 leading-relaxed">Got a question? I respond within 2 hours.</p>
             <a href="/#contact">
-              <Button size="sm" variant="outline" className="w-full border-primary/20 text-primary hover:bg-primary/8 text-xs font-bold">
+              <Button size="sm" variant="outline" className="w-full border-orange-500/20 text-primary hover:bg-orange-500/8 text-xs font-bold">
                 <MessageSquare size={11} className="mr-1.5" /> Contact Developer
               </Button>
             </a>
@@ -574,8 +574,8 @@ function GlassCard({ title, children }: { title: string; children: React.ReactNo
 function EmptyState() {
   return (
     <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="text-center py-24">
-      <div className="w-20 h-20 rounded-2xl bg-primary/8 border border-primary/15 flex items-center justify-center mx-auto mb-5">
-        <Rocket size={28} className="text-primary/60" />
+      <div className="w-20 h-20 rounded-2xl bg-orange-500/8 border border-orange-500/15 flex items-center justify-center mx-auto mb-5">
+        <Rocket size={28} className="text-orange-500/60" />
       </div>
       <h3 className="text-lg font-bold mb-2">No projects yet</h3>
       <p className="text-muted-foreground/50 text-xs max-w-xs mx-auto">Your projects will appear here once your developer assigns them to your account.</p>
@@ -585,9 +585,9 @@ function EmptyState() {
 
 function LoadingScreen() {
   return (
-    <div className="min-h-screen bg-[#060410] flex items-center justify-center">
+    <div className="min-h-screen bg-[#141414] flex items-center justify-center">
       <div className="flex flex-col items-center gap-4">
-        <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-primary to-fuchsia-500 flex items-center justify-center animate-pulse shadow-lg shadow-primary/30">
+        <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-orange-500 to-orange-600 flex items-center justify-center animate-pulse shadow-lg shadow-orange-500/30">
           <Sparkles size={16} className="text-white" />
         </div>
         <div className="flex gap-1.5">

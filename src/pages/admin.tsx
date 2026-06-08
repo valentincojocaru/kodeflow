@@ -143,28 +143,28 @@ export default function Admin() {
   ];
 
   return (
-    <div className="min-h-screen bg-[#060410] text-foreground relative overflow-hidden">
+    <div className="min-h-screen bg-[#141414] text-foreground relative overflow-hidden">
       <CodeBackground />
-      <div className="fixed inset-0 bg-[radial-gradient(ellipse_80%_50%_at_20%_-10%,rgba(184,85,255,0.1),transparent)] pointer-events-none" />
-      <div className="fixed inset-0 bg-[radial-gradient(ellipse_40%_50%_at_90%_90%,rgba(240,80,200,0.05),transparent)] pointer-events-none" />
-      <div className="fixed inset-0 bg-[linear-gradient(rgba(184,85,255,0.012)_1px,transparent_1px),linear-gradient(90deg,rgba(184,85,255,0.012)_1px,transparent_1px)] bg-[size:72px_72px] pointer-events-none" />
+      <div className="fixed inset-0 bg-[radial-gradient(ellipse_80%_50%_at_20%_-10%,rgba(249,115,22,0.1),transparent)] pointer-events-none" />
+      <div className="fixed inset-0 bg-[radial-gradient(ellipse_40%_50%_at_90%_90%,rgba(234,88,12,0.05),transparent)] pointer-events-none" />
+      <div className="fixed inset-0 bg-[linear-gradient(rgba(249,115,22,0.012)_1px,transparent_1px),linear-gradient(90deg,rgba(249,115,22,0.012)_1px,transparent_1px)] bg-[size:72px_72px] pointer-events-none" />
 
       {/* Sidebar */}
       <aside className="fixed left-0 top-0 h-full w-60 z-30 flex flex-col">
-        <div className="absolute inset-0 bg-[#0a0618]/90 backdrop-blur-2xl border-r border-white/[0.04]" />
+        <div className="absolute inset-0 bg-[#1a1a1a]/90 backdrop-blur-2xl border-r border-white/[0.04]" />
         <div className="absolute inset-y-0 right-0 w-px bg-gradient-to-b from-transparent via-primary/20 to-transparent" />
 
         <div className="relative flex flex-col h-full">
           {/* Logo */}
           <div className="px-5 pt-6 pb-5">
             <a href="/" className="flex items-center gap-2.5 group mb-6">
-              <div className="w-8 h-8 rounded-xl bg-gradient-to-br from-[#b855ff] to-[#f050c8] flex items-center justify-center shadow-lg shadow-primary/30 group-hover:shadow-primary/50 transition-shadow">
+              <div className="w-8 h-8 rounded-xl bg-gradient-to-br from-[#f97316] to-[#ea580c] flex items-center justify-center shadow-lg shadow-orange-500/30 group-hover:shadow-orange-500/50 transition-shadow">
                 <Shield size={13} className="text-white" />
               </div>
               <div>
                 <p className="text-[8px] font-black tracking-[0.18em] uppercase text-muted-foreground/40">Admin Panel</p>
                 <p className="text-sm font-black tracking-tight leading-tight">
-                  <span className="bg-gradient-to-r from-primary to-fuchsia-400 bg-clip-text text-transparent">py</span>
+                  <span className="bg-gradient-to-r from-orange-500 to-orange-400 bg-clip-text text-transparent">py</span>
                   <span className="text-white">Kode</span>
                 </p>
               </div>
@@ -173,14 +173,14 @@ export default function Admin() {
             {/* Admin card */}
             <div className="p-3 rounded-2xl bg-gradient-to-br from-primary/10 to-fuchsia-500/5 border border-primary/15">
               <div className="flex items-center gap-3">
-                <div className="w-8 h-8 rounded-xl bg-gradient-to-br from-primary to-fuchsia-500 flex items-center justify-center text-[11px] font-black text-white shadow-md shadow-primary/30 flex-shrink-0">
+                <div className="w-8 h-8 rounded-xl bg-gradient-to-br from-orange-500 to-orange-600 flex items-center justify-center text-[11px] font-black text-white shadow-md shadow-orange-500/30 flex-shrink-0">
                   {user?.name?.[0]?.toUpperCase()}
                 </div>
                 <div className="min-w-0 flex-1">
-                  <p className="text-xs font-bold truncate text-primary/90">{user?.name}</p>
-                  <p className="text-[9px] text-primary/40">Administrator</p>
+                  <p className="text-xs font-bold truncate text-orange-400">{user?.name}</p>
+                  <p className="text-[9px] text-orange-500/40">Administrator</p>
                 </div>
-                <span className="text-[8px] font-black px-1.5 py-0.5 rounded-full bg-primary text-white flex-shrink-0">ADMIN</span>
+                <span className="text-[8px] font-black px-1.5 py-0.5 rounded-full bg-orange-600 text-white flex-shrink-0">ADMIN</span>
               </div>
             </div>
           </div>
@@ -239,7 +239,7 @@ export default function Admin() {
                   <p className="text-[9px] font-black tracking-[0.15em] uppercase text-muted-foreground/30 mb-3">Projects</p>
                   <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
                     {[
-                      { label: "Total Clients",  value: stats?.totalClients ?? "—",   icon: <Users size={15} />,  color: "#b855ff", sub: "registered" },
+                      { label: "Total Clients",  value: stats?.totalClients ?? "—",   icon: <Users size={15} />,  color: "#f97316", sub: "registered" },
                       { label: "Total Projects", value: stats?.totalProjects ?? "—",  icon: <Layers size={15} />, color: "#818cf8", sub: "all time" },
                       { label: "Active",         value: stats?.activeProjects ?? "—", icon: <Zap size={15} />,    color: "#34d399", sub: "in progress" },
                       { label: "Pending",        value: stats?.pendingRequests ?? "—",icon: <Clock size={15} />,  color: "#f59e0b", sub: "awaiting" },
@@ -263,7 +263,7 @@ export default function Admin() {
                   <p className="text-[9px] font-black tracking-[0.15em] uppercase text-muted-foreground/30 mb-3">Revenue</p>
                   <div className="grid grid-cols-3 gap-4">
                     {[
-                      { label: "Total Invoiced", value: stats?.totalInvoiced, color: "#b855ff", icon: <BarChart3 size={15} />, sub: "issued" },
+                      { label: "Total Invoiced", value: stats?.totalInvoiced, color: "#f97316", icon: <BarChart3 size={15} />, sub: "issued" },
                       { label: "Collected",      value: stats?.totalPaid,     color: "#34d399", icon: <CheckCircle2 size={15} />, sub: "cleared" },
                       { label: "Outstanding",    value: stats?.totalPending,  color: "#f59e0b", icon: <Clock size={15} />, sub: "pending" },
                     ].map((r, i) => (
@@ -343,7 +343,7 @@ export default function Admin() {
             <Pane key="projects">
               <Header title="Projects" subtitle={`${filteredProjects.length} project${filteredProjects.length !== 1 ? "s" : ""}`}>
                 <Button onClick={() => { setEditingProject(null); setShowProjectForm(true); }}
-                  className="bg-gradient-to-r from-primary to-fuchsia-500 text-white text-xs h-9 shadow-lg shadow-primary/20 font-bold">
+                  className="bg-gradient-to-r from-orange-500 to-orange-600 text-white text-xs h-9 shadow-lg shadow-orange-500/20 font-bold">
                   <Plus size={13} className="mr-1.5" /> New Project
                 </Button>
               </Header>
@@ -395,7 +395,7 @@ export default function Admin() {
                           <Trash2 size={13} />
                         </button>
                       </div>
-                      <ChevronRight size={14} className="text-muted-foreground/20 group-hover:text-primary/40 transition-colors flex-shrink-0 cursor-pointer" onClick={() => loadProject(p.id)} />
+                      <ChevronRight size={14} className="text-muted-foreground/20 group-hover:text-orange-500/40 transition-colors flex-shrink-0 cursor-pointer" onClick={() => loadProject(p.id)} />
                     </motion.div>
                   );
                 })}
@@ -472,7 +472,7 @@ export default function Admin() {
                         placeholder="Write an update for the client..." rows={2}
                         className="bg-white/[0.02] border-white/[0.06] focus:border-primary/30 resize-none text-xs" />
                       <Button onClick={sendUpdate} disabled={sending || !updateMsg.trim()} size="sm"
-                        className="bg-gradient-to-r from-primary to-fuchsia-500 text-white text-xs font-bold shadow-lg shadow-primary/20">
+                        className="bg-gradient-to-r from-orange-500 to-orange-600 text-white text-xs font-bold shadow-lg shadow-orange-500/20">
                         {sending ? "Sending..." : <><Send size={11} className="mr-1.5" />Send Update</>}
                       </Button>
                     </div>
@@ -536,7 +536,7 @@ export default function Admin() {
                         </div>
                         <div className="flex gap-2">
                           <Button onClick={createInvoice} disabled={savingInvoice || !invoiceForm.amount} size="sm"
-                            className="flex-1 bg-gradient-to-r from-primary to-fuchsia-500 text-white text-xs h-8 font-bold">
+                            className="flex-1 bg-gradient-to-r from-orange-500 to-orange-600 text-white text-xs h-8 font-bold">
                             {savingInvoice ? "..." : "Create"}
                           </Button>
                           <Button onClick={() => setShowInvoiceForm(false)} size="sm" variant="outline" className="h-8 border-white/[0.07] text-xs">Cancel</Button>
@@ -561,7 +561,7 @@ export default function Admin() {
               <div className="px-8 py-6 space-y-5">
                 <div className="grid grid-cols-3 gap-4">
                   {[
-                    { label: "Total Invoiced", value: stats?.totalInvoiced, color: "#b855ff", icon: <BarChart3 size={15} />, sub: "issued" },
+                    { label: "Total Invoiced", value: stats?.totalInvoiced, color: "#f97316", icon: <BarChart3 size={15} />, sub: "issued" },
                     { label: "Collected",      value: stats?.totalPaid,     color: "#34d399", icon: <CheckCircle2 size={15} />, sub: "cleared" },
                     { label: "Outstanding",    value: stats?.totalPending,  color: "#f59e0b", icon: <Clock size={15} />, sub: "pending" },
                   ].map((r, i) => (
@@ -621,7 +621,7 @@ export default function Admin() {
                 {users.map((u, i) => {
                   const clientProjects = projects.filter(p => p.client_id === u.id);
                   const activeCount = clientProjects.filter(p => p.status === "in_progress").length;
-                  const colors = ["#b855ff", "#818cf8", "#f472b6", "#34d399", "#f59e0b"];
+                  const colors = ["#f97316", "#818cf8", "#f472b6", "#34d399", "#f59e0b"];
                   const color = colors[u.id % colors.length];
                   return (
                     <motion.div key={u.id} initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.05 }}
@@ -673,7 +673,7 @@ function Pane({ children }: { children: React.ReactNode }) {
 
 function Header({ title, subtitle, children }: { title: string; subtitle: string; children?: React.ReactNode }) {
   return (
-    <div className="px-8 py-5 border-b border-white/[0.04] bg-[#060410]/80 backdrop-blur-xl sticky top-0 z-20 flex items-center justify-between gap-4">
+    <div className="px-8 py-5 border-b border-white/[0.04] bg-[#141414]/80 backdrop-blur-xl sticky top-0 z-20 flex items-center justify-between gap-4">
       <div>
         <h1 className="text-xl font-black tracking-tight">{title}</h1>
         {subtitle && <p className="text-xs text-muted-foreground/45 mt-0.5">{subtitle}</p>}
@@ -741,7 +741,7 @@ function QuickEdit({ project, token, onUpdate }: { project: any; token: string |
       </div>
       <div className="col-span-2">
         <Button onClick={save} disabled={saving} size="sm"
-          className="bg-gradient-to-r from-primary to-fuchsia-500 text-white text-xs font-bold shadow-lg shadow-primary/20">
+          className="bg-gradient-to-r from-orange-500 to-orange-600 text-white text-xs font-bold shadow-lg shadow-orange-500/20">
           {saving ? "Saving..." : <><CheckCircle2 size={11} className="mr-1.5" />Save Changes</>}
         </Button>
       </div>
@@ -874,7 +874,7 @@ function ProjectForm({ users, initial, token, onSuccess }: { users: any[]; initi
         </div>
         <div className="md:col-span-2">
           <Button type="submit" disabled={saving}
-            className="bg-gradient-to-r from-primary to-fuchsia-500 text-white text-xs font-bold shadow-lg shadow-primary/20">
+            className="bg-gradient-to-r from-orange-500 to-orange-600 text-white text-xs font-bold shadow-lg shadow-orange-500/20">
             {saving ? "Saving..." : initial ? "Save Changes" : "Create Project"}
           </Button>
         </div>
@@ -885,9 +885,9 @@ function ProjectForm({ users, initial, token, onSuccess }: { users: any[]; initi
 
 function LoadingScreen() {
   return (
-    <div className="min-h-screen bg-[#060410] flex items-center justify-center">
+    <div className="min-h-screen bg-[#141414] flex items-center justify-center">
       <div className="flex flex-col items-center gap-4">
-        <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-primary to-fuchsia-500 flex items-center justify-center animate-pulse shadow-lg shadow-primary/30">
+        <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-orange-500 to-orange-600 flex items-center justify-center animate-pulse shadow-lg shadow-orange-500/30">
           <Sparkles size={16} className="text-white" />
         </div>
         <div className="flex gap-1.5">

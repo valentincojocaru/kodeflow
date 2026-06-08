@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from "react";
+import React, { useState, useRef, useEffect, useContext, createContext } from "react";
 import { motion, useMotionValue, useSpring, useTransform, useScroll, useInView, AnimatePresence } from "framer-motion";
 import emailjs from "@emailjs/browser";
 import { Button } from "@/components/ui/button";
@@ -133,14 +133,115 @@ function AnimatedNumber({ target, suffix = "" }: { target: number; suffix?: stri
   return <span ref={ref}>{n}{suffix}</span>;
 }
 
+// ─── Hire Modal Context ───────────────────────────────────────────────────
+
+const HireModalCtx = createContext<() => void>(() => {});
+
+const HireModal = ({ open, onClose }: { open: boolean; onClose: () => void }) => {
+  const [form, setForm] = useState({ name: "", email: "", message: "" });
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const { toast } = useToast();
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setIsSubmitting(true);
+    try {
+      if (EMAILJS_PUBLIC_KEY && EMAILJS_SERVICE_ID && EMAILJS_TEMPLATE_ID) {
+        await emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_ID,
+          { from_name: form.name, from_email: form.email, message: form.message },
+          EMAILJS_PUBLIC_KEY
+        );
+        toast({ title: "✦ Message Sent!", description: "I'll respond within 24 hours." });
+      } else {
+        await new Promise(r => setTimeout(r, 1200));
+        toast({ title: "✦ Demo Mode", description: "Configure VITE_EMAILJS_* env vars to enable real email." });
+      }
+      setForm({ name: "", email: "", message: "" });
+      onClose();
+    } catch {
+      toast({ title: "Failed to send", description: "Please try again or reach out directly.", variant: "destructive" });
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
+  return (
+    <AnimatePresence>
+      {open && (
+        <motion.div
+          key="hire-modal"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          transition={{ duration: 0.2 }}
+          className="fixed inset-0 z-[9999] flex items-center justify-center p-4"
+          onClick={onClose}
+        >
+          <div className="absolute inset-0 bg-black/75 backdrop-blur-md" />
+          <motion.div
+            initial={{ opacity: 0, scale: 0.96, y: 24 }}
+            animate={{ opacity: 1, scale: 1, y: 0 }}
+            exit={{ opacity: 0, scale: 0.96, y: 24 }}
+            transition={{ duration: 0.28, ease: [0.16, 1, 0.3, 1] }}
+            className="relative bg-[#1c1c1c] border border-white/[0.09] rounded-3xl p-8 w-full max-w-lg shadow-2xl shadow-black/60"
+            onClick={e => e.stopPropagation()}
+          >
+            <button onClick={onClose}
+              className="absolute top-5 right-5 w-8 h-8 flex items-center justify-center rounded-xl bg-white/[0.04] hover:bg-white/[0.08] text-gray-500 hover:text-white transition-all">
+              <X size={16} />
+            </button>
+            <div className="mb-7">
+              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-orange-500/10 border border-orange-500/20 text-orange-400 text-xs font-semibold tracking-wide uppercase mb-4">
+                <Zap size={10} /> Let's Work Together
+              </div>
+              <h2 className="text-2xl font-black tracking-tight mb-1.5">Start a project</h2>
+              <p className="text-gray-400 text-sm">Tell me about your idea. I'll get back within 24 hours.</p>
+            </div>
+            <form className="space-y-4" onSubmit={handleSubmit}>
+              <div>
+                <label className="block text-[10px] font-bold text-gray-500 uppercase tracking-widest mb-2">Your Name</label>
+                <input type="text" value={form.name}
+                  onChange={e => setForm(f => ({ ...f, name: e.target.value }))}
+                  className="w-full bg-[#141414] border border-white/[0.08] rounded-xl px-4 py-3 text-white placeholder-gray-600 focus:outline-none focus:border-orange-500/60 focus:bg-[#181818] transition-all text-sm"
+                  placeholder="John Doe" required />
+              </div>
+              <div>
+                <label className="block text-[10px] font-bold text-gray-500 uppercase tracking-widest mb-2">Email Address</label>
+                <input type="email" value={form.email}
+                  onChange={e => setForm(f => ({ ...f, email: e.target.value }))}
+                  className="w-full bg-[#141414] border border-white/[0.08] rounded-xl px-4 py-3 text-white placeholder-gray-600 focus:outline-none focus:border-orange-500/60 focus:bg-[#181818] transition-all text-sm"
+                  placeholder="john@example.com" required />
+              </div>
+              <div>
+                <label className="block text-[10px] font-bold text-gray-500 uppercase tracking-widest mb-2">Project Details</label>
+                <textarea rows={4} value={form.message}
+                  onChange={e => setForm(f => ({ ...f, message: e.target.value }))}
+                  className="w-full bg-[#141414] border border-white/[0.08] rounded-xl px-4 py-3 text-white placeholder-gray-600 focus:outline-none focus:border-orange-500/60 focus:bg-[#181818] transition-all resize-none text-sm"
+                  placeholder="Describe your project, goals, and timeline..." required />
+              </div>
+              <button type="submit" disabled={isSubmitting}
+                className="w-full bg-orange-600 hover:bg-orange-500 text-white font-bold py-4 rounded-xl flex items-center justify-center gap-2 transition-all duration-300 shadow-lg shadow-orange-600/20 hover:shadow-orange-500/30 group disabled:opacity-60">
+                {isSubmitting
+                  ? <motion.span animate={{ opacity: [1, 0.4, 1] }} transition={{ duration: 0.9, repeat: Infinity }}>Sending...</motion.span>
+                  : <><Send className="w-4 h-4 group-hover:translate-x-1 transition-transform" /> Send Message</>}
+              </button>
+            </form>
+          </motion.div>
+        </motion.div>
+      )}
+    </AnimatePresence>
+  );
+};
+
 // ─── Navbar ──────────────────────────────────────────────────────────────
 
 const Navbar = () => {
+  const openHire = useContext(HireModalCtx);
   const [open, setOpen] = useState(false);
   const { scrollY } = useScroll();
-  const navBg = useTransform(scrollY, [0, 60], ["rgba(250,250,248,0)", "rgba(250,250,248,0.95)"]);
-  const navBorder = useTransform(scrollY, [0, 60], ["rgba(229,231,235,0)", "rgba(229,231,235,1)"]);
-  const navBlur = useTransform(scrollY, [0, 60], ["blur(0px)", "blur(14px)"]);
+  const navBg = useTransform(scrollY, [0, 60], ["rgba(26,26,26,0)", "rgba(22,22,22,0.96)"]);
+  const navBorder = useTransform(scrollY, [0, 60], ["rgba(255,255,255,0)", "rgba(255,255,255,0.06)"]);
+  const navBlur = useTransform(scrollY, [0, 60], ["blur(0px)", "blur(18px)"]);
 
   const links = ["About", "Services", "Process", "Work", "Pricing"];
 
@@ -160,7 +261,7 @@ const Navbar = () => {
           initial={{ opacity: 0, x: -20 }}
           animate={{ opacity: 1, x: 0 }}
           transition={{ duration: 0.5 }}
-          className="font-bold text-2xl tracking-tighter text-[#111111] z-10"
+          className="font-bold text-2xl tracking-tighter text-white z-10"
         >
           py<span className="text-orange-600">Kode</span>
         </motion.a>
@@ -173,15 +274,15 @@ const Navbar = () => {
               initial={{ opacity: 0, y: -10 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.5, delay: 0.08 * i }}
-              className="text-gray-600 hover:text-orange-600 transition-colors relative group"
+              className="text-gray-400 hover:text-orange-600 transition-colors relative group"
             >
               {item}
-              <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-orange-600 transition-all duration-300 group-hover:w-full" />
+              <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-orange-500 transition-all duration-300 group-hover:w-full" />
             </motion.a>
           ))}
           <a
             href="/login"
-            className="text-sm font-medium text-gray-500 hover:text-orange-600 transition-colors flex items-center gap-1.5 border border-gray-200 hover:border-orange-300 px-3 py-1.5 rounded-lg"
+            className="text-sm font-medium text-gray-500 hover:text-orange-600 transition-colors flex items-center gap-1.5 border border-white/[0.08] hover:border-orange-300 px-3 py-1.5 rounded-lg"
           >
             <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><rect width="18" height="11" x="3" y="11" rx="2" ry="2" /><path d="M7 11V7a5 5 0 0 1 10 0v4" /></svg>
             Client Portal
@@ -194,12 +295,12 @@ const Navbar = () => {
           transition={{ duration: 0.5 }}
           className="hidden md:block z-10"
         >
-          <a href="#contact" className="bg-[#111111] hover:bg-orange-600 text-white px-6 py-2.5 rounded-full font-medium transition-all duration-300 shadow-lg shadow-orange-500/0 hover:shadow-orange-500/25">
+          <button onClick={openHire} className="bg-orange-600 hover:bg-orange-500 text-white px-6 py-2.5 rounded-full font-medium transition-all duration-300 shadow-lg shadow-orange-600/20 hover:shadow-orange-500/35">
             Hire Me
-          </a>
+          </button>
         </motion.div>
 
-        <button className="md:hidden z-10 text-[#111111]" onClick={() => setOpen(!open)}>
+        <button className="md:hidden z-10 text-white" onClick={() => setOpen(!open)}>
           {open ? <X /> : <Menu />}
         </button>
       </div>
@@ -210,23 +311,23 @@ const Navbar = () => {
             initial={{ opacity: 0, height: 0 }}
             animate={{ opacity: 1, height: "auto" }}
             exit={{ opacity: 0, height: 0 }}
-            className="md:hidden bg-[#fafaf8] border-b border-gray-200 overflow-hidden"
+            className="md:hidden bg-[#1c1c1c] border-b border-white/[0.08] overflow-hidden"
           >
             <div className="flex flex-col px-6 py-4 gap-4">
               {links.map(item => (
                 <a key={item} href={`#${item.toLowerCase()}`} onClick={() => setOpen(false)}
-                  className="text-lg font-medium text-gray-700 hover:text-orange-600 py-2 border-b border-gray-100 last:border-0">
+                  className="text-lg font-medium text-gray-300 hover:text-orange-600 py-2 border-b border-white/[0.06] last:border-0">
                   {item}
                 </a>
               ))}
               <a href="/login" onClick={() => setOpen(false)}
-                className="text-lg font-medium text-gray-700 hover:text-orange-600">
+                className="text-lg font-medium text-gray-300 hover:text-orange-600">
                 Client Portal
               </a>
-              <a href="#contact" onClick={() => setOpen(false)}
-                className="bg-orange-600 text-white text-center py-3 rounded-xl font-medium mt-4">
+              <button onClick={() => { setOpen(false); openHire(); }}
+                className="bg-orange-600 text-white text-center py-3 rounded-xl font-medium mt-4 w-full">
                 Hire Me
-              </a>
+              </button>
             </div>
           </motion.div>
         )}
@@ -238,6 +339,7 @@ const Navbar = () => {
 // ─── Hero ─────────────────────────────────────────────────────────────────
 
 const Hero = () => {
+  const openHire = useContext(HireModalCtx);
   const heroRef = useRef<HTMLElement>(null);
   const { scrollYProgress } = useScroll({ target: heroRef, offset: ["start start", "end start"] });
   const heroY = useTransform(scrollYProgress, [0, 1], ["0%", "40%"]);
@@ -254,7 +356,7 @@ const Hero = () => {
           initial={{ opacity: 0, scale: 0.9 }}
           animate={{ opacity: 1, scale: 1 }}
           transition={{ duration: 0.5 }}
-          className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-orange-50 border border-orange-200 text-orange-700 text-sm font-medium mb-8 overflow-hidden relative"
+          className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-orange-500/10 border border-orange-500/25 text-orange-400 text-sm font-medium mb-8 overflow-hidden relative"
         >
           <div className="w-2 h-2 rounded-full bg-orange-500 animate-pulse" />
           Available for projects
@@ -265,7 +367,7 @@ const Hero = () => {
           />
         </motion.div>
 
-        <h1 className="text-6xl md:text-8xl font-black tracking-tighter leading-[1.05] mb-8 text-[#111111]">
+        <h1 className="text-6xl md:text-8xl font-black tracking-tighter leading-[1.05] mb-8">
           {["Build Faster.", "Build Smarter.", null].map((line, i) => (
             <div key={i} className="overflow-hidden">
               <motion.div
@@ -279,23 +381,13 @@ const Hero = () => {
               </motion.div>
             </div>
           ))}
-          <div className="overflow-hidden">
-            <motion.div
-              initial={{ y: "100%", filter: "blur(10px)" }}
-              animate={{ y: 0, filter: "blur(0px)" }}
-              transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1], delay: 0.2 }}
-              className="text-transparent bg-clip-text bg-gradient-to-r from-orange-500 to-amber-400"
-            >
-              Dominate.
-            </motion.div>
-          </div>
         </h1>
 
         <motion.p
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, delay: 0.4 }}
-          className="text-xl md:text-2xl text-gray-600 mb-10 max-w-2xl leading-relaxed font-light"
+          className="text-xl md:text-2xl text-gray-400 mb-10 max-w-2xl leading-relaxed font-light"
         >
           I'm a freelance full-stack engineer building fast, scalable, and premium web applications for ambitious brands.
         </motion.p>
@@ -306,17 +398,17 @@ const Hero = () => {
           transition={{ duration: 0.8, delay: 0.5 }}
           className="flex flex-col sm:flex-row gap-6 items-start sm:items-center"
         >
-          <motion.a
-            ref={btnRef}
+          <motion.button
+            ref={btnRef as any}
             style={{ x: btnX, y: btnY }}
-            href="#contact"
+            onClick={openHire}
             className="bg-orange-600 text-white px-8 py-4 rounded-full font-semibold flex items-center justify-center gap-2 transition-shadow hover:shadow-xl hover:shadow-orange-500/30 hover:bg-orange-700"
           >
             Start a Project <ArrowRight className="w-5 h-5" />
-          </motion.a>
-          <a href="#work" className="text-[#111111] font-semibold flex items-center justify-center group relative overflow-hidden px-4 py-2">
+          </motion.button>
+          <a href="#work" className="text-gray-300 hover:text-white font-semibold flex items-center justify-center group relative overflow-hidden px-4 py-2">
             <span className="relative z-10">View My Work</span>
-            <span className="absolute bottom-0 left-0 w-full h-0.5 bg-[#111111] transform origin-left scale-x-0 transition-transform duration-300 group-hover:scale-x-100" />
+            <span className="absolute bottom-0 left-0 w-full h-0.5 bg-white transform origin-left scale-x-0 transition-transform duration-300 group-hover:scale-x-100" />
           </a>
         </motion.div>
 
@@ -328,12 +420,12 @@ const Hero = () => {
         >
           <div className="flex -space-x-3">
             {[
-              ["bg-blue-100", "text-blue-600"],
-              ["bg-green-100", "text-green-600"],
-              ["bg-purple-100", "text-purple-600"],
-              ["bg-yellow-100", "text-yellow-600"],
+              ["bg-white/[0.08] text-gray-400"],
+              ["bg-white/[0.08] text-gray-400"],
+              ["bg-white/[0.08] text-gray-400"],
+              ["bg-white/[0.08] text-gray-400"],
             ].map(([bg, text], i) => (
-              <div key={i} className={`w-10 h-10 rounded-full border-2 border-[#fafaf8] ${bg} ${text} flex items-center justify-center text-xs font-bold`}>
+              <div key={i} className={`w-10 h-10 rounded-full border-2 border-[#1a1a1a] ${bg} ${text} flex items-center justify-center text-xs font-bold`}>
                 U{i + 1}
               </div>
             ))}
@@ -351,10 +443,10 @@ const Hero = () => {
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ duration: 1, delay: 1.5 }}
-        className="absolute bottom-10 left-6 md:left-auto flex flex-col items-center gap-2 text-gray-400 text-sm font-medium tracking-widest uppercase"
+        className="absolute bottom-10 left-6 md:left-auto flex flex-col items-center gap-2 text-gray-600 text-sm font-medium tracking-widest uppercase"
       >
         <span className="-rotate-90 origin-center mb-6">Scroll</span>
-        <div className="w-[1px] h-12 bg-gray-300 relative overflow-hidden">
+        <div className="w-[1px] h-12 bg-white/20 relative overflow-hidden">
           <motion.div
             className="absolute top-0 left-0 w-full h-full bg-orange-500"
             animate={{ y: ["-100%", "100%"] }}
@@ -372,7 +464,7 @@ const TECHS = ["React", "TypeScript", "Node.js", "Python", "Next.js", "PostgreSQ
   "Tailwind CSS", "OpenAI API", "AWS", "Vite", "Redis", "Stripe", "Docker", "Framer Motion"];
 
 const TechStack = () => (
-  <div className="border-y border-gray-200 bg-white py-6 overflow-hidden flex relative z-10">
+  <div className="border-y border-white/[0.06] bg-[#1e1e1e] py-6 overflow-hidden flex relative z-10">
     <motion.div
       className="flex gap-16 whitespace-nowrap px-4 font-mono text-sm text-gray-400 uppercase tracking-wider font-bold"
       animate={{ x: ["0%", "-50%"] }}
@@ -384,8 +476,8 @@ const TechStack = () => (
         </React.Fragment>
       ))}
     </motion.div>
-    <div className="absolute top-0 bottom-0 left-0 w-32 bg-gradient-to-r from-white to-transparent z-10 pointer-events-none" />
-    <div className="absolute top-0 bottom-0 right-0 w-32 bg-gradient-to-l from-white to-transparent z-10 pointer-events-none" />
+    <div className="absolute top-0 bottom-0 left-0 w-32 bg-gradient-to-r from-[#1e1e1e] to-transparent z-10 pointer-events-none" />
+    <div className="absolute top-0 bottom-0 right-0 w-32 bg-gradient-to-l from-[#1e1e1e] to-transparent z-10 pointer-events-none" />
   </div>
 );
 
@@ -399,7 +491,7 @@ const StatsBar = () => {
     { num: 99, suffix: ".9%", label: "Uptime Average", icon: <TrendingUp size={18} /> },
   ];
   return (
-    <div className="bg-[#111111] py-14 px-6 relative z-10">
+    <div className="bg-[#141414] py-14 px-6 relative z-10">
       <div className="max-w-6xl mx-auto grid grid-cols-2 lg:grid-cols-4 gap-8">
         {stats.map((s, i) => (
           <motion.div key={i}
@@ -514,13 +606,13 @@ const About = () => (
         viewport={{ once: true, margin: "-100px" }}
         transition={{ duration: 0.8 }}
       >
-        <h2 className="text-4xl md:text-5xl font-black mb-8 tracking-tighter leading-tight text-[#111111]">
+        <h2 className="text-4xl md:text-5xl font-black mb-8 tracking-tighter leading-tight text-white">
           The difference is in the details.
         </h2>
-        <p className="text-xl text-gray-600 mb-6 leading-relaxed">
+        <p className="text-xl text-gray-400 mb-6 leading-relaxed">
           When you hire me, you don't get an account manager or a junior dev learning on your dime. You get me directly — building your product from architecture to deployment.
         </p>
-        <p className="text-xl text-gray-600 leading-relaxed">
+        <p className="text-xl text-gray-400 leading-relaxed">
           I specialize in taking complex requirements and turning them into intuitive, blazing-fast applications that your users will actually love using.
         </p>
       </motion.div>
@@ -540,12 +632,12 @@ const About = () => (
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true, margin: "-50px" }}
               transition={{ duration: 0.5, delay: i * 0.1 }}
-              className="bg-white p-8 rounded-3xl border border-gray-100 shadow-sm hover:shadow-md transition-shadow group"
+              className="bg-white p-8 rounded-3xl border border-white/[0.06] shadow-sm hover:shadow-md transition-shadow group"
             >
-              <div className="text-5xl font-black text-orange-600 mb-3 group-hover:scale-110 transition-transform origin-left">
+              <div className="text-5xl font-black text-orange-500 mb-3 group-hover:scale-110 transition-transform origin-left">
                 <AnimatedCounter to={stat.num} />{stat.suffix}
               </div>
-              <div className="font-medium text-gray-900">{stat.text}</div>
+              <div className="font-medium text-white">{stat.text}</div>
             </motion.div>
           ))}
         </div>
@@ -565,7 +657,7 @@ const Process = () => {
   ];
 
   return (
-    <section id="process" className="py-32 px-6 bg-white relative z-10">
+    <section id="process" className="py-32 px-6 bg-[#1e1e1e] relative z-10">
       <div className="max-w-6xl mx-auto">
         <motion.div
           initial={{ opacity: 0, y: 30 }}
@@ -573,8 +665,8 @@ const Process = () => {
           viewport={{ once: true }}
           className="mb-20 text-center"
         >
-          <h2 className="text-5xl font-black mb-6 tracking-tighter text-[#111111]">How we work</h2>
-          <p className="text-2xl text-gray-600 max-w-2xl mx-auto font-light">A streamlined process focused on shipping.</p>
+          <h2 className="text-5xl font-black mb-6 tracking-tighter text-white">How we work</h2>
+          <p className="text-2xl text-gray-400 max-w-2xl mx-auto font-light">A streamlined process focused on shipping.</p>
         </motion.div>
 
         <div className="grid md:grid-cols-4 gap-8 relative">
@@ -600,12 +692,12 @@ const Process = () => {
               <div className="w-12 h-12 rounded-xl bg-orange-600 flex items-center justify-center mb-6 text-white shadow-lg shadow-orange-500/30">
                 {phase.icon}
               </div>
-              <div className="text-6xl font-black text-gray-100 mb-4 select-none group-hover:text-orange-100 transition-colors">{phase.step}</div>
+              <div className="text-6xl font-black text-white/[0.05] mb-4 select-none group-hover:text-orange-100 transition-colors">{phase.step}</div>
               <div className="flex items-center gap-2 mb-2">
-                <h3 className="text-xl font-bold tracking-tight text-[#111111]">{phase.title}</h3>
-                <span className="text-[10px] text-gray-400 border border-gray-200 px-2 py-0.5 rounded-full font-mono">{phase.time}</span>
+                <h3 className="text-xl font-bold tracking-tight text-white">{phase.title}</h3>
+                <span className="text-[10px] text-gray-500 border border-white/[0.08] px-2 py-0.5 rounded-full font-mono">{phase.time}</span>
               </div>
-              <p className="text-gray-600 leading-relaxed text-sm">{phase.desc}</p>
+              <p className="text-gray-400 leading-relaxed text-sm">{phase.desc}</p>
             </motion.div>
           ))}
         </div>
@@ -629,7 +721,7 @@ const Services = () => {
   ];
 
   return (
-    <section id="services" className="py-32 px-6 relative z-10 bg-[#fafaf8]">
+    <section id="services" className="py-32 px-6 relative z-10 bg-[#1c1c1c]">
       <div className="max-w-6xl mx-auto">
         <motion.div
           initial={{ opacity: 0, y: 30 }}
@@ -637,8 +729,8 @@ const Services = () => {
           viewport={{ once: true }}
           className="mb-20"
         >
-          <h2 className="text-5xl font-black mb-6 tracking-tighter text-[#111111]">Expertise</h2>
-          <p className="text-2xl text-gray-600 max-w-2xl font-light">What I can build for you.</p>
+          <h2 className="text-5xl font-black mb-6 tracking-tighter text-white">Expertise</h2>
+          <p className="text-2xl text-gray-400 max-w-2xl font-light">What I can build for you.</p>
         </motion.div>
 
         <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
@@ -649,13 +741,13 @@ const Services = () => {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true, margin: "-50px" }}
               transition={{ duration: 0.6, delay: (i % 4) * 0.1 }}
-              className="p-8 rounded-3xl bg-white border border-gray-100 hover:border-orange-200 hover:shadow-xl hover:shadow-orange-500/5 hover:-translate-y-2 transition-all duration-300 group"
+              className="p-8 rounded-3xl bg-[#252525] border border-white/[0.07] hover:border-orange-200 hover:shadow-xl hover:shadow-orange-500/5 hover:-translate-y-2 transition-all duration-300 group"
             >
-              <div className="mb-6 bg-orange-50 w-16 h-16 rounded-2xl flex items-center justify-center shadow-sm group-hover:scale-110 transition-transform">
+              <div className="mb-6 bg-orange-500/10 w-16 h-16 rounded-2xl flex items-center justify-center shadow-sm group-hover:scale-110 transition-transform">
                 {service.icon}
               </div>
-              <h3 className="text-lg font-bold mb-3 tracking-tight text-[#111111]">{service.title}</h3>
-              <p className="text-gray-600 leading-relaxed text-sm">{service.desc}</p>
+              <h3 className="text-lg font-bold mb-3 tracking-tight text-white">{service.title}</h3>
+              <p className="text-gray-400 leading-relaxed text-sm">{service.desc}</p>
             </motion.div>
           ))}
         </div>
@@ -674,7 +766,7 @@ const Work = () => {
   ];
 
   return (
-    <section id="work" className="py-32 px-6 bg-white relative z-10">
+    <section id="work" className="py-32 px-6 bg-[#1e1e1e] relative z-10">
       <div className="max-w-6xl mx-auto">
         <motion.div
           initial={{ opacity: 0, y: 30 }}
@@ -683,10 +775,10 @@ const Work = () => {
           className="flex flex-col md:flex-row justify-between items-start md:items-end mb-20 gap-6"
         >
           <div>
-            <h2 className="text-5xl font-black mb-6 tracking-tighter text-[#111111]">Selected Work</h2>
-            <p className="text-2xl text-gray-600 font-light">Recent projects I've built.</p>
+            <h2 className="text-5xl font-black mb-6 tracking-tighter text-white">Selected Work</h2>
+            <p className="text-2xl text-gray-400 font-light">Recent projects I've built.</p>
           </div>
-          <a href="#" className="flex items-center gap-2 font-semibold text-orange-600 hover:text-orange-700 group pb-2 border-b border-orange-200 hover:border-orange-600 transition-colors">
+          <a href="#" className="flex items-center gap-2 font-semibold text-orange-400 hover:text-orange-300 group pb-2 border-b border-orange-200 hover:border-orange-600 transition-colors">
             View GitHub <ChevronRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
           </a>
         </motion.div>
@@ -716,11 +808,11 @@ const Work = () => {
                 <div className="h-[1px] w-8 bg-orange-600" />
                 <div className="text-sm font-bold text-orange-600 uppercase tracking-widest">{project.tag}</div>
               </div>
-              <h3 className="text-2xl font-bold group-hover:text-orange-600 transition-colors tracking-tight text-[#111111] mb-3">{project.title}</h3>
-              <p className="text-gray-600 text-sm leading-relaxed mb-4">{project.desc}</p>
+              <h3 className="text-2xl font-bold group-hover:text-orange-600 transition-colors tracking-tight text-white mb-3">{project.title}</h3>
+              <p className="text-gray-400 text-sm leading-relaxed mb-4">{project.desc}</p>
               <div className="flex flex-wrap gap-1.5">
                 {project.tech.map(t => (
-                  <span key={t} className="px-2.5 py-1 rounded-lg text-xs font-medium border border-gray-200 text-gray-500 bg-gray-50">{t}</span>
+                  <span key={t} className="px-2.5 py-1 rounded-lg text-xs font-medium border border-white/[0.08] text-gray-500 bg-white/[0.02]">{t}</span>
                 ))}
               </div>
             </motion.div>
@@ -745,7 +837,7 @@ const Comparison = () => {
   ];
 
   return (
-    <section className="py-32 px-6 bg-[#fafaf8] relative z-10">
+    <section className="py-32 px-6 bg-[#1c1c1c] relative z-10">
       <div className="max-w-4xl mx-auto">
         <motion.div
           initial={{ opacity: 0, y: 30 }}
@@ -753,21 +845,21 @@ const Comparison = () => {
           viewport={{ once: true }}
           className="text-center mb-20"
         >
-          <h2 className="text-5xl font-black mb-6 tracking-tighter text-[#111111]">
+          <h2 className="text-5xl font-black mb-6 tracking-tighter text-white">
             pyKode <span className="text-orange-600">vs The Rest</span>
           </h2>
-          <p className="text-xl text-gray-600 font-light">Stop paying 10x more for slower results and junior code.</p>
+          <p className="text-xl text-gray-400 font-light">Stop paying 10x more for slower results and junior code.</p>
         </motion.div>
 
         <motion.div initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}>
           <div className="grid grid-cols-3 gap-0 mb-2">
             <div className="px-5 py-3" />
             <div className="px-5 py-3 text-center text-sm font-bold text-gray-500 rounded-t-xl"
-              style={{ background: "rgba(0,0,0,0.03)", border: "1px solid rgba(0,0,0,0.06)", borderBottom: "none" }}>
+              style={{ background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.08)", borderBottom: "none" }}>
               Agency / Freelancer
             </div>
             <div className="px-5 py-3 text-center rounded-t-xl relative"
-              style={{ background: "linear-gradient(135deg, rgba(234,88,12,0.12), rgba(251,146,60,0.08))", border: "1px solid rgba(234,88,12,0.3)", borderBottom: "none" }}>
+              style={{ background: "linear-gradient(135deg, rgba(249,115,22,0.15), rgba(234,88,12,0.08))", border: "1px solid rgba(249,115,22,0.35)", borderBottom: "none" }}>
               <span className="text-sm font-bold text-orange-600">pyKode</span>
               <div className="absolute -top-3 left-1/2 -translate-x-1/2 bg-orange-600 text-white text-[9px] font-black px-3 py-0.5 rounded-full tracking-widest uppercase whitespace-nowrap shadow-lg shadow-orange-500/30">
                 Best Choice
@@ -779,15 +871,15 @@ const Comparison = () => {
             <motion.div key={i} className="grid grid-cols-3 gap-0"
               initial={{ opacity: 0, x: -20 }} whileInView={{ opacity: 1, x: 0 }}
               viewport={{ once: true }} transition={{ delay: i * 0.07 }}>
-              <div className="px-5 py-4 text-sm font-medium text-gray-700 border-b border-gray-100">{row.label}</div>
-              <div className="px-5 py-4 text-center text-sm text-gray-500 border-b border-x border-gray-100"
-                style={{ background: "rgba(0,0,0,0.015)" }}>
+              <div className="px-5 py-4 text-sm font-medium text-gray-300 border-b border-white/[0.06]">{row.label}</div>
+              <div className="px-5 py-4 text-center text-sm text-gray-500 border-b border-x border-white/[0.06]"
+                style={{ background: "rgba(255,255,255,0.02)" }}>
                 <div className="flex items-center justify-center gap-1.5">
                   <Minus size={12} className="text-red-400" />{row.agency}
                 </div>
               </div>
               <div className="px-5 py-4 text-center text-sm font-semibold border-b border-x"
-                style={{ background: "rgba(234,88,12,0.04)", borderColor: "rgba(234,88,12,0.2)", color: "#c2410c" }}>
+                style={{ background: "rgba(249,115,22,0.06)", borderColor: "rgba(249,115,22,0.2)", color: "#fb923c" }}>
                 <div className="flex items-center justify-center gap-1.5">
                   <CheckCircle2 size={13} className="text-orange-500" />{row.me}
                 </div>
@@ -797,8 +889,8 @@ const Comparison = () => {
 
           <div className="grid grid-cols-3 gap-0">
             <div />
-            <div className="px-5 py-4 rounded-b-xl" style={{ background: "rgba(0,0,0,0.02)", border: "1px solid rgba(0,0,0,0.06)", borderTop: "none" }} />
-            <div className="px-5 py-4 rounded-b-xl" style={{ background: "rgba(234,88,12,0.06)", border: "1px solid rgba(234,88,12,0.25)", borderTop: "none" }}>
+            <div className="px-5 py-4 rounded-b-xl" style={{ background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.07)", borderTop: "none" }} />
+            <div className="px-5 py-4 rounded-b-xl" style={{ background: "rgba(249,115,22,0.08)", border: "1px solid rgba(249,115,22,0.3)", borderTop: "none" }}>
               <a href="#contact" className="w-full bg-orange-600 hover:bg-orange-700 text-white text-xs font-bold py-2 px-4 rounded-xl transition-all flex items-center justify-center gap-1 shadow-md shadow-orange-500/20">
                 Choose pyKode <ArrowRight className="w-3 h-3" />
               </a>
@@ -835,7 +927,7 @@ const Pricing = () => {
   ];
 
   return (
-    <section id="pricing" className="py-32 px-6 bg-white relative z-10">
+    <section id="pricing" className="py-32 px-6 bg-[#1e1e1e] relative z-10">
       <div className="max-w-5xl mx-auto">
         <motion.div
           initial={{ opacity: 0, y: 30 }}
@@ -843,8 +935,8 @@ const Pricing = () => {
           viewport={{ once: true }}
           className="mb-20 text-center"
         >
-          <h2 className="text-5xl font-black mb-6 tracking-tighter text-[#111111]">Transparent Pricing</h2>
-          <p className="text-2xl text-gray-600 font-light">Simple, predictable rates for high-quality engineering.</p>
+          <h2 className="text-5xl font-black mb-6 tracking-tighter text-white">Transparent Pricing</h2>
+          <p className="text-2xl text-gray-400 font-light">Simple, predictable rates for high-quality engineering.</p>
         </motion.div>
 
         <div className="grid md:grid-cols-3 gap-8 items-center">
@@ -885,7 +977,7 @@ const Pricing = () => {
                 className={`rounded-[2rem] p-10 flex flex-col relative ${
                   tier.popular
                     ? "bg-[#111111] text-white shadow-2xl shadow-black/25 md:scale-105 z-10"
-                    : "bg-white border border-gray-200 shadow-sm"
+                    : "bg-[#1f1f1f] border border-white/[0.07] shadow-sm"
                 }`}
               >
                 {tier.popular && (
@@ -893,19 +985,19 @@ const Pricing = () => {
                     Most Popular
                   </div>
                 )}
-                <h3 className={`text-xl font-bold mb-4 ${tier.popular ? "text-gray-300" : "text-gray-600"}`}>{tier.name}</h3>
+                <h3 className={`text-xl font-bold mb-4 ${tier.popular ? "text-gray-300" : "text-gray-400"}`}>{tier.name}</h3>
                 <div className="mb-6 flex items-baseline gap-2">
-                  <span className={`text-5xl font-black tracking-tighter ${tier.popular ? "text-orange-400" : "text-[#111111]"}`}>{tier.price}</span>
+                  <span className={`text-5xl font-black tracking-tighter ${tier.popular ? "text-orange-400" : "text-white"}`}>{tier.price}</span>
                   <span className={tier.popular ? "text-gray-400 text-sm" : "text-gray-500 text-sm"}>/ {tier.period}</span>
                 </div>
-                <p className={`mb-8 text-sm leading-relaxed ${tier.popular ? "text-gray-400" : "text-gray-600"}`}>{tier.desc}</p>
+                <p className={`mb-8 text-sm leading-relaxed ${tier.popular ? "text-gray-400" : "text-gray-400"}`}>{tier.desc}</p>
                 <ul className="space-y-4 mb-10 flex-grow">
                   {tier.features.map((f, j) => (
                     <li key={j} className="flex items-start gap-3">
                       <div className={`mt-0.5 p-1 rounded-full shrink-0 ${tier.popular ? "bg-orange-500/20 text-orange-400" : "bg-orange-100 text-orange-600"}`}>
                         <CheckCircle2 className="w-3 h-3" strokeWidth={3} />
                       </div>
-                      <span className={`font-medium text-sm ${tier.popular ? "text-gray-300" : "text-gray-700"}`}>{f}</span>
+                      <span className={`font-medium text-sm ${tier.popular ? "text-gray-300" : "text-gray-300"}`}>{f}</span>
                     </li>
                   ))}
                 </ul>
@@ -913,7 +1005,7 @@ const Pricing = () => {
                   className={`w-full py-4 rounded-2xl font-bold transition-all duration-300 text-center text-sm ${
                     tier.popular
                       ? "bg-orange-600 text-white hover:bg-orange-500 shadow-lg shadow-orange-500/25"
-                      : "bg-gray-100 text-gray-900 hover:bg-gray-200"
+                      : "bg-white/[0.06] text-white hover:bg-gray-200"
                   }`}>
                   {tier.name === "Custom" ? "Contact Me" : "Get Started"}
                 </a>
@@ -999,14 +1091,14 @@ const Booking = () => {
   };
 
   return (
-    <section className="py-32 px-6 bg-[#fafaf8] relative z-10">
+    <section className="py-32 px-6 bg-[#1c1c1c] relative z-10">
       <div className="max-w-3xl mx-auto">
         <motion.div className="text-center mb-16"
           initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}>
-          <h2 className="text-5xl font-black mb-6 tracking-tighter text-[#111111]">
+          <h2 className="text-5xl font-black mb-6 tracking-tighter text-white">
             Pick a slot. <span className="text-orange-600">Let's talk.</span>
           </h2>
-          <p className="text-xl text-gray-600 font-light">Select a day and time, share project details — I'll reply within 2 hours.</p>
+          <p className="text-xl text-gray-400 font-light">Select a day and time, share project details — I'll reply within 2 hours.</p>
         </motion.div>
 
         <div className="flex items-center justify-center gap-3 mb-10">
@@ -1015,7 +1107,7 @@ const Booking = () => {
             return (
               <React.Fragment key={i}>
                 <div className={`flex items-center gap-2 text-xs font-medium transition-colors ${i <= stepIdx ? "text-orange-600" : "text-gray-400"}`}>
-                  <div className={`w-6 h-6 rounded-full border flex items-center justify-center text-[10px] font-bold transition-all ${i < stepIdx ? "bg-orange-600 border-orange-600 text-white" : i === stepIdx ? "border-orange-600 text-orange-600" : "border-gray-200 text-gray-400"}`}>
+                  <div className={`w-6 h-6 rounded-full border flex items-center justify-center text-[10px] font-bold transition-all ${i < stepIdx ? "bg-orange-600 border-orange-600 text-white" : i === stepIdx ? "border-orange-600 text-orange-600" : "border-white/[0.08] text-gray-400"}`}>
                     {i < stepIdx ? <CheckCircle2 size={12} /> : i + 1}
                   </div>
                   <span className="hidden sm:inline">{label}</span>
@@ -1029,10 +1121,10 @@ const Booking = () => {
         <AnimatePresence mode="wait">
           {step === "pick" && (
             <motion.div key="pick" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -16 }}>
-              <div className="bg-white rounded-3xl border border-gray-100 shadow-sm p-8">
+              <div className="bg-white rounded-3xl border border-white/[0.06] shadow-sm p-8">
                 <div className="flex items-center justify-between mb-6">
-                  <p className="text-sm font-semibold text-[#111111]">Pick a day — next week</p>
-                  <span className="text-xs text-gray-400 border border-gray-200 px-2 py-0.5 rounded-full font-mono">EET · UTC+2</span>
+                  <p className="text-sm font-semibold text-white">Pick a day — next week</p>
+                  <span className="text-xs text-gray-400 border border-white/[0.08] px-2 py-0.5 rounded-full font-mono">EET · UTC+2</span>
                 </div>
 
                 <div className="grid grid-cols-5 gap-2 mb-8">
@@ -1041,11 +1133,11 @@ const Booking = () => {
                       onClick={() => { setSelectedDay(d.label); setSelectedSlot(null); }}
                       className={`flex flex-col items-center py-3 rounded-xl border transition-all duration-200 ${
                         selectedDay === d.label
-                          ? "border-orange-500 bg-orange-50 shadow-md shadow-orange-500/10"
-                          : "border-gray-200 bg-gray-50 hover:border-orange-300 hover:bg-orange-50/50"
+                          ? "border-orange-500 bg-orange-500/8 shadow-md shadow-orange-500/15"
+                          : "border-white/[0.08] bg-white/[0.03] hover:border-orange-500/40 hover:bg-orange-500/5"
                       }`}>
                       <span className="text-[10px] text-gray-500 tracking-wider uppercase mb-1">{d.label}</span>
-                      <span className={`text-xl font-bold ${selectedDay === d.label ? "text-orange-600" : "text-[#111111]"}`}>{d.date}</span>
+                      <span className={`text-xl font-bold ${selectedDay === d.label ? "text-orange-600" : "text-white"}`}>{d.date}</span>
                       <span className="text-[10px] text-gray-400">{d.month}</span>
                     </motion.button>
                   ))}
@@ -1054,7 +1146,7 @@ const Booking = () => {
                 <AnimatePresence>
                   {selectedDay && (
                     <motion.div initial={{ opacity: 0, height: 0 }} animate={{ opacity: 1, height: "auto" }} exit={{ opacity: 0, height: 0 }}>
-                      <p className="text-sm font-semibold mb-4 text-[#111111]">
+                      <p className="text-sm font-semibold mb-4 text-white">
                         Pick a time — <span className="text-gray-500 font-normal">{selectedDay}, {dayDates.find(d => d.label === selectedDay)?.date} {dayDates.find(d => d.label === selectedDay)?.month}</span>
                       </p>
                       <div className="grid grid-cols-3 gap-2 mb-8">
@@ -1064,9 +1156,9 @@ const Booking = () => {
                             <motion.button key={slot} whileHover={taken ? {} : { scale: 1.03 }} whileTap={taken ? {} : { scale: 0.97 }}
                               disabled={taken} onClick={() => !taken && setSelectedSlot(slot)}
                               className={`py-3 px-3 rounded-xl border text-sm font-medium transition-all duration-200 ${
-                                taken ? "border-gray-100 text-gray-300 cursor-not-allowed" :
+                                taken ? "border-white/[0.06] text-gray-300 cursor-not-allowed" :
                                   selectedSlot === slot ? "border-orange-500 bg-orange-50 text-orange-600 shadow-md shadow-orange-500/10" :
-                                    "border-gray-200 bg-gray-50 hover:border-orange-300 hover:bg-orange-50/50 text-[#111111]"
+                                    "border-white/[0.08] bg-white/[0.03] hover:border-orange-500/40 hover:bg-orange-500/5 text-white"
                               }`}>
                               {taken ? <span className="text-[11px] line-through">Taken</span> : slot}
                             </motion.button>
@@ -1090,15 +1182,15 @@ const Booking = () => {
 
           {step === "form" && (
             <motion.div key="form" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -16 }}>
-              <div className="bg-white rounded-3xl border border-gray-100 shadow-sm">
+              <div className="bg-white rounded-3xl border border-white/[0.06] shadow-sm">
                 <form onSubmit={handleSend} className="p-8">
                   <div className="flex items-center gap-3 mb-8 p-4 rounded-2xl bg-orange-50 border border-orange-200">
-                    <div className="w-9 h-9 rounded-lg bg-orange-100 border border-orange-200 flex items-center justify-center flex-shrink-0">
+                    <div className="w-9 h-9 rounded-lg bg-orange-500/15 border border-orange-500/25 flex items-center justify-center flex-shrink-0">
                       <Clock size={16} className="text-orange-600" />
                     </div>
                     <div>
                       <p className="text-xs text-gray-500 uppercase tracking-wider">Selected slot</p>
-                      <p className="text-sm font-bold text-[#111111]">{selectedDay}, {dayDates.find(d => d.label === selectedDay)?.date} {dayDates.find(d => d.label === selectedDay)?.month} · {selectedSlot}</p>
+                      <p className="text-sm font-bold text-white">{selectedDay}, {dayDates.find(d => d.label === selectedDay)?.date} {dayDates.find(d => d.label === selectedDay)?.month} · {selectedSlot}</p>
                     </div>
                     <button type="button" onClick={() => setStep("pick")}
                       className="ml-auto text-xs text-orange-600 hover:text-orange-700 border border-orange-200 hover:border-orange-400 px-2 py-1 rounded-lg transition-all">
@@ -1111,19 +1203,19 @@ const Booking = () => {
                       <label className="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2 block">Your Name</label>
                       <Input value={form.name} onChange={e => setForm(f => ({ ...f, name: e.target.value }))}
                         placeholder="John Smith" required
-                        className="border-gray-200 focus:border-orange-400 focus:ring-orange-400/20 h-11 bg-white text-[#111111]" />
+                        className="border-white/[0.08] focus:border-orange-400 h-11 bg-[#1e1e1e] text-white" />
                     </div>
                     <div>
                       <label className="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2 block">Email Address</label>
                       <Input type="email" value={form.email} onChange={e => setForm(f => ({ ...f, email: e.target.value }))}
                         placeholder="john@company.com" required
-                        className="border-gray-200 focus:border-orange-400 focus:ring-orange-400/20 h-11 bg-white text-[#111111]" />
+                        className="border-white/[0.08] focus:border-orange-400 h-11 bg-[#1e1e1e] text-white" />
                     </div>
                     <div>
                       <label className="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2 block">About the Project</label>
                       <Textarea value={form.brief} onChange={e => setForm(f => ({ ...f, brief: e.target.value }))}
                         placeholder="What do you want to build? Timeline, budget, stack preferences..." required rows={4}
-                        className="border-gray-200 focus:border-orange-400 focus:ring-orange-400/20 bg-white text-[#111111] resize-none" />
+                        className="border-white/[0.08] focus:border-orange-400 bg-[#1e1e1e] text-white resize-none" />
                     </div>
                   </div>
 
@@ -1140,23 +1232,23 @@ const Booking = () => {
 
           {step === "done" && (
             <motion.div key="done" initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} className="text-center">
-              <div className="bg-white rounded-3xl border border-gray-100 shadow-sm">
+              <div className="bg-white rounded-3xl border border-white/[0.06] shadow-sm">
                 <div className="p-12 flex flex-col items-center gap-6">
-                  <motion.div className="w-20 h-20 rounded-full bg-green-50 border border-green-200 flex items-center justify-center"
+                  <motion.div className="w-20 h-20 rounded-full bg-green-500/10 border border-green-500/20 flex items-center justify-center"
                     initial={{ scale: 0 }} animate={{ scale: 1 }} transition={{ type: "spring", stiffness: 200, damping: 15 }}>
                     <CheckCircle2 size={36} className="text-green-500" />
                   </motion.div>
                   <div>
-                    <h3 className="text-2xl font-bold mb-2 text-[#111111]">Request sent! 🎉</h3>
-                    <p className="text-gray-600 max-w-sm mx-auto text-sm">
-                      Slot <span className="text-[#111111] font-semibold">{selectedDay} at {selectedSlot}</span> has been reserved. I'll reply to <span className="text-orange-600 font-semibold">{form.email}</span> within 2 hours.
+                    <h3 className="text-2xl font-bold mb-2 text-white">Request sent! 🎉</h3>
+                    <p className="text-gray-400 max-w-sm mx-auto text-sm">
+                      Slot <span className="text-white font-semibold">{selectedDay} at {selectedSlot}</span> has been reserved. I'll reply to <span className="text-orange-600 font-semibold">{form.email}</span> within 2 hours.
                     </p>
                   </div>
                   <div className="flex items-center gap-2 text-sm text-green-500">
                     <motion.span className="w-2 h-2 rounded-full bg-green-500" animate={{ scale: [1, 1.5, 1] }} transition={{ duration: 1.5, repeat: Infinity }} />
                     Email sent successfully
                   </div>
-                  <button onClick={reset} className="px-6 py-2 border border-gray-200 rounded-xl text-sm font-medium text-gray-700 hover:border-orange-300 hover:text-orange-600 transition-all">
+                  <button onClick={reset} className="px-6 py-2 border border-white/[0.08] rounded-xl text-sm font-medium text-gray-300 hover:border-orange-300 hover:text-orange-600 transition-all">
                     Book another session
                   </button>
                 </div>
@@ -1303,6 +1395,110 @@ const Footer = () => (
   </footer>
 );
 
+// ─── FAQ ──────────────────────────────────────────────────────────────────
+
+const FAQ_ITEMS = [
+  {
+    q: "How long does it take to build a project?",
+    a: "Most projects are delivered in 2–6 weeks depending on scope. A landing page takes 5–7 days; a full web app with auth and database typically 3–5 weeks. I always give a realistic timeline upfront before we start."
+  },
+  {
+    q: "How does the payment process work?",
+    a: "I work with a 50% deposit upfront, 50% on delivery. For longer projects I can split into milestones. I accept bank transfer, PayPal, and crypto. Invoices are issued at each payment stage."
+  },
+  {
+    q: "Do you work with international clients?",
+    a: "Yes — 100%. I work with clients from the EU, US, UK, and beyond. All communication is async-friendly via email and video calls. Time zones have never been a blocker."
+  },
+  {
+    q: "Can you work on an existing codebase?",
+    a: "Absolutely. I can audit, refactor, extend, or fix bugs in existing projects. Send me the repo and I'll give you an honest assessment before we commit to anything."
+  },
+  {
+    q: "Do you offer support after launch?",
+    a: "Yes. I offer a 30-day free bug-fix window after every project. After that, I offer monthly retainer packages for ongoing maintenance, updates, and new features."
+  },
+  {
+    q: "What technologies do you specialise in?",
+    a: "My main stack is React, TypeScript, Node.js/Express, PostgreSQL, and Tailwind CSS. I also work with Next.js, Python, REST & GraphQL APIs, and cloud deployments on AWS/VPS."
+  },
+];
+
+const FAQ = () => {
+  const [openIdx, setOpenIdx] = useState<number | null>(null);
+  return (
+    <section id="faq" className="py-32 px-6 bg-[#1c1c1c] relative z-10">
+      <div className="max-w-3xl mx-auto">
+        <motion.div
+          initial={{ opacity: 0, y: 30 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.7 }}
+          className="text-center mb-16"
+        >
+          <span className="inline-block px-4 py-1.5 rounded-full bg-orange-500/10 border border-orange-500/20 text-orange-400 text-xs font-bold tracking-widest uppercase mb-6">FAQ</span>
+          <h2 className="text-4xl md:text-6xl font-black tracking-tighter mb-5">
+            Common <span className="text-transparent bg-clip-text bg-gradient-to-r from-orange-400 to-amber-300">questions</span>
+          </h2>
+          <p className="text-gray-400 text-lg">Everything you need to know before we start working together.</p>
+        </motion.div>
+
+        <div className="space-y-3">
+          {FAQ_ITEMS.map((item, i) => (
+            <motion.div
+              key={i}
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.5, delay: i * 0.06 }}
+              className={`rounded-2xl border transition-all duration-300 overflow-hidden ${
+                openIdx === i
+                  ? "bg-[#222222] border-orange-500/25"
+                  : "bg-[#1f1f1f] border-white/[0.06] hover:border-white/[0.10]"
+              }`}
+            >
+              <button
+                className="w-full flex items-center justify-between px-7 py-5 text-left gap-4"
+                onClick={() => setOpenIdx(openIdx === i ? null : i)}
+              >
+                <span className={`font-semibold text-[15px] leading-snug transition-colors ${openIdx === i ? "text-white" : "text-gray-200"}`}>
+                  {item.q}
+                </span>
+                <motion.div
+                  animate={{ rotate: openIdx === i ? 45 : 0 }}
+                  transition={{ duration: 0.2 }}
+                  className={`flex-shrink-0 w-7 h-7 rounded-full flex items-center justify-center border transition-colors ${
+                    openIdx === i
+                      ? "bg-orange-500/15 border-orange-500/30 text-orange-400"
+                      : "border-white/[0.08] text-gray-500"
+                  }`}
+                >
+                  <ChevronRight size={14} className="rotate-90" />
+                </motion.div>
+              </button>
+              <AnimatePresence initial={false}>
+                {openIdx === i && (
+                  <motion.div
+                    key="answer"
+                    initial={{ height: 0, opacity: 0 }}
+                    animate={{ height: "auto", opacity: 1 }}
+                    exit={{ height: 0, opacity: 0 }}
+                    transition={{ duration: 0.28, ease: [0.16, 1, 0.3, 1] }}
+                  >
+                    <p className="px-7 pb-6 text-gray-400 text-sm leading-relaxed">
+                      {item.a}
+                    </p>
+                  </motion.div>
+                )}
+              </AnimatePresence>
+            </motion.div>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+};
+
 // ─── Ambient Blobs ────────────────────────────────────────────────────────
 
 const AmbientBlobs = () => (
@@ -1328,27 +1524,31 @@ const AmbientBlobs = () => (
 // ─── Page ─────────────────────────────────────────────────────────────────
 
 export default function Home() {
+  const [hireOpen, setHireOpen] = useState(false);
   return (
-    <div className="min-h-screen bg-[#fafaf8] text-[#111111]" style={{ fontFeatureSettings: '"ss01","ss02"' }}>
-      <ScrollProgress />
-      <AmbientBlobs />
-      <div className="relative z-10">
-        <Navbar />
-        <main>
-          <Hero />
-          <TechStack />
-          <StatsBar />
-          <About />
-          <Process />
-          <Services />
-          <Work />
-          <Comparison />
-          <Pricing />
-          <Booking />
-          <Contact />
-        </main>
-        <Footer />
+    <HireModalCtx.Provider value={() => setHireOpen(true)}>
+      <HireModal open={hireOpen} onClose={() => setHireOpen(false)} />
+      <div className="min-h-screen bg-[#1c1c1c] text-white" style={{ fontFeatureSettings: '"ss01","ss02"' }}>
+        <ScrollProgress />
+        <AmbientBlobs />
+        <div className="relative z-10">
+          <Navbar />
+          <main>
+            <Hero />
+            <TechStack />
+            <StatsBar />
+            <About />
+            <Process />
+            <Services />
+            <Work />
+            <Comparison />
+            <Pricing />
+            <Booking />
+            <FAQ />
+          </main>
+          <Footer />
+        </div>
       </div>
-    </div>
+    </HireModalCtx.Provider>
   );
 }
