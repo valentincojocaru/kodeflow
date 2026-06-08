@@ -9,7 +9,13 @@ if [ -z "$GITHUB_TOKEN" ]; then
   exit 1
 fi
 
-git remote set-url origin https://valentincojocaru:${GITHUB_TOKEN}@github.com/valentincojocaru/kodeflow.git
+REMOTE_URL="https://valentincojocaru:${GITHUB_TOKEN}@github.com/valentincojocaru/kodeflow.git"
+
+if git remote get-url origin > /dev/null 2>&1; then
+  git remote set-url origin "$REMOTE_URL"
+else
+  git remote add origin "$REMOTE_URL"
+fi
 
 git add .
 git commit -m "$MSG" || echo "Nimic nou de commit — verific dacă există commit-uri nepusate..."
