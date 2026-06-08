@@ -102,6 +102,7 @@ interface CompletedLine { text: string; segs: Seg[] }
 interface Session {
   x: number;
   y: number;
+  maxWidth: number;
   completedLines: CompletedLine[];
   typed: string;
   targetLineIdx: number;
@@ -118,19 +119,24 @@ interface Session {
 function randBetween(a: number, b: number) { return a + Math.random() * (b - a); }
 
 function makeSession(index: number, total: number, W: number, H: number, now: number): Session {
-  const cols = total <= 2 ? 2 : total <= 3 ? 3 : 4;
+  const cols = total <= 2 ? 2 : total <= 3 ? 3 : 2;
   const rows = Math.ceil(total / cols);
   const col = index % cols;
   const row = Math.floor(index / cols);
   const cellW = W / cols;
   const cellH = H / rows;
-  const x = col * cellW + cellW * 0.1 + Math.random() * cellW * 0.3;
-  const y = row * cellH + cellH * 0.15 + Math.random() * cellH * 0.25;
+  // Strict positioning: session starts in left 30% of its cell, max width stays within cell
+  const margin = cellW * 0.08;
+  const x = col * cellW + margin + Math.random() * (cellW * 0.12);
+  const y = row * cellH + cellH * 0.12 + Math.random() * (cellH * 0.2);
+  // Max line width must not spill into the next cell
+  const maxWidth = cellW - margin * 2 - 20;
   const startLine = Math.floor(Math.random() * CODE_LINES.length);
 
   return {
     x,
     y,
+    maxWidth,
     completedLines: [],
     typed: "",
     targetLineIdx: startLine,
@@ -139,13 +145,13 @@ function makeSession(index: number, total: number, W: number, H: number, now: nu
     cursorOn: true,
     state: "typing",
     stateUntil: 0,
-    opacity: randBetween(0.38, 0.55),
-    maxLines: Math.floor(randBetween(6, 10)),
+    opacity: randBetween(0.38, 0.52),
+    maxLines: Math.floor(randBetween(6, 9)),
     charDelay: () => {
       const r = Math.random();
-      if (r < 0.08) return randBetween(180, 380); // thinking pause
-      if (r < 0.18) return randBetween(90, 160);  // slightly slower
-      return randBetween(28, 75);                  // normal typing
+      if (r < 0.08) return randBetween(180, 380);
+      if (r < 0.18) return randBetween(90, 160);
+      return randBetween(28, 75);
     },
   };
 }
@@ -201,7 +207,7 @@ export default function CodeBackground() {
     }
 
     function drawSession(s: Session, now: number) {
-      const maxLineWidth = Math.min(W - s.x - 20, 420);
+      const maxLineWidth = s.maxWidth;
 
       ctx.font = `${FS}px "JetBrains Mono", monospace`;
 

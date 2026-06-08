@@ -5,7 +5,7 @@ Website + API pentru kodeflow.dev — aplicație web cu frontend React/Vite și 
 ## Run & Operate
 
 - `pnpm --filter @workspace/api-server run dev` — rulează API server-ul (port 5000)
-- `sh push.sh "mesaj commit"` — commit + push pe GitHub → deploy automat pe VPS
+- `sh push.sh "mesaj commit"` — commit + push pe GitHub → deploy automat pe VPS (rulează DIN SHELL, nu din agent)
 - `pnpm run typecheck` — typecheck complet
 - `pnpm run build` — typecheck + build toate pachetele
 
@@ -30,7 +30,7 @@ sh push.sh "mesaj" → GitHub (main branch) → GitHub Actions → SSH VPS → d
 
 ## Secrets necesare
 
-- `GITHUB_TOKEN` — GitHub Personal Access Token (ghp_...) pentru git push din Replit
+- `GITHUB_TOKEN` — GitHub Personal Access Token (ghp_...) pentru git push din Replit ✓ (setat)
 - `VPS_SSH_KEY` — cheia SSH privată (pentru GitHub Actions să se conecteze pe VPS)
 
 ## GitHub Actions Secrets (setate pe GitHub, nu în Replit)
@@ -42,16 +42,20 @@ Mergi pe github.com/valentincojocaru/kodeflow → Settings → Secrets → Actio
 
 ## Stack
 
-- **Frontend**: React + Vite + TypeScript + Tailwind CSS (în repo GitHub, nu în Replit workspace)
-- **Backend/API**: Express 5, Node.js 24, TypeScript (în `artifacts/api-server/`)
+- **Frontend**: React + Vite + TypeScript + Tailwind CSS (`src/`)
+- **Backend/API**: Express 5, Node.js 24, TypeScript (`artifacts/api-server/`)
 - **DB**: PostgreSQL + Drizzle ORM
 - **Monorepo**: pnpm workspaces
 
 ## Where things live
 
 - `artifacts/api-server/` — codul API server Express
-- `src/` — frontend React (copiat din GitHub la nevoie)
-- `push.sh` — scriptul de deploy
+- `src/` — frontend React
+- `src/components/CodeBackground.tsx` — fundalul animat (typing effect)
+- `src/pages/home.tsx` — pagina principală
+- `src/pages/admin.tsx` — admin panel
+- `src/pages/dashboard.tsx` — client portal
+- `push.sh` — scriptul de deploy (rulează din Shell)
 - `deploy.sh` — scriptul care rulează pe VPS
 - `.github/workflows/deploy.yml` — GitHub Actions workflow
 
@@ -59,29 +63,34 @@ Mergi pe github.com/valentincojocaru/kodeflow → Settings → Secrets → Actio
 
 - Repo-ul Replit are istoric git SEPARAT față de GitHub repo. `push.sh` folosește `--force` intenționat.
 - `GITHUB_TOKEN` în Replit Secrets trebuie să fie DOAR valoarea `ghp_...` fără prefix `sha256:` sau spații.
-- Frontend-ul (React) e în GitHub repo, nu în Replit workspace. La modificări CSS/frontend, descarcă fișierele din GitHub înainte.
+- **Agentul NU poate rula `sh push.sh`** — git push este blocat pentru agent. Userul trebuie să îl ruleze DIN SHELL.
 - `git remote set-url` și `git remote add` nu sunt permise agentului — push.sh le face în Shell.
 
-## Ce s-a modificat (pentru agentul următor)
+## Starea curentă a site-ului (ce s-a modificat)
 
 ### Fundal animat — `src/components/CodeBackground.tsx`
 - Canvas transparent, `position: fixed`, `z-index: 1`, `pointer-events: none`
 - Efect de **typing** (cod scris caracter cu caracter), NU Matrix scrolling
-- 2 sesiuni pe mobile, 3 pe tablet, 4 pe desktop — poziționate în cadrane diferite
-- Fiecare sesiune tastează linii de cod una câte una, cu cursor clipitor `|` la capăt
-- Sintaxă colorată în timp real pe măsură ce se tastează; după ~8-10 linii, sesiunea se resetează
-- Opacitate per sesiune: 0.13–0.20 — foarte subtilă ca fundal
-- Folosit și în `admin.tsx` și `dashboard.tsx` (client portal + admin panel)
-- Body-ul păstrează `bg-background` (hsl 258 35% 11%) ca fundal solid — canvas-ul transparent desenează codul deasupra lui
+- Sesiunile sunt poziționate strict pe un grid de celule — **nu se suprapun**
+- 2 sesiuni pe mobile, 3 pe tablet, 5 pe desktop
+- Fiecare sesiune tastează linii de cod una câte una, cu cursor clipitor `|` la capăt + glow violet
+- Sintaxă colorată în timp real pe măsură ce se tastează
+- Opacitate per sesiune: 0.38–0.52 (vizibil, nu transparent)
+- `maxWidth` per sesiune = lățimea celulei minus margini — liniile nu depășesc zona lor
+- Folosit și în `admin.tsx` (Admin Panel) și `dashboard.tsx` (Client Portal)
+- Body-ul păstrează `bg-background` (hsl 258 35% 11%) ca fundal solid
 
-### Hero dreapta — `src/components/HeroDevStation.tsx` (NOU, înlocuiește AIBrainField + BrainHUD)
-- IDE window floating cu 3D mouse tilt (framer-motion `useTransform`)
-- Tabs animate: `api.ts` și `Dashboard.tsx` — se schimbă automat la 8s
-- Cod live-typed cu syntax highlighting real + cursor animat
-- Terminal panel jos cu output animat `pnpm run build` → deploy → live
-- 4 carduri floating cu metrici (Build: 1.24s, Bundle: 87KB, Lighthouse: 99, Response: 61ms)
-- Strip git commit animat jos
-- Import în `src/pages/home.tsx` — înlocuiește AIBrainField și BrainHUD
+### Hero — `src/pages/home.tsx`
+- **HeroDevStation eliminat** complet (fereastra IDE flotantă cu tabs/terminal)
+- **IntroScreen eliminat** (splash screen de la început)
+- Hero are acum layout full-width centrat: `max-w-3xl mx-auto text-center sm:text-left`
+- Grila `lg:grid-cols-2` → `flex items-center` (un singur bloc de conținut)
+
+### Mobile responsiveness — `src/pages/home.tsx`
+- Toate secțiunile au padding responsive: `py-20 sm:py-32 lg:py-40`
+- Container padding: `px-4 sm:px-6` pe tot site-ul
+- Font titlu hero: `clamp(2.2rem, 7vw, 4.8rem)`
+- Butoane hero adaptate: `h-11 sm:h-12`, `px-6 sm:px-8`
 
 ### index.css
 - Body păstrează `bg-background` (NU face transparent — canvas-ul depinde de el)
@@ -89,5 +98,5 @@ Mergi pe github.com/valentincojocaru/kodeflow → Settings → Secrets → Actio
 ## User preferences
 
 - Limbă: română în conversații
-- Deploy: `sh push.sh "mesaj"` din Shell
+- Deploy: `sh push.sh "mesaj"` din Shell (nu din agent)
 - Background site: violet închis (nu negru complet) — `--background: 258 35% 11%`

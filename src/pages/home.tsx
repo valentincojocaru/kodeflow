@@ -13,8 +13,6 @@ import {
   TrendingUp, Award, Users, ExternalLink, ChevronRight, BadgeCheck, Minus
 } from "lucide-react";
 import CodeBackground from "@/components/CodeBackground";
-import HeroDevStation from "@/components/HeroDevStation";
-import IntroScreen from "@/components/IntroScreen";
 import ScrollProgress from "@/components/ScrollProgress";
 
 // ─── Magnetic Button ──────────────────────────────────────────────────────
@@ -287,9 +285,9 @@ const Hero = () => {
         style={{ background: "radial-gradient(ellipse, rgba(140,60,255,0.09), transparent)" }} />
       <div className="absolute bottom-0 inset-x-0 h-52 bg-gradient-to-t from-black/60 to-transparent" />
 
-      <div className="container mx-auto px-4 sm:px-6 grid lg:grid-cols-2 gap-12 items-center relative z-10">
-        {/* Left */}
-        <div className="flex flex-col gap-5 sm:gap-7">
+      <div className="container mx-auto px-4 sm:px-6 flex items-center relative z-10">
+        {/* Content — full width, centered */}
+        <div className="flex flex-col gap-5 sm:gap-7 max-w-3xl mx-auto text-center sm:text-left items-center sm:items-start">
           <motion.div
             className="shimmer-badge inline-flex items-center gap-2.5 px-4 py-2 rounded-full w-fit text-sm font-medium"
             style={{ background: "rgba(184,80,255,0.07)", border: "1px solid rgba(184,80,255,0.25)", color: "rgba(200,130,255,0.95)", boxShadow: "0 0 20px rgba(184,80,255,0.12), inset 0 1px 0 rgba(255,255,255,0.06)" }}
@@ -369,14 +367,6 @@ const Hero = () => {
           </motion.div>
         </div>
 
-        {/* Right — Live Dev Station (desktop only) */}
-        <motion.div
-          className="hidden lg:flex relative items-center justify-center"
-          initial={{ opacity: 0, x: 40 }}
-          animate={{ opacity: 1, x: 0 }}
-          transition={{ duration: 1.1, delay: 0.4, ease: [0.22, 1, 0.36, 1] }}>
-          <HeroDevStation />
-        </motion.div>
       </div>
 
       <motion.div className="absolute bottom-10 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2"
