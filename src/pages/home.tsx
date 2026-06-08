@@ -1112,7 +1112,7 @@ const Booking = () => {
                   </div>
                   <span className="hidden sm:inline">{label}</span>
                 </div>
-                {i < 2 && <div className={`flex-1 max-w-[60px] h-px transition-colors ${i < stepIdx ? "bg-orange-400" : "bg-gray-200"}`} />}
+                {i < 2 && <div className={`flex-1 max-w-[60px] h-px transition-colors ${i < stepIdx ? "bg-orange-400" : "bg-white/[0.08]"}`} />}
               </React.Fragment>
             );
           })}
@@ -1121,7 +1121,7 @@ const Booking = () => {
         <AnimatePresence mode="wait">
           {step === "pick" && (
             <motion.div key="pick" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -16 }}>
-              <div className="bg-white rounded-3xl border border-white/[0.06] shadow-sm p-8">
+              <div className="bg-[#222222] rounded-3xl border border-white/[0.07] p-8">
                 <div className="flex items-center justify-between mb-6">
                   <p className="text-sm font-semibold text-white">Pick a day — next week</p>
                   <span className="text-xs text-gray-400 border border-white/[0.08] px-2 py-0.5 rounded-full font-mono">EET · UTC+2</span>
@@ -1157,7 +1157,7 @@ const Booking = () => {
                               disabled={taken} onClick={() => !taken && setSelectedSlot(slot)}
                               className={`py-3 px-3 rounded-xl border text-sm font-medium transition-all duration-200 ${
                                 taken ? "border-white/[0.06] text-gray-300 cursor-not-allowed" :
-                                  selectedSlot === slot ? "border-orange-500 bg-orange-50 text-orange-600 shadow-md shadow-orange-500/10" :
+                                  selectedSlot === slot ? "border-orange-500 bg-orange-500/12 text-orange-400 shadow-md shadow-orange-500/15" :
                                     "border-white/[0.08] bg-white/[0.03] hover:border-orange-500/40 hover:bg-orange-500/5 text-white"
                               }`}>
                               {taken ? <span className="text-[11px] line-through">Taken</span> : slot}
@@ -1182,9 +1182,9 @@ const Booking = () => {
 
           {step === "form" && (
             <motion.div key="form" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -16 }}>
-              <div className="bg-white rounded-3xl border border-white/[0.06] shadow-sm">
+              <div className="bg-[#222222] rounded-3xl border border-white/[0.07]">
                 <form onSubmit={handleSend} className="p-8">
-                  <div className="flex items-center gap-3 mb-8 p-4 rounded-2xl bg-orange-50 border border-orange-200">
+                  <div className="flex items-center gap-3 mb-8 p-4 rounded-2xl bg-orange-500/10 border border-orange-500/20">
                     <div className="w-9 h-9 rounded-lg bg-orange-500/15 border border-orange-500/25 flex items-center justify-center flex-shrink-0">
                       <Clock size={16} className="text-orange-600" />
                     </div>
@@ -1193,7 +1193,7 @@ const Booking = () => {
                       <p className="text-sm font-bold text-white">{selectedDay}, {dayDates.find(d => d.label === selectedDay)?.date} {dayDates.find(d => d.label === selectedDay)?.month} · {selectedSlot}</p>
                     </div>
                     <button type="button" onClick={() => setStep("pick")}
-                      className="ml-auto text-xs text-orange-600 hover:text-orange-700 border border-orange-200 hover:border-orange-400 px-2 py-1 rounded-lg transition-all">
+                      className="ml-auto text-xs text-orange-400 hover:text-orange-300 border border-orange-500/30 hover:border-orange-500/60 px-2 py-1 rounded-lg transition-all">
                       Change
                     </button>
                   </div>
@@ -1232,7 +1232,7 @@ const Booking = () => {
 
           {step === "done" && (
             <motion.div key="done" initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} className="text-center">
-              <div className="bg-white rounded-3xl border border-white/[0.06] shadow-sm">
+              <div className="bg-[#222222] rounded-3xl border border-white/[0.07]">
                 <div className="p-12 flex flex-col items-center gap-6">
                   <motion.div className="w-20 h-20 rounded-full bg-green-500/10 border border-green-500/20 flex items-center justify-center"
                     initial={{ scale: 0 }} animate={{ scale: 1 }} transition={{ type: "spring", stiffness: 200, damping: 15 }}>
