@@ -13,8 +13,7 @@ import {
   TrendingUp, Award, Users, ExternalLink, ChevronRight, BadgeCheck, Minus
 } from "lucide-react";
 import CodeBackground from "@/components/CodeBackground";
-import AIBrainField from "@/components/AIBrainField";
-import BrainHUD from "@/components/BrainHUD";
+import HeroDevStation from "@/components/HeroDevStation";
 import IntroScreen from "@/components/IntroScreen";
 import ScrollProgress from "@/components/ScrollProgress";
 
@@ -370,56 +369,13 @@ const Hero = () => {
           </motion.div>
         </div>
 
-        {/* Right — Interactive Particle Field */}
+        {/* Right — Live Dev Station */}
         <motion.div
           className="relative flex items-center justify-center"
-          initial={{ opacity: 0, scale: 0.85 }}
-          animate={{ opacity: 1, scale: 1 }}
-          transition={{ duration: 1.2, delay: 0.3, ease: [0.22, 1, 0.36, 1] }}>
-
-          {/* Deep ambient glow */}
-          <div className="absolute inset-0 pointer-events-none"
-            style={{ background: "radial-gradient(ellipse 70% 60% at 50% 50%, rgba(184,80,255,0.13) 0%, transparent 70%)" }} />
-
-          {/* Particle canvas — borderless, free-floating */}
-          <div className="relative">
-            <AIBrainField width={520} height={440} />
-            {/* Ultra-subtle scanlines */}
-            <div className="absolute inset-0 pointer-events-none"
-              style={{
-                backgroundImage: "repeating-linear-gradient(0deg, transparent, transparent 3px, rgba(120,160,255,0.005) 3px, rgba(120,160,255,0.005) 6px)",
-              }} />
-            {/* HUD panel */}
-            <BrainHUD />
-          </div>
-
-          {/* Floating tech badges */}
-          {[
-            { label: "React + TS", icon: "⚛", x: -70, y: -170 },
-            { label: "Node.js",   icon: "🟢", x: -90, y:  160 },
-            { label: "AI Powered",icon: "✦",  x:  200, y:   20 },
-          ].map(({ label, icon, x, y }, i) => (
-            <motion.div key={i}
-              className="absolute flex items-center gap-2 px-3 py-1.5 rounded-full border border-primary/22 bg-[#080612]/90 backdrop-blur-md text-xs font-semibold text-foreground z-20 whitespace-nowrap"
-              style={{
-                left: `calc(50% + ${x}px)`,
-                top: `calc(50% + ${y}px)`,
-                transform: "translate(-50%,-50%)",
-                boxShadow: "0 0 18px rgba(184,80,255,0.15), inset 0 1px 0 rgba(255,255,255,0.07)",
-              }}
-              animate={{ y: [0, -5, 0] }}
-              transition={{ duration: 3.2 + i * 0.7, delay: i * 0.45, repeat: Infinity, ease: "easeInOut" }}>
-              <span>{icon}</span>{label}
-            </motion.div>
-          ))}
-
-          {/* Hint text */}
-          <motion.p
-            className="absolute -bottom-8 left-1/2 -translate-x-1/2 text-[10px] text-muted-foreground/40 tracking-[0.3em] uppercase whitespace-nowrap"
-            animate={{ opacity: [0.4, 0.7, 0.4] }}
-            transition={{ duration: 3, repeat: Infinity }}>
-            Mișcă mouse-ul peste simbol
-          </motion.p>
+          initial={{ opacity: 0, x: 40 }}
+          animate={{ opacity: 1, x: 0 }}
+          transition={{ duration: 1.1, delay: 0.4, ease: [0.22, 1, 0.36, 1] }}>
+          <HeroDevStation />
         </motion.div>
       </div>
 
