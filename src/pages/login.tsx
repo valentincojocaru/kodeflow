@@ -2,11 +2,12 @@ import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useAuth } from "@/contexts/AuthContext";
 import { useLocation } from "wouter";
-import { Eye, EyeOff, Zap, User, Mail, Lock, Building, Phone, ShieldCheck, ArrowRight, AlertCircle } from "lucide-react";
+import { Eye, EyeOff, Zap, User, Mail, Lock, Building, Phone, ShieldCheck, ArrowRight, AlertCircle, CheckCircle2, RotateCcw, KeyRound } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 
 type Tab = "login" | "register";
+type ForgotStep = "email" | "code" | "done";
 
 export default function LoginPage() {
   const { login, register, user } = useAuth();
@@ -18,6 +19,16 @@ export default function LoginPage() {
 
   const [loginForm, setLoginForm] = useState({ email: "", password: "" });
   const [regForm, setRegForm] = useState({ name: "", email: "", password: "", company: "", phone: "", adminSecret: "" });
+
+  // Forgot password state
+  const [forgotOpen, setForgotOpen] = useState(false);
+  const [forgotStep, setForgotStep] = useState<ForgotStep>("email");
+  const [forgotEmail, setForgotEmail] = useState("");
+  const [forgotCode, setForgotCode] = useState("");
+  const [newPassword, setNewPassword] = useState("");
+  const [showNewPass, setShowNewPass] = useState(false);
+  const [forgotError, setForgotError] = useState("");
+  const [forgotLoading, setForgotLoading] = useState(false);
 
   if (user) {
     setLocation(user.role === "admin" ? "/admin" : "/dashboard");
@@ -57,6 +68,56 @@ export default function LoginPage() {
     } finally { setLoading(false); }
   };
 
+  const handleForgotSend = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setForgotError("");
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(forgotEmail.trim())) {
+      setForgotError("Introdu o adresă de email validă."); return;
+    }
+    setForgotLoading(true);
+    try {
+      const res = await fetch("/api/auth/forgot-password", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email: forgotEmail.trim() }),
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || "Eroare");
+      setForgotStep("code");
+    } catch (err: any) {
+      setForgotError(err.message || "Eroare la trimiterea codului.");
+    } finally { setForgotLoading(false); }
+  };
+
+  const handleForgotReset = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setForgotError("");
+    if (forgotCode.trim().length !== 6) { setForgotError("Codul trebuie să aibă 6 cifre."); return; }
+    if (newPassword.length < 8) { setForgotError("Parola trebuie să aibă minim 8 caractere."); return; }
+    setForgotLoading(true);
+    try {
+      const res = await fetch("/api/auth/reset-password", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email: forgotEmail.trim(), code: forgotCode.trim(), newPassword }),
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || "Eroare");
+      setForgotStep("done");
+    } catch (err: any) {
+      setForgotError(err.message || "Eroare la resetarea parolei.");
+    } finally { setForgotLoading(false); }
+  };
+
+  const closeForgot = () => {
+    setForgotOpen(false);
+    setForgotStep("email");
+    setForgotEmail("");
+    setForgotCode("");
+    setNewPassword("");
+    setForgotError("");
+  };
+
   return (
     <div className="min-h-screen bg-[#141414] flex items-center justify-center px-4 relative overflow-hidden">
       {/* Background */}
@@ -79,7 +140,133 @@ export default function LoginPage() {
       <motion.div className="w-full max-w-md relative z-10"
         initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}>
 
-        {/* Card */}
+        {/* ── Forgot Password Overlay ────────────────────────────────────── */}
+        <AnimatePresence>
+          {forgotOpen && (
+            <motion.div
+              key="forgot-overlay"
+              initial={{ opacity: 0, scale: 0.96, y: 8 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              exit={{ opacity: 0, scale: 0.96, y: 8 }}
+              transition={{ duration: 0.25 }}
+              className="absolute inset-0 z-20 rounded-2xl overflow-hidden"
+              style={{ background: "linear-gradient(135deg, rgba(249,115,22,0.5), rgba(234,88,12,0.3), rgba(249,115,22,0.1))" }}
+            >
+              <div className="rounded-[15px] bg-[#181818]/98 backdrop-blur-xl h-full flex flex-col">
+                <div className="px-8 pt-8 pb-6 border-b border-white/[0.06]">
+                  <div className="flex items-center gap-3 mb-1">
+                    <div className="w-8 h-8 rounded-xl bg-orange-500/15 border border-orange-500/25 flex items-center justify-center">
+                      <KeyRound size={15} className="text-orange-400" />
+                    </div>
+                    <h2 className="text-base font-bold text-white">Resetare parolă</h2>
+                  </div>
+                  <p className="text-xs text-muted-foreground pl-11">
+                    {forgotStep === "email" && "Introdu emailul contului tău."}
+                    {forgotStep === "code" && `Codul a fost trimis la ${forgotEmail}`}
+                    {forgotStep === "done" && "Parola a fost resetată cu succes!"}
+                  </p>
+                </div>
+
+                <div className="px-8 py-6 flex-1 flex flex-col">
+                  {/* Error */}
+                  <AnimatePresence>
+                    {forgotError && (
+                      <motion.div key="fe" initial={{ opacity: 0, y: -6 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }}
+                        className="flex items-center gap-2 p-3 rounded-xl bg-red-500/10 border border-red-500/25 text-red-400 text-sm mb-4">
+                        <AlertCircle size={13} className="shrink-0" /> {forgotError}
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
+
+                  <AnimatePresence mode="wait">
+                    {/* Step 1: email */}
+                    {forgotStep === "email" && (
+                      <motion.form key="fs1" noValidate initial={{ opacity: 0, x: -10 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: 10 }}
+                        onSubmit={handleForgotSend} className="space-y-4 flex flex-col flex-1">
+                        <Field label="Email" icon={<Mail size={14} />}>
+                          <Input type="email" placeholder="your@email.com" value={forgotEmail}
+                            onChange={e => setForgotEmail(e.target.value)}
+                            className="bg-white/[0.03] border-white/[0.08] focus:border-primary/50 pl-9 h-11" />
+                        </Field>
+                        <Button type="submit" disabled={forgotLoading}
+                          className="w-full h-11 font-semibold bg-gradient-to-r from-orange-500 to-orange-600 text-white shadow-[0_0_30px_rgba(249,115,22,0.3)] hover:shadow-[0_0_50px_rgba(249,115,22,0.5)] transition-all">
+                          {forgotLoading
+                            ? <motion.span animate={{ opacity: [1, 0.5, 1] }} transition={{ duration: 0.8, repeat: Infinity }}>Se trimite...</motion.span>
+                            : <><ArrowRight className="mr-2 h-4 w-4" />Trimite codul</>}
+                        </Button>
+                        <div className="flex-1" />
+                        <button type="button" onClick={closeForgot}
+                          className="text-xs text-muted-foreground/50 hover:text-muted-foreground transition-colors text-center">
+                          ← Înapoi la login
+                        </button>
+                      </motion.form>
+                    )}
+
+                    {/* Step 2: code + new password */}
+                    {forgotStep === "code" && (
+                      <motion.form key="fs2" noValidate initial={{ opacity: 0, x: 10 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -10 }}
+                        onSubmit={handleForgotReset} className="space-y-4 flex flex-col flex-1">
+                        <div>
+                          <label className="text-xs font-semibold text-muted-foreground/60 uppercase tracking-wider mb-1.5 block">Cod din email (6 cifre)</label>
+                          <input
+                            type="text"
+                            inputMode="numeric"
+                            maxLength={6}
+                            placeholder="123456"
+                            value={forgotCode}
+                            onChange={e => setForgotCode(e.target.value.replace(/\D/g, ""))}
+                            className="w-full bg-white/[0.03] border border-white/[0.08] rounded-lg px-4 h-14 text-center text-3xl font-black tracking-[0.3em] text-orange-400 focus:outline-none focus:border-orange-500/50 transition-colors placeholder:text-white/10 placeholder:text-lg placeholder:tracking-normal"
+                          />
+                        </div>
+                        <Field label="Parola nouă (min 8 caractere)" icon={<Lock size={14} />}
+                          right={
+                            <button type="button" onClick={() => setShowNewPass(!showNewPass)} className="text-muted-foreground/50 hover:text-muted-foreground transition-colors">
+                              {showNewPass ? <EyeOff size={14} /> : <Eye size={14} />}
+                            </button>
+                          }>
+                          <Input type={showNewPass ? "text" : "password"} placeholder="••••••••" value={newPassword}
+                            onChange={e => setNewPassword(e.target.value)}
+                            className="bg-white/[0.03] border-white/[0.08] focus:border-primary/50 pl-9 pr-9 h-11" />
+                        </Field>
+                        <Button type="submit" disabled={forgotLoading}
+                          className="w-full h-11 font-semibold bg-gradient-to-r from-orange-500 to-orange-600 text-white shadow-[0_0_30px_rgba(249,115,22,0.3)] hover:shadow-[0_0_50px_rgba(249,115,22,0.5)] transition-all">
+                          {forgotLoading
+                            ? <motion.span animate={{ opacity: [1, 0.5, 1] }} transition={{ duration: 0.8, repeat: Infinity }}>Se salvează...</motion.span>
+                            : <><KeyRound className="mr-2 h-4 w-4" />Resetează parola</>}
+                        </Button>
+                        <div className="flex-1" />
+                        <button type="button" onClick={() => { setForgotStep("email"); setForgotError(""); }}
+                          className="flex items-center justify-center gap-1.5 text-xs text-muted-foreground/50 hover:text-orange-400 transition-colors">
+                          <RotateCcw size={11} /> Retrimite codul
+                        </button>
+                      </motion.form>
+                    )}
+
+                    {/* Step 3: done */}
+                    {forgotStep === "done" && (
+                      <motion.div key="fs3" initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }}
+                        className="flex flex-col items-center justify-center flex-1 text-center gap-5">
+                        <div className="w-16 h-16 rounded-full bg-green-500/10 border border-green-500/25 flex items-center justify-center">
+                          <CheckCircle2 size={28} className="text-green-400" />
+                        </div>
+                        <div>
+                          <h3 className="text-white font-bold text-base mb-1">Parola resetată!</h3>
+                          <p className="text-muted-foreground text-sm">Acum te poți autentifica cu noua parolă.</p>
+                        </div>
+                        <Button onClick={closeForgot}
+                          className="w-full h-11 font-semibold bg-gradient-to-r from-orange-500 to-orange-600 text-white shadow-[0_0_30px_rgba(249,115,22,0.3)]">
+                          <ArrowRight className="mr-2 h-4 w-4" /> Mergi la login
+                        </Button>
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
+                </div>
+              </div>
+            </motion.div>
+          )}
+        </AnimatePresence>
+
+        {/* ── Main Card ──────────────────────────────────────────────────── */}
         <div className="relative rounded-2xl p-[1px]"
           style={{ background: "linear-gradient(135deg, rgba(249,115,22,0.5), rgba(234,88,12,0.3), rgba(249,115,22,0.1))" }}>
           <div className="rounded-[15px] bg-[#181818]/98 backdrop-blur-xl overflow-hidden">
@@ -123,7 +310,7 @@ export default function LoginPage() {
 
             {/* Form */}
             <div className="px-8 pb-8">
-              <AnimatePresence mode="wait">
+              <AnimatePresence>
                 {error && (
                   <motion.div key="err" initial={{ opacity: 0, y: -8 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }}
                     className="flex items-center gap-2 p-3 rounded-xl bg-red-500/10 border border-red-500/25 text-red-400 text-sm mb-5">
@@ -140,12 +327,21 @@ export default function LoginPage() {
                         onChange={e => setLoginForm(f => ({ ...f, email: e.target.value }))}
                         className="bg-white/[0.03] border-white/[0.08] focus:border-primary/50 pl-9 h-11" required />
                     </Field>
-                    <Field label="Password" icon={<Lock size={14} />}
-                      right={<button type="button" onClick={() => setShowPass(!showPass)} className="text-muted-foreground/50 hover:text-muted-foreground transition-colors">{showPass ? <EyeOff size={14} /> : <Eye size={14} />}</button>}>
-                      <Input type={showPass ? "text" : "password"} placeholder="••••••••" value={loginForm.password}
-                        onChange={e => setLoginForm(f => ({ ...f, password: e.target.value }))}
-                        className="bg-white/[0.03] border-white/[0.08] focus:border-primary/50 pl-9 pr-9 h-11" required />
-                    </Field>
+                    <div>
+                      <Field label="Password" icon={<Lock size={14} />}
+                        right={<button type="button" onClick={() => setShowPass(!showPass)} className="text-muted-foreground/50 hover:text-muted-foreground transition-colors">{showPass ? <EyeOff size={14} /> : <Eye size={14} />}</button>}>
+                        <Input type={showPass ? "text" : "password"} placeholder="••••••••" value={loginForm.password}
+                          onChange={e => setLoginForm(f => ({ ...f, password: e.target.value }))}
+                          className="bg-white/[0.03] border-white/[0.08] focus:border-primary/50 pl-9 pr-9 h-11" required />
+                      </Field>
+                      <div className="flex justify-end mt-2">
+                        <button type="button"
+                          onClick={() => { setForgotEmail(loginForm.email); setForgotOpen(true); }}
+                          className="text-xs text-muted-foreground/50 hover:text-orange-400 transition-colors">
+                          Ai uitat parola?
+                        </button>
+                      </div>
+                    </div>
                     <Button type="submit" disabled={loading}
                       className="w-full h-11 mt-2 font-semibold bg-gradient-to-r from-orange-500 to-orange-600 text-white shadow-[0_0_30px_rgba(249,115,22,0.3)] hover:shadow-[0_0_50px_rgba(249,115,22,0.5)] transition-all">
                       {loading ? <motion.span animate={{ opacity: [1, 0.5, 1] }} transition={{ duration: 0.8, repeat: Infinity }}>Signing in...</motion.span>

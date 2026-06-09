@@ -3,6 +3,7 @@ import cors from "cors";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 import pg from "pg";
+import nodemailer from "nodemailer";
 
 const { Pool } = pg;
 
@@ -15,6 +16,71 @@ const pool = new Pool({
   connectionString: process.env.DATABASE_URL,
   ssl: process.env.DATABASE_SSL === "true" ? { rejectUnauthorized: false } : false,
 });
+
+// ─── Mailer ────────────────────────────────────────────────────────────────
+
+function createTransport() {
+  if (process.env.SMTP_HOST) {
+    return nodemailer.createTransport({
+      host: process.env.SMTP_HOST,
+      port: Number(process.env.SMTP_PORT ?? 587),
+      secure: process.env.SMTP_PORT === "465",
+      auth: { user: process.env.SMTP_USER, pass: process.env.SMTP_PASS },
+    });
+  }
+  // dev fallback — log to console, no real email
+  return null;
+}
+
+async function sendResetEmail(to: string, code: string) {
+  const transporter = createTransport();
+  const html = `
+    <div style="font-family:Inter,sans-serif;max-width:480px;margin:0 auto;background:#0d0d0d;border:1px solid #222;border-radius:16px;overflow:hidden;">
+      <div style="background:linear-gradient(135deg,#ea580c,#f97316);padding:32px 36px;">
+        <h1 style="color:#fff;margin:0;font-size:22px;font-weight:800;letter-spacing:-0.5px;">pyKode</h1>
+        <p style="color:rgba(255,255,255,0.8);margin:8px 0 0;font-size:13px;">Client Portal</p>
+      </div>
+      <div style="padding:36px;">
+        <h2 style="color:#fff;font-size:18px;font-weight:700;margin:0 0 8px;">Reset parola ta</h2>
+        <p style="color:rgba(255,255,255,0.55);font-size:14px;line-height:1.6;margin:0 0 28px;">
+          Ai solicitat resetarea parolei. Folosește codul de mai jos — expiră în <strong style="color:#f97316;">15 minute</strong>.
+        </p>
+        <div style="background:#1a1a1a;border:1px solid #2a2a2a;border-radius:12px;padding:24px;text-align:center;margin-bottom:28px;">
+          <span style="font-family:monospace;font-size:36px;font-weight:800;letter-spacing:10px;color:#f97316;">${code}</span>
+        </div>
+        <p style="color:rgba(255,255,255,0.3);font-size:12px;margin:0;">
+          Dacă nu ai solicitat acest cod, ignoră acest email. Contul tău este în siguranță.
+        </p>
+      </div>
+    </div>
+  `;
+  if (!transporter) {
+    console.log(`\n🔑 RESET CODE pentru ${to}: ${code}\n`);
+    return;
+  }
+  await transporter.sendMail({
+    from: process.env.SMTP_FROM || `"pyKode" <noreply@kodeflow.dev>`,
+    to,
+    subject: "Resetare parolă — pyKode",
+    html,
+  });
+}
+
+// ─── DB init ───────────────────────────────────────────────────────────────
+
+async function ensureTables() {
+  await pool.query(`
+    CREATE TABLE IF NOT EXISTS password_resets (
+      id SERIAL PRIMARY KEY,
+      email VARCHAR(255) NOT NULL,
+      code VARCHAR(6) NOT NULL,
+      expires_at TIMESTAMPTZ NOT NULL,
+      used BOOLEAN DEFAULT false,
+      created_at TIMESTAMPTZ DEFAULT NOW()
+    )
+  `);
+}
+ensureTables().catch(console.error);
 
 app.use(cors({ origin: true, credentials: true }));
 app.use(express.json());
@@ -377,6 +443,63 @@ app.post("/api/admin/projects/:id/invoices", authMiddleware, adminMiddleware, as
     res.json(result.rows[0]);
   } catch {
     res.status(500).json({ error: "Failed to create invoice" });
+  }
+});
+
+// ─── Password Reset Routes ─────────────────────────────────────────────────
+
+// Forgot password — sends 6-digit code
+app.post("/api/auth/forgot-password", async (req, res) => {
+  try {
+    const { email } = req.body;
+    if (!email) return res.status(400).json({ error: "Email obligatoriu" });
+
+    const userRes = await pool.query("SELECT id FROM users WHERE email = $1", [email.toLowerCase()]);
+    // Always respond OK to not leak whether email exists
+    if (userRes.rows.length === 0) {
+      return res.json({ ok: true });
+    }
+
+    const code = Math.floor(100000 + Math.random() * 900000).toString();
+    const expires = new Date(Date.now() + 15 * 60 * 1000); // 15 min
+
+    // Invalidate old codes for this email
+    await pool.query("UPDATE password_resets SET used = true WHERE email = $1 AND used = false", [email.toLowerCase()]);
+    await pool.query(
+      "INSERT INTO password_resets (email, code, expires_at) VALUES ($1, $2, $3)",
+      [email.toLowerCase(), code, expires]
+    );
+
+    await sendResetEmail(email.toLowerCase(), code);
+    res.json({ ok: true });
+  } catch (err) {
+    console.error("Forgot password error:", err);
+    res.status(500).json({ error: "Eroare la trimiterea emailului" });
+  }
+});
+
+// Reset password — validates code + sets new password
+app.post("/api/auth/reset-password", async (req, res) => {
+  try {
+    const { email, code, newPassword } = req.body;
+    if (!email || !code || !newPassword) return res.status(400).json({ error: "Date incomplete" });
+    if (newPassword.length < 8) return res.status(400).json({ error: "Parola trebuie să aibă minim 8 caractere" });
+
+    const resetRes = await pool.query(
+      "SELECT * FROM password_resets WHERE email = $1 AND code = $2 AND used = false AND expires_at > NOW() ORDER BY created_at DESC LIMIT 1",
+      [email.toLowerCase(), code]
+    );
+
+    if (resetRes.rows.length === 0) return res.status(400).json({ error: "Codul este invalid sau a expirat" });
+
+    const hash = await bcrypt.hash(newPassword, 12);
+    await pool.query("UPDATE users SET password = $1 WHERE email = $2", [hash, email.toLowerCase()]);
+    await pool.query("UPDATE password_resets SET used = true WHERE id = $1", [resetRes.rows[0].id]);
+
+    res.json({ ok: true });
+  } catch (err) {
+    console.error("Reset password error:", err);
+    res.status(500).json({ error: "Eroare la resetarea parolei" });
   }
 });
 
