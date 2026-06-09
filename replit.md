@@ -16,7 +16,8 @@ sh push.sh "mesaj" → GitHub (main branch) → GitHub Actions → SSH VPS → d
 ```
 
 - **push.sh** — face `git add . && commit && git push origin main --force`
-- **deploy.sh** — rulează PE VPS: `git pull`, `npm install`, `npm run build`, `pm2 restart kodeflow`, `nginx reload`
+- **deploy.sh** — rulează PE VPS: `git pull`, `npm install`, `npm run build`, apoi `pm2 delete kodeflow` + `pm2 start ecosystem.config.cjs` (slate curat), `nginx reload`
+- **ecosystem.config.cjs** — config PM2 pentru backend: `node --import tsx --env-file-if-exists=.env server/index.ts`, port `SERVER_PORT=3001`
 - **GitHub Actions** (`.github/workflows/deploy.yml`) — se conectează SSH pe VPS și rulează `deploy.sh`
 
 ## Infrastructură
@@ -57,6 +58,7 @@ Mergi pe github.com/valentincojocaru/kodeflow → Settings → Secrets → Actio
 - `src/pages/dashboard.tsx` — client portal
 - `push.sh` — scriptul de deploy (rulează din Shell)
 - `deploy.sh` — scriptul care rulează pe VPS
+- `ecosystem.config.cjs` — config PM2 pentru backend (rulează pe VPS)
 - `.github/workflows/deploy.yml` — GitHub Actions workflow
 
 ## Gotchas
@@ -65,6 +67,8 @@ Mergi pe github.com/valentincojocaru/kodeflow → Settings → Secrets → Actio
 - `GITHUB_TOKEN` în Replit Secrets trebuie să fie DOAR valoarea `ghp_...` fără prefix `sha256:` sau spații.
 - **Agentul NU poate rula `sh push.sh`** — git push este blocat pentru agent. Userul trebuie să îl ruleze DIN SHELL.
 - `git remote set-url` și `git remote add` nu sunt permise agentului — push.sh le face în Shell.
+- **502 pe `/api` = backend Express picat pe VPS** (frontend-ul rămâne 200, e static). Cauza tipică: PM2 `kodeflow` în crash-loop. `pm2 restart` refolosește definiția veche (stricată) a procesului — de aceea `deploy.sh` face `pm2 delete` + `pm2 start ecosystem.config.cjs` ca să aplice mereu config-ul bun. Logul de erori al backend-ului apare acum în output-ul GitHub Actions (deploy.sh rulează `pm2 logs --err`).
+- Backend-ul NU folosește `dotenv` în cod — variabilele (`DATABASE_URL`, `JWT_SECRET`, `SMTP_*`) sunt încărcate pe VPS prin `node --env-file-if-exists=.env` din `ecosystem.config.cjs`. Pe VPS trebuie să existe `/var/www/kodeflow/.env`.
 
 ## Starea curentă a site-ului (ce s-a modificat)
 

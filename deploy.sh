@@ -35,17 +35,28 @@ log "Build frontend..."
 npm run build || { log "EROARE: Build a eșuat!"; exit 1; }
 log "✓ Frontend construit în dist/public/"
 
-# 5. Restart backend cu PM2
-log "Restart backend (PM2)..."
-if pm2 list | grep -q "$APP_NAME"; then
-    pm2 restart "$APP_NAME" || { log "EROARE: PM2 restart a eșuat!"; exit 1; }
-    log "✓ Backend restartat"
+# 5. (Re)pornește backend cu PM2 dintr-o config explicită (slate curat)
+#    pm2 restart refoloseste definiția veche a procesului — dacă aceasta e
+#    stricată, procesul rămâne în crash-loop. De aceea ștergem și pornim din nou
+#    din ecosystem.config.cjs, ca să aplicăm mereu config-ul corect.
+log "(Re)pornire backend (PM2) din ecosystem.config.cjs..."
+pm2 delete "$APP_NAME" 2>/dev/null || true
+pm2 start ecosystem.config.cjs --update-env || { log "EROARE: PM2 start a eșuat!"; exit 1; }
+pm2 save || true
+log "✓ Backend pornit"
+
+# 5b. Diagnostic: verifică dacă backend-ul a rămas pornit (nu în crash-loop)
+sleep 6
+log "Status backend (PM2):"
+pm2 list || true
+# Health-check direct pe backend — distinge "backend picat" de "mismatch de port Nginx"
+if curl -fsS http://127.0.0.1:3001/api/health >/dev/null 2>&1; then
+    log "✓ Backend răspunde pe 127.0.0.1:3001/api/health"
 else
-    log "PM2: Pornesc aplicația pentru prima dată..."
-    pm2 start "$APP_DIR/start.sh" --name "$APP_NAME" || { log "EROARE: PM2 start a eșuat!"; exit 1; }
-    pm2 save
-    log "✓ Backend pornit"
+    log "✗ Backend NU răspunde pe 127.0.0.1:3001 — vezi logul de erori de mai jos"
 fi
+log "Ultimele linii din log-ul de erori backend:"
+pm2 logs "$APP_NAME" --err --lines 25 --nostream 2>&1 || true
 
 # 6. Reload Nginx (fără downtime)
 log "Reload Nginx..."
