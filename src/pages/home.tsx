@@ -350,6 +350,10 @@ const Hero = () => {
 
   return (
     <section ref={heroRef} className="relative pt-28 sm:pt-36 md:pt-40 pb-16 sm:pb-24 px-5 sm:px-6 max-w-6xl mx-auto min-h-screen flex items-center z-10">
+      {/* grid overlay */}
+      <div className="absolute inset-0 -z-10 pointer-events-none [background-image:linear-gradient(rgba(255,255,255,0.03)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.03)_1px,transparent_1px)] [background-size:80px_80px] [mask-image:radial-gradient(ellipse_80%_70%_at_40%_40%,black_30%,transparent_100%)]" />
+      {/* orange glow under title */}
+      <div className="absolute top-[38%] left-0 w-[600px] h-[220px] -translate-y-1/2 bg-orange-500/[0.07] blur-[90px] rounded-full pointer-events-none -z-10" />
       <motion.div style={{ y: heroY, opacity: heroOpacity }} className="max-w-4xl w-full">
 
         <motion.div
@@ -376,7 +380,7 @@ const Hero = () => {
                 {i === 2 ? (
                   <span className="text-transparent bg-clip-text bg-gradient-to-r from-orange-400 via-amber-300 to-orange-500">Dominate.</span>
                 ) : (
-                  <span className="text-white/90">{line}</span>
+                  <span className="text-white">{line}</span>
                 )}
               </motion.div>
             </div>
@@ -387,7 +391,7 @@ const Hero = () => {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, delay: 0.4 }}
-          className="text-lg md:text-xl text-white/40 mb-12 max-w-xl leading-relaxed font-light tracking-wide"
+          className="text-lg md:text-xl text-white/65 mb-12 max-w-xl leading-relaxed font-light tracking-wide"
         >
           Freelance full-stack engineer building fast, scalable, and premium web applications for ambitious brands.
         </motion.p>
@@ -466,7 +470,7 @@ const TECHS = ["React", "TypeScript", "Node.js", "Python", "Next.js", "PostgreSQ
 const TechStack = () => (
   <div className="border-y border-white/[0.04] bg-[#0d0d0d] py-5 overflow-hidden flex relative z-10">
     <motion.div
-      className="flex gap-16 whitespace-nowrap px-4 font-mono text-xs text-white/25 uppercase tracking-[0.18em] font-semibold"
+      className="flex gap-16 whitespace-nowrap px-4 font-mono text-xs text-white/40 uppercase tracking-[0.18em] font-semibold"
       animate={{ x: ["0%", "-50%"] }}
       transition={{ duration: 22, repeat: Infinity, ease: "linear" }}
     >
@@ -504,10 +508,10 @@ const StatsBar = () => {
             <div className="w-11 h-11 rounded-2xl bg-white/[0.04] border border-white/[0.07] flex items-center justify-center mb-5 text-orange-400/70 group-hover:border-orange-500/30 group-hover:text-orange-400 transition-all duration-300">
               {s.icon}
             </div>
-            <div className="text-4xl lg:text-5xl font-black tracking-tighter mb-1.5 text-transparent bg-clip-text bg-gradient-to-b from-white to-white/50">
+            <div className="text-5xl lg:text-6xl font-black tracking-tighter mb-1.5 text-transparent bg-clip-text bg-gradient-to-b from-orange-300 to-orange-500" style={{ filter: "drop-shadow(0 0 20px rgba(249,115,22,0.35))" }}>
               <AnimatedNumber target={s.num} suffix={s.suffix} />
             </div>
-            <div className="text-xs font-medium text-white/30 uppercase tracking-widest">{s.label}</div>
+            <div className="text-xs font-semibold text-white/50 uppercase tracking-widest">{s.label}</div>
           </motion.div>
         ))}
       </div>
@@ -612,10 +616,10 @@ const About = () => (
         <h2 className="text-4xl md:text-5xl font-black mb-8 tracking-[-0.02em] leading-[1.1] text-white">
           The difference is in the details.
         </h2>
-        <p className="text-base text-white/40 mb-5 leading-[1.8]">
+        <p className="text-base text-white/65 mb-5 leading-[1.8]">
           When you hire me, you don't get an account manager or a junior dev learning on your dime. You get me directly — building your product from architecture to deployment.
         </p>
-        <p className="text-base text-white/40 leading-[1.8]">
+        <p className="text-base text-white/65 leading-[1.8]">
           I specialize in taking complex requirements and turning them into intuitive, blazing-fast applications that your users will actually love using.
         </p>
       </motion.div>
@@ -698,12 +702,12 @@ const Process = () => {
               <div className="w-10 h-10 rounded-xl bg-white/[0.05] border border-white/[0.08] flex items-center justify-center mb-6 text-orange-400/80 group-hover:border-orange-500/30 group-hover:text-orange-400 transition-all">
                 {phase.icon}
               </div>
-              <div className="text-5xl font-black text-white/[0.04] mb-4 select-none group-hover:text-orange-500/10 transition-colors">{phase.step}</div>
+              <div className="text-5xl font-black text-white/[0.06] mb-4 select-none group-hover:text-orange-500/15 transition-colors">{phase.step}</div>
               <div className="flex items-center gap-2 mb-2.5">
                 <h3 className="text-base font-bold tracking-tight text-white">{phase.title}</h3>
-                <span className="text-[9px] text-white/20 border border-white/[0.06] px-2 py-0.5 rounded-full font-mono">{phase.time}</span>
+                <span className="text-[9px] text-white/35 border border-white/[0.08] px-2 py-0.5 rounded-full font-mono">{phase.time}</span>
               </div>
-              <p className="text-white/30 leading-relaxed text-sm">{phase.desc}</p>
+              <p className="text-white/55 leading-relaxed text-sm">{phase.desc}</p>
             </motion.div>
           ))}
         </div>
@@ -739,7 +743,7 @@ const Services = () => {
             Services
           </div>
           <h2 className="text-4xl md:text-5xl font-black mb-5 tracking-[-0.02em] text-white">Expertise</h2>
-          <p className="text-base text-white/35 max-w-sm">What I can build for you.</p>
+          <p className="text-base text-white/60 max-w-sm">What I can build for you.</p>
         </motion.div>
 
         <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-4">
@@ -755,8 +759,8 @@ const Services = () => {
               <div className="mb-5 w-12 h-12 rounded-xl bg-white/[0.04] border border-white/[0.07] flex items-center justify-center group-hover:border-orange-500/25 transition-all">
                 <div className="text-orange-400/70 group-hover:text-orange-400 transition-colors">{service.icon}</div>
               </div>
-              <h3 className="text-sm font-bold mb-2 tracking-tight text-white/80">{service.title}</h3>
-              <p className="text-white/30 leading-relaxed text-xs">{service.desc}</p>
+              <h3 className="text-sm font-bold mb-2 tracking-tight text-white">{service.title}</h3>
+              <p className="text-white/55 leading-relaxed text-xs">{service.desc}</p>
             </motion.div>
           ))}
         </div>
@@ -788,7 +792,7 @@ const Work = () => {
               Work
             </div>
             <h2 className="text-4xl md:text-5xl font-black mb-4 tracking-[-0.02em] text-white">Selected Work</h2>
-            <p className="text-base text-white/35">Recent projects I've built.</p>
+            <p className="text-base text-white/60">Recent projects I've built.</p>
           </div>
           <a href="#" className="flex items-center gap-2 font-semibold text-orange-400 hover:text-orange-300 group pb-2 border-b border-orange-200 hover:border-orange-600 transition-colors">
             View GitHub <ChevronRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
@@ -821,11 +825,11 @@ const Work = () => {
                 <div className="h-px w-6 bg-orange-500/50" />
                 <div className="text-[10px] font-bold text-orange-400/60 uppercase tracking-[0.15em]">{project.tag}</div>
               </div>
-              <h3 className="text-lg font-bold group-hover:text-orange-400 transition-colors tracking-tight text-white/80 mb-2">{project.title}</h3>
-              <p className="text-white/30 text-xs leading-relaxed mb-4">{project.desc}</p>
+              <h3 className="text-lg font-bold group-hover:text-orange-400 transition-colors tracking-tight text-white mb-2">{project.title}</h3>
+              <p className="text-white/60 text-xs leading-relaxed mb-4">{project.desc}</p>
               <div className="flex flex-wrap gap-1.5">
                 {project.tech.map(t => (
-                  <span key={t} className="px-2 py-0.5 rounded-md text-[10px] font-medium border border-white/[0.06] text-white/25 bg-white/[0.02]">{t}</span>
+                  <span key={t} className="px-2 py-0.5 rounded-md text-[10px] font-medium border border-white/[0.09] text-white/45 bg-white/[0.03]">{t}</span>
                 ))}
               </div>
             </motion.div>
@@ -864,7 +868,7 @@ const Comparison = () => {
           <h2 className="text-4xl md:text-5xl font-black mb-5 tracking-[-0.02em] text-white">
             pyKode <span className="text-transparent bg-clip-text bg-gradient-to-r from-orange-400 to-amber-300">vs The Rest</span>
           </h2>
-          <p className="text-base text-white/35">Stop paying 10x more for slower results and junior code.</p>
+          <p className="text-base text-white/60">Stop paying 10x more for slower results and junior code.</p>
         </motion.div>
 
         <motion.div initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}>
@@ -980,7 +984,7 @@ const Pricing = () => {
             Pricing
           </div>
           <h2 className="text-4xl md:text-5xl font-black mb-5 tracking-[-0.02em] text-white">Transparent Pricing</h2>
-          <p className="text-base text-white/35">Simple, predictable rates for high-quality engineering.</p>
+          <p className="text-base text-white/60">Simple, predictable rates for high-quality engineering.</p>
         </motion.div>
 
         <div className="grid md:grid-cols-3 gap-8 items-center">
@@ -1029,17 +1033,17 @@ const Pricing = () => {
                     Most Popular
                   </div>
                 )}
-                <h3 className="text-sm font-bold mb-4 text-white/50 uppercase tracking-[0.12em]">{tier.name}</h3>
+                <h3 className="text-sm font-bold mb-4 text-white/70 uppercase tracking-[0.12em]">{tier.name}</h3>
                 <div className="mb-5 flex items-baseline gap-2">
                   <span className={`text-4xl font-black tracking-tighter ${tier.popular ? "text-transparent bg-clip-text bg-gradient-to-r from-orange-400 to-amber-300" : "text-white"}`}>{tier.price}</span>
-                  <span className="text-white/25 text-sm">/ {tier.period}</span>
+                  <span className="text-white/40 text-sm">/ {tier.period}</span>
                 </div>
-                <p className="mb-7 text-xs leading-relaxed text-white/35">{tier.desc}</p>
+                <p className="mb-7 text-xs leading-relaxed text-white/60">{tier.desc}</p>
                 <ul className="space-y-3 mb-8 flex-grow">
                   {tier.features.map((f, j) => (
                     <li key={j} className="flex items-start gap-2.5">
                       <CheckCircle2 className={`w-3.5 h-3.5 mt-0.5 shrink-0 ${tier.popular ? "text-orange-400" : "text-white/25"}`} strokeWidth={2.5} />
-                      <span className={`text-xs ${tier.popular ? "text-white/60" : "text-white/30"}`}>{f}</span>
+                      <span className={`text-xs ${tier.popular ? "text-white/75" : "text-white/55"}`}>{f}</span>
                     </li>
                   ))}
                 </ul>
@@ -1424,10 +1428,10 @@ const Contact = () => {
 const Footer = () => (
   <footer className="bg-[#030303] pt-12 pb-16 px-6 relative z-10 border-t border-white/[0.04]">
     <div className="max-w-6xl mx-auto flex flex-col md:flex-row justify-between items-center gap-6">
-      <div className="font-black text-xl text-white/80 tracking-[-0.02em]">
+      <div className="font-black text-xl text-white tracking-[-0.02em]">
         py<span className="text-orange-400">Kode</span>
       </div>
-      <div className="text-xs font-medium text-white/20 tracking-wide">© {new Date().getFullYear()} pyKode. All rights reserved.</div>
+      <div className="text-xs font-medium text-white/40 tracking-wide">© {new Date().getFullYear()} pyKode. All rights reserved.</div>
       <div className="flex items-center gap-3">
         {[{ icon: <Github size={15} />, label: "GitHub" }, { icon: <Twitter size={15} />, label: "Twitter" }, { icon: <Linkedin size={15} />, label: "LinkedIn" }].map(s => (
           <motion.a key={s.label} href="#"
@@ -1486,7 +1490,7 @@ const FAQ = () => {
           <h2 className="text-4xl md:text-5xl font-black tracking-[-0.02em] mb-5">
             Common <span className="text-transparent bg-clip-text bg-gradient-to-r from-orange-400 to-amber-300">questions</span>
           </h2>
-          <p className="text-white/35 text-base">Everything you need to know before we start working together.</p>
+          <p className="text-white/60 text-base">Everything you need to know before we start working together.</p>
         </motion.div>
 
         <div className="space-y-2">
@@ -1507,7 +1511,7 @@ const FAQ = () => {
                 className="w-full flex items-center justify-between px-7 py-5 text-left gap-4"
                 onClick={() => setOpenIdx(openIdx === i ? null : i)}
               >
-                <span className={`font-semibold text-sm leading-snug transition-colors ${openIdx === i ? "text-white/90" : "text-white/50"}`}>
+                <span className={`font-semibold text-sm leading-snug transition-colors ${openIdx === i ? "text-white" : "text-white/75"}`}>
                   {item.q}
                 </span>
                 <motion.div
@@ -1531,7 +1535,7 @@ const FAQ = () => {
                     exit={{ height: 0, opacity: 0 }}
                     transition={{ duration: 0.28, ease: [0.16, 1, 0.3, 1] }}
                   >
-                    <p className="px-7 pb-6 text-white/30 text-sm leading-[1.8]">
+                    <p className="px-7 pb-6 text-white/60 text-sm leading-[1.8]">
                       {item.a}
                     </p>
                   </motion.div>
@@ -1545,22 +1549,72 @@ const FAQ = () => {
   );
 };
 
+// ─── CTA Band ─────────────────────────────────────────────────────────────
+
+const CTABand = () => {
+  const openHire = useContext(HireModalCtx);
+  return (
+    <section className="relative z-10 overflow-hidden">
+      <div className="bg-gradient-to-br from-orange-500 via-orange-600 to-amber-500 px-5 sm:px-6 py-20 md:py-28">
+        {/* noise texture */}
+        <div className="absolute inset-0 opacity-[0.08] pointer-events-none" style={{ backgroundImage: "url(\"data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E\")" }} />
+        {/* grid lines */}
+        <div className="absolute inset-0 opacity-[0.07] pointer-events-none [background-image:linear-gradient(rgba(0,0,0,0.5)_1px,transparent_1px),linear-gradient(90deg,rgba(0,0,0,0.5)_1px,transparent_1px)] [background-size:60px_60px]" />
+
+        <div className="relative max-w-4xl mx-auto text-center">
+          <motion.div
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.7 }}
+          >
+            <p className="text-orange-100/80 text-sm font-semibold tracking-[0.2em] uppercase mb-5">Ready when you are</p>
+            <h2 className="text-4xl sm:text-5xl md:text-6xl font-black text-white tracking-[-0.03em] leading-[1.05] mb-6">
+              Got a project in mind?<br />
+              <span className="text-orange-950/70">Let's build it.</span>
+            </h2>
+            <p className="text-orange-100/75 text-lg md:text-xl max-w-xl mx-auto mb-10 leading-relaxed">
+              From MVP to production-ready. I take ambitious ideas and turn them into software people actually use.
+            </p>
+            <div className="flex flex-col sm:flex-row gap-4 justify-center">
+              <motion.button
+                whileHover={{ scale: 1.03 }}
+                whileTap={{ scale: 0.97 }}
+                onClick={openHire}
+                className="bg-white text-orange-600 px-8 py-4 rounded-full font-bold text-base shadow-xl hover:shadow-2xl hover:bg-orange-50 transition-all flex items-center justify-center gap-2.5 group"
+              >
+                Start a Project <ArrowRight className="w-4 h-4 group-hover:translate-x-0.5 transition-transform" />
+              </motion.button>
+              <a
+                href="#contact"
+                className="border-2 border-white/40 hover:border-white text-white px-8 py-4 rounded-full font-semibold text-base transition-all flex items-center justify-center gap-2 hover:bg-white/10"
+              >
+                Or just say hello
+              </a>
+            </div>
+          </motion.div>
+        </div>
+      </div>
+    </section>
+  );
+};
+
 // ─── Ambient Blobs ────────────────────────────────────────────────────────
 
 const AmbientBlobs = () => (
   <div className="fixed inset-0 overflow-hidden pointer-events-none z-0">
     <motion.div
-      className="absolute top-[-15%] right-[-10%] w-[700px] h-[700px] rounded-full bg-orange-500/[0.055] blur-[130px]"
+      className="absolute top-[-15%] right-[-10%] w-[700px] h-[700px] rounded-full bg-orange-500/[0.13] blur-[120px]"
       animate={{ scale: [1, 1.15, 1], x: [0, -40, 0], y: [0, 40, 0] }}
       transition={{ duration: 20, repeat: Infinity, ease: "easeInOut" }}
     />
     <motion.div
-      className="absolute bottom-[20%] left-[-15%] w-[600px] h-[600px] rounded-full bg-amber-500/[0.04] blur-[120px]"
+      className="absolute bottom-[20%] left-[-15%] w-[600px] h-[600px] rounded-full bg-amber-500/[0.09] blur-[110px]"
       animate={{ scale: [1, 1.2, 1], x: [0, 40, 0], y: [0, -25, 0] }}
       transition={{ duration: 24, repeat: Infinity, ease: "easeInOut", delay: 3 }}
     />
     <motion.div
-      className="absolute top-[55%] right-[-8%] w-[450px] h-[450px] rounded-full bg-orange-400/[0.03] blur-[100px]"
+      className="absolute top-[55%] right-[-8%] w-[450px] h-[450px] rounded-full bg-orange-400/[0.07] blur-[100px]"
       animate={{ scale: [1, 1.12, 1], y: [0, -35, 0] }}
       transition={{ duration: 16, repeat: Infinity, ease: "easeInOut", delay: 6 }}
     />
@@ -1590,6 +1644,7 @@ export default function Home() {
             <Comparison />
             <Pricing />
             <Booking />
+            <CTABand />
             <FAQ />
           </main>
           <Footer />
