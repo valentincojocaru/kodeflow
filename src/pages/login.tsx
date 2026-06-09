@@ -26,21 +26,34 @@ export default function LoginPage() {
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
-    setError(""); setLoading(true);
+    setError("");
+    if (!loginForm.email.trim() || !loginForm.password) {
+      setError("Email și parola sunt obligatorii."); return;
+    }
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(loginForm.email.trim())) {
+      setError("Introdu o adresă de email validă."); return;
+    }
+    setLoading(true);
     try {
-      await login(loginForm.email, loginForm.password);
+      await login(loginForm.email.trim(), loginForm.password);
     } catch (err: any) {
-      setError(err.message);
+      setError(err.message || "Autentificare eșuată. Verifică datele.");
     } finally { setLoading(false); }
   };
 
   const handleRegister = async (e: React.FormEvent) => {
     e.preventDefault();
-    setError(""); setLoading(true);
+    setError("");
+    if (!regForm.name.trim()) { setError("Numele este obligatoriu."); return; }
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(regForm.email.trim())) {
+      setError("Introdu o adresă de email validă."); return;
+    }
+    if (regForm.password.length < 8) { setError("Parola trebuie să aibă minim 8 caractere."); return; }
+    setLoading(true);
     try {
-      await register(regForm);
+      await register({ ...regForm, email: regForm.email.trim() });
     } catch (err: any) {
-      setError(err.message);
+      setError(err.message || "Înregistrare eșuată. Încearcă din nou.");
     } finally { setLoading(false); }
   };
 
@@ -121,7 +134,7 @@ export default function LoginPage() {
 
               <AnimatePresence mode="wait">
                 {tab === "login" ? (
-                  <motion.form key="lform" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} onSubmit={handleLogin} className="space-y-4">
+                  <motion.form key="lform" noValidate initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} onSubmit={handleLogin} className="space-y-4">
                     <Field label="Email" icon={<Mail size={14} />}>
                       <Input type="email" placeholder="your@email.com" value={loginForm.email}
                         onChange={e => setLoginForm(f => ({ ...f, email: e.target.value }))}
@@ -140,7 +153,7 @@ export default function LoginPage() {
                     </Button>
                   </motion.form>
                 ) : (
-                  <motion.form key="rform" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} onSubmit={handleRegister} className="space-y-3">
+                  <motion.form key="rform" noValidate initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} onSubmit={handleRegister} className="space-y-3">
                     <Field label="Full Name" icon={<User size={14} />}>
                       <Input placeholder="John Smith" value={regForm.name}
                         onChange={e => setRegForm(f => ({ ...f, name: e.target.value }))}
