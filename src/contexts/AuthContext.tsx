@@ -46,7 +46,14 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         ...options.headers,
       },
     });
-    const data = await res.json();
+    let data: any = {};
+    try {
+      const text = await res.text();
+      if (text) data = JSON.parse(text);
+    } catch {
+      if (!res.ok) throw new Error(`Server error (${res.status})`);
+      return data;
+    }
     if (!res.ok) throw new Error(data.error || "Request failed");
     return data;
   }, [token]);
@@ -107,7 +114,14 @@ export async function authFetch(url: string, token: string | null, options: Requ
       ...options.headers,
     },
   });
-  const data = await res.json();
+  let data: any = {};
+  try {
+    const text = await res.text();
+    if (text) data = JSON.parse(text);
+  } catch {
+    if (!res.ok) throw new Error(`Server error (${res.status})`);
+    return data;
+  }
   if (!res.ok) throw new Error(data.error || "Request failed");
   return data;
 }

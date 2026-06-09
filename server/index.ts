@@ -506,4 +506,10 @@ app.post("/api/auth/reset-password", async (req, res) => {
 // Health check
 app.get("/api/health", (_req, res) => res.json({ ok: true, time: new Date().toISOString() }));
 
+// Global JSON error handler — always return JSON, never HTML
+app.use((err: any, _req: any, res: any, _next: any) => {
+  console.error("Server error:", err?.message || err);
+  res.status(err.status || 500).json({ error: err.message || "Internal server error" });
+});
+
 app.listen(PORT, () => console.log(`🚀 API server running on port ${PORT}`));

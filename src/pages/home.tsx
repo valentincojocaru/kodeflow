@@ -13,6 +13,7 @@ import {
   Code, Smartphone
 } from "lucide-react";
 import ScrollProgress from "@/components/ScrollProgress";
+import HeroScene3D from "@/components/HeroScene3D";
 
 // ─── Magnetic Button ──────────────────────────────────────────────────────
 
@@ -349,12 +350,13 @@ const Hero = () => {
   const { x: btnX, y: btnY } = useMagnetic(btnRef as React.RefObject<HTMLElement>);
 
   return (
-    <section ref={heroRef} className="relative pt-28 sm:pt-36 md:pt-40 pb-16 sm:pb-24 px-5 sm:px-6 max-w-6xl mx-auto min-h-screen flex items-center z-10">
+    <section ref={heroRef} className="relative pt-28 sm:pt-36 md:pt-40 pb-16 sm:pb-24 min-h-screen flex items-center z-10 overflow-hidden">
       {/* grid overlay */}
       <div className="absolute inset-0 -z-10 pointer-events-none [background-image:linear-gradient(rgba(255,255,255,0.03)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.03)_1px,transparent_1px)] [background-size:80px_80px] [mask-image:radial-gradient(ellipse_80%_70%_at_40%_40%,black_30%,transparent_100%)]" />
       {/* orange glow under title */}
       <div className="absolute top-[38%] left-0 w-[600px] h-[220px] -translate-y-1/2 bg-orange-500/[0.07] blur-[90px] rounded-full pointer-events-none -z-10" />
-      <motion.div style={{ y: heroY, opacity: heroOpacity }} className="max-w-4xl w-full">
+      <div className="max-w-7xl mx-auto px-5 sm:px-6 w-full grid lg:grid-cols-[58%_42%] gap-10 items-center">
+      <motion.div style={{ y: heroY, opacity: heroOpacity }} className="w-full">
 
         <motion.div
           initial={{ opacity: 0, scale: 0.9 }}
@@ -442,6 +444,18 @@ const Hero = () => {
           </div>
         </motion.div>
       </motion.div>
+
+      {/* 3D Scene — desktop only */}
+      <motion.div
+        initial={{ opacity: 0, scale: 0.92 }}
+        animate={{ opacity: 1, scale: 1 }}
+        transition={{ duration: 1.5, delay: 0.4, ease: [0.16, 1, 0.3, 1] }}
+        className="hidden lg:block relative h-[560px] xl:h-[640px]"
+      >
+        <HeroScene3D className="w-full h-full" />
+        <div className="absolute inset-0 pointer-events-none" style={{ background: "radial-gradient(ellipse 82% 82% at 50% 50%, transparent 18%, #080808 100%)" }} />
+      </motion.div>
+      </div>
 
       <motion.div
         initial={{ opacity: 0 }}

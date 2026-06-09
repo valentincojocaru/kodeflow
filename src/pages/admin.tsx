@@ -12,7 +12,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import CodeBackground from "@/components/CodeBackground";
+import ThreeBackground from "@/components/ThreeBackground";
 
 const STATUS_OPTIONS = ["pending", "planning", "in_progress", "review", "completed", "cancelled"];
 const PRIORITY_OPTIONS = ["low", "normal", "high", "urgent"];
@@ -143,16 +143,16 @@ export default function Admin() {
   ];
 
   return (
-    <div className="min-h-screen bg-[#141414] text-foreground relative overflow-hidden">
-      <CodeBackground />
-      <div className="fixed inset-0 bg-[radial-gradient(ellipse_80%_50%_at_20%_-10%,rgba(249,115,22,0.1),transparent)] pointer-events-none" />
-      <div className="fixed inset-0 bg-[radial-gradient(ellipse_40%_50%_at_90%_90%,rgba(234,88,12,0.05),transparent)] pointer-events-none" />
-      <div className="fixed inset-0 bg-[linear-gradient(rgba(249,115,22,0.012)_1px,transparent_1px),linear-gradient(90deg,rgba(249,115,22,0.012)_1px,transparent_1px)] bg-[size:72px_72px] pointer-events-none" />
+    <div className="min-h-screen bg-[#07070e] text-foreground relative overflow-hidden">
+      <ThreeBackground />
+      <div className="fixed inset-0 bg-[radial-gradient(ellipse_80%_50%_at_20%_-10%,rgba(147,51,234,0.09),transparent)] pointer-events-none" />
+      <div className="fixed inset-0 bg-[radial-gradient(ellipse_40%_50%_at_90%_90%,rgba(249,115,22,0.05),transparent)] pointer-events-none" />
+      <div className="fixed inset-0 bg-[linear-gradient(rgba(147,51,234,0.014)_1px,transparent_1px),linear-gradient(90deg,rgba(147,51,234,0.014)_1px,transparent_1px)] bg-[size:80px_80px] pointer-events-none" />
 
       {/* Sidebar */}
       <aside className="fixed left-0 top-0 h-full w-60 z-30 flex flex-col">
-        <div className="absolute inset-0 bg-[#1a1a1a]/90 backdrop-blur-2xl border-r border-white/[0.04]" />
-        <div className="absolute inset-y-0 right-0 w-px bg-gradient-to-b from-transparent via-primary/20 to-transparent" />
+        <div className="absolute inset-0 bg-[#090910]/96 backdrop-blur-3xl border-r border-white/[0.07]" />
+        <div className="absolute inset-y-0 right-0 w-px bg-gradient-to-b from-transparent via-violet-500/28 to-transparent" />
 
         <div className="relative flex flex-col h-full">
           {/* Logo */}
@@ -245,14 +245,15 @@ export default function Admin() {
                       { label: "Pending",        value: stats?.pendingRequests ?? "—",icon: <Clock size={15} />,  color: "#f59e0b", sub: "awaiting" },
                     ].map((s, i) => (
                       <motion.div key={i} initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.06 }}
-                        className="relative overflow-hidden p-5 rounded-2xl border border-white/[0.05] bg-white/[0.02] group hover:border-white/[0.08] transition-all">
-                        <div className="absolute top-0 right-0 w-16 h-16 rounded-full blur-2xl opacity-20" style={{ background: s.color }} />
-                        <div className="flex items-start justify-between mb-3">
-                          <div className="w-9 h-9 rounded-xl flex items-center justify-center" style={{ background: s.color + "18", color: s.color }}>{s.icon}</div>
-                          <span className="text-[9px] text-muted-foreground/30 font-medium">{s.sub}</span>
+                        className="relative overflow-hidden p-5 rounded-2xl border border-white/[0.07] bg-gradient-to-br from-white/[0.028] to-white/[0.006] group hover:border-white/[0.14] hover:from-white/[0.04] transition-all duration-300">
+                        <div className="absolute -top-6 -right-6 w-24 h-24 rounded-full blur-3xl opacity-30" style={{ background: s.color }} />
+                        <div className="flex items-center justify-between mb-4">
+                          <div className="w-10 h-10 rounded-xl flex items-center justify-center border border-white/[0.06]" style={{ background: s.color + "12", color: s.color }}>{s.icon}</div>
+                          <RingProgress value={typeof s.value === "number" ? s.value : parseFloat(String(s.value)) || 0} max={Math.max(Number(stats?.totalProjects) || 4, typeof s.value === "number" ? s.value : parseFloat(String(s.value)) || 1)} color={s.color} />
                         </div>
-                        <p className="text-3xl font-black" style={{ color: s.color }}>{s.value}</p>
-                        <p className="text-[11px] text-muted-foreground/55 mt-0.5 font-medium">{s.label}</p>
+                        <p className="text-[34px] font-black leading-none" style={{ color: s.color }}>{s.value}</p>
+                        <p className="text-xs text-white/40 mt-1.5 font-semibold">{s.label}</p>
+                        <p className="text-[9px] text-white/25 mt-0.5">{s.sub}</p>
                       </motion.div>
                     ))}
                   </div>
@@ -268,16 +269,16 @@ export default function Admin() {
                       { label: "Outstanding",    value: stats?.totalPending,  color: "#f59e0b", icon: <Clock size={15} />, sub: "pending" },
                     ].map((r, i) => (
                       <motion.div key={i} initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.25 + i * 0.06 }}
-                        className="relative overflow-hidden p-5 rounded-2xl border border-white/[0.05] bg-white/[0.02]">
-                        <div className="absolute top-0 right-0 w-16 h-16 rounded-full blur-2xl opacity-15" style={{ background: r.color }} />
-                        <div className="flex items-start justify-between mb-3">
-                          <div className="w-9 h-9 rounded-xl flex items-center justify-center flex-shrink-0" style={{ background: r.color + "18", color: r.color }}>{r.icon}</div>
-                          <span className="text-[9px] text-muted-foreground/30">{r.sub}</span>
+                        className="relative overflow-hidden p-5 rounded-2xl border border-white/[0.07] bg-gradient-to-br from-white/[0.025] to-white/[0.006] hover:border-white/[0.12] transition-all duration-300">
+                        <div className="absolute -top-6 -right-6 w-24 h-24 rounded-full blur-3xl opacity-28" style={{ background: r.color }} />
+                        <div className="flex items-center justify-between mb-4">
+                          <div className="w-10 h-10 rounded-xl flex items-center justify-center border border-white/[0.06] flex-shrink-0" style={{ background: r.color + "12", color: r.color }}>{r.icon}</div>
+                          <span className="text-[9px] text-white/25 font-medium tracking-wider uppercase">{r.sub}</span>
                         </div>
-                        <p className="text-3xl font-black" style={{ color: r.color }}>
+                        <p className="text-[34px] font-black leading-none" style={{ color: r.color }}>
                           ${r.value != null ? Number(r.value).toFixed(2) : "0.00"}
                         </p>
-                        <p className="text-[11px] text-muted-foreground/55 mt-0.5 font-medium">{r.label}</p>
+                        <p className="text-xs text-white/40 mt-1.5 font-semibold">{r.label}</p>
                       </motion.div>
                     ))}
                   </div>
@@ -663,6 +664,22 @@ export default function Admin() {
   );
 }
 
+function RingProgress({ value, max, color, size = 40, strokeWidth = 2.5 }: {
+  value: number; max: number; color: string; size?: number; strokeWidth?: number;
+}) {
+  const r = (size - strokeWidth * 2) / 2;
+  const circ = 2 * Math.PI * r;
+  const pct = max > 0 ? Math.min(value / max, 1) : 0;
+  return (
+    <svg width={size} height={size} style={{ transform: "rotate(-90deg)", flexShrink: 0 }}>
+      <circle cx={size / 2} cy={size / 2} r={r} fill="none" stroke="rgba(255,255,255,0.06)" strokeWidth={strokeWidth} />
+      <circle cx={size / 2} cy={size / 2} r={r} fill="none" stroke={color} strokeWidth={strokeWidth}
+        strokeLinecap="round" strokeDasharray={circ} strokeDashoffset={circ * (1 - pct)}
+        style={{ transition: "stroke-dashoffset 1.2s ease" }} />
+    </svg>
+  );
+}
+
 function Pane({ children }: { children: React.ReactNode }) {
   return (
     <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }} transition={{ duration: 0.22 }}>
@@ -673,7 +690,7 @@ function Pane({ children }: { children: React.ReactNode }) {
 
 function Header({ title, subtitle, children }: { title: string; subtitle: string; children?: React.ReactNode }) {
   return (
-    <div className="px-8 py-5 border-b border-white/[0.04] bg-[#141414]/80 backdrop-blur-xl sticky top-0 z-20 flex items-center justify-between gap-4">
+    <div className="px-8 py-5 border-b border-white/[0.05] bg-[#07070e]/92 backdrop-blur-2xl sticky top-0 z-20 flex items-center justify-between gap-4">
       <div>
         <h1 className="text-xl font-black tracking-tight">{title}</h1>
         {subtitle && <p className="text-xs text-muted-foreground/45 mt-0.5">{subtitle}</p>}
@@ -685,9 +702,9 @@ function Header({ title, subtitle, children }: { title: string; subtitle: string
 
 function GlassCard({ title, children, action }: { title: string; children: React.ReactNode; action?: { label: string; onClick: () => void } }) {
   return (
-    <div className="rounded-2xl border border-white/[0.05] bg-white/[0.015] overflow-hidden backdrop-blur-sm">
-      <div className="px-5 py-3 border-b border-white/[0.04] bg-white/[0.015] flex items-center justify-between">
-        <h3 className="text-[9px] font-black tracking-[0.12em] uppercase text-muted-foreground/35">{title}</h3>
+    <div className="rounded-2xl border border-white/[0.07] bg-white/[0.02] overflow-hidden">
+      <div className="px-5 py-3.5 border-b border-white/[0.05] bg-gradient-to-r from-white/[0.018] to-transparent flex items-center justify-between">
+        <h3 className="text-[9px] font-black tracking-[0.14em] uppercase text-white/30">{title}</h3>
         {action && <button onClick={action.onClick} className="text-[10px] text-primary font-bold hover:underline">{action.label}</button>}
       </div>
       <div className="p-4">{children}</div>
