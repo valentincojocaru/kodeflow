@@ -316,7 +316,7 @@ const Navbar = () => {
             initial={{ opacity: 0, height: 0 }}
             animate={{ opacity: 1, height: "auto" }}
             exit={{ opacity: 0, height: 0 }}
-            className="md:hidden bg-[#0a0a0a] border-b border-white/[0.05] overflow-hidden"
+            className="md:hidden bg-[#1f1f1f] border-b border-white/[0.05] overflow-hidden"
           >
             <div className="flex flex-col px-6 py-4 gap-4">
               {links.map(item => (
@@ -567,7 +567,7 @@ const StatsBar = () => {
     { num: 99, suffix: ".9%", label: "Uptime Average", icon: <TrendingUp size={18} /> },
   ];
   return (
-    <div className="bg-[#060606] py-12 md:py-16 px-5 sm:px-6 relative z-10 border-y border-white/[0.04]">
+    <div className="bg-[#191919] py-12 md:py-16 px-5 sm:px-6 relative z-10 border-y border-white/[0.04]">
       <div className="max-w-6xl mx-auto grid grid-cols-2 lg:grid-cols-4 gap-6 md:gap-8">
         {stats.map((s, i) => (
           <motion.div key={i}
@@ -736,7 +736,7 @@ const Process = () => {
   ];
 
   return (
-    <section id="process" className="py-20 md:py-32 px-5 sm:px-6 bg-[#050505] relative z-10">
+    <section id="process" className="py-20 md:py-32 px-5 sm:px-6 bg-[#181818] relative z-10">
       <div className="max-w-6xl mx-auto">
         <motion.div
           initial={{ opacity: 0, y: 30 }}
@@ -803,7 +803,7 @@ const Services = () => {
   ];
 
   return (
-    <section id="services" className="py-20 md:py-32 px-5 sm:px-6 relative z-10 bg-[#080808]">
+    <section id="services" className="py-20 md:py-32 px-5 sm:px-6 relative z-10 bg-[#1c1c1c]">
       <div className="max-w-6xl mx-auto">
         <motion.div
           initial={{ opacity: 0, y: 30 }}
@@ -851,7 +851,7 @@ const Work = () => {
   ];
 
   return (
-    <section id="work" className="py-20 md:py-32 px-5 sm:px-6 bg-[#050505] relative z-10">
+    <section id="work" className="py-20 md:py-32 px-5 sm:px-6 bg-[#181818] relative z-10">
       <div className="max-w-6xl mx-auto">
         <motion.div
           initial={{ opacity: 0, y: 30 }}
@@ -891,7 +891,7 @@ const Work = () => {
                 <div className="relative overflow-hidden h-[calc(100%-1.75rem)]">
                   <img src={project.image} alt={project.title} loading="lazy"
                     className="w-full h-full object-cover object-top transition-transform duration-[1200ms] ease-out group-hover:scale-[1.06]" />
-                  <div className="absolute inset-0 bg-gradient-to-t from-[#050505]/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+                  <div className="absolute inset-0 bg-gradient-to-t from-[#181818]/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
                 </div>
                 <div className="absolute top-3.5 right-4 bg-black/65 backdrop-blur-sm text-orange-300 text-[10px] font-bold px-3 py-1 rounded-full border border-orange-500/20 z-20">
                   {project.stat}
@@ -925,7 +925,7 @@ const TESTIMONIALS = [
 ];
 
 const Testimonials = () => (
-  <section id="testimonials" className="py-20 md:py-32 px-5 sm:px-6 bg-[#080808] relative z-10">
+  <section id="testimonials" className="py-20 md:py-32 px-5 sm:px-6 bg-[#1c1c1c] relative z-10">
     <div className="max-w-6xl mx-auto">
       <motion.div
         initial={{ opacity: 0, y: 30 }}
@@ -987,7 +987,7 @@ const Comparison = () => {
   ];
 
   return (
-    <section className="py-20 md:py-32 px-5 sm:px-6 bg-[#0a0a0a] relative z-10">
+    <section className="py-20 md:py-32 px-5 sm:px-6 bg-[#1f1f1f] relative z-10">
       <div className="max-w-4xl mx-auto">
         <motion.div
           initial={{ opacity: 0, y: 30 }}
@@ -1105,7 +1105,7 @@ const Pricing = () => {
   ];
 
   return (
-    <section id="pricing" className="py-20 md:py-32 px-5 sm:px-6 bg-[#060606] relative z-10">
+    <section id="pricing" className="py-20 md:py-32 px-5 sm:px-6 bg-[#191919] relative z-10">
       <div className="max-w-5xl mx-auto">
         <motion.div
           initial={{ opacity: 0, y: 30 }}
@@ -1270,7 +1270,7 @@ const Booking = () => {
   };
 
   return (
-    <section className="py-20 md:py-32 px-5 sm:px-6 bg-[#0a0a0a] relative z-10">
+    <section className="py-20 md:py-32 px-5 sm:px-6 bg-[#1f1f1f] relative z-10">
       <div className="max-w-3xl mx-auto">
         <motion.div className="text-center mb-16"
           initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}>
@@ -1353,7 +1353,7 @@ const Booking = () => {
 
                 <button
                   onClick={() => setStep("form")} disabled={!selectedDay || !selectedSlot}
-                  className="w-full py-4 rounded-2xl font-bold text-sm transition-all bg-[#111111] hover:bg-orange-600 text-white disabled:opacity-30 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+                  className="w-full py-4 rounded-2xl font-bold text-sm transition-all bg-[#202020] hover:bg-orange-600 text-white disabled:opacity-30 disabled:cursor-not-allowed flex items-center justify-center gap-2"
                 >
                   Continue — {selectedDay && selectedSlot ? `${selectedDay} at ${selectedSlot}` : "select a slot"}
                   <ChevronRight className="w-4 h-4" />
@@ -1486,7 +1486,7 @@ const Contact = () => {
   };
 
   return (
-    <section id="contact" className="py-20 md:py-32 bg-[#040404] text-white px-5 sm:px-6 relative z-10 overflow-hidden">
+    <section id="contact" className="py-20 md:py-32 bg-[#171717] text-white px-5 sm:px-6 relative z-10 overflow-hidden">
       <div className="absolute top-0 right-0 w-[700px] h-[700px] bg-orange-500/[0.04] rounded-full blur-[140px] pointer-events-none -translate-y-1/2 translate-x-1/2" />
 
       <div className="max-w-5xl mx-auto grid md:grid-cols-2 gap-20 relative z-10">
@@ -1559,7 +1559,7 @@ const Contact = () => {
 // ─── Footer ───────────────────────────────────────────────────────────────
 
 const Footer = () => (
-  <footer className="bg-[#030303] pt-12 pb-16 px-6 relative z-10 border-t border-white/[0.04]">
+  <footer className="bg-[#161616] pt-12 pb-16 px-6 relative z-10 border-t border-white/[0.04]">
     <div className="max-w-6xl mx-auto flex flex-col md:flex-row justify-between items-center gap-6">
       <div className="font-black text-xl text-white tracking-[-0.02em]">
         py<span className="text-orange-400">Kode</span>
@@ -1610,7 +1610,7 @@ const FAQ_ITEMS = [
 const FAQ = () => {
   const [openIdx, setOpenIdx] = useState<number | null>(null);
   return (
-    <section id="faq" className="py-20 md:py-32 px-5 sm:px-6 bg-[#080808] relative z-10">
+    <section id="faq" className="py-20 md:py-32 px-5 sm:px-6 bg-[#1c1c1c] relative z-10">
       <div className="max-w-3xl mx-auto">
         <motion.div
           initial={{ opacity: 0, y: 30 }}
@@ -1761,7 +1761,7 @@ export default function Home() {
   return (
     <HireModalCtx.Provider value={() => setHireOpen(true)}>
       <HireModal open={hireOpen} onClose={() => setHireOpen(false)} />
-      <div className="min-h-screen bg-[#080808] text-white overflow-x-hidden" style={{ fontFeatureSettings: '"ss01","ss02"' }}>
+      <div className="min-h-screen bg-[#1c1c1c] text-white overflow-x-hidden" style={{ fontFeatureSettings: '"ss01","ss02"' }}>
         <ScrollProgress />
         <AmbientBlobs />
         <div className="relative z-10">

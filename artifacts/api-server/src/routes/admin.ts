@@ -73,7 +73,7 @@ router.get("/admin/activity", ...auth, async (_req, res) => {
        FROM project_updates pu
        JOIN projects p ON pu.project_id = p.id
        JOIN users u ON pu.author_id = u.id
-       ORDER BY pu.created_at DESC LIMIT 10`
+       ORDER BY pu.created_at DESC LIMIT 50`
     );
     res.json(result.rows);
   } catch {

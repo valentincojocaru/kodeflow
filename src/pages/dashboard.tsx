@@ -96,7 +96,7 @@ export default function Dashboard() {
   ];
 
   return (
-    <div className="min-h-screen bg-[#07070e] text-foreground relative overflow-hidden">
+    <div className="min-h-screen bg-[#18181d] text-foreground relative overflow-hidden">
       <ThreeBackground />
       {/* Background layers */}
       <div className="fixed inset-0 bg-[radial-gradient(ellipse_80%_50%_at_50%_-10%,rgba(147,51,234,0.09),transparent)] pointer-events-none" />
@@ -128,7 +128,7 @@ export default function Dashboard() {
                   <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-orange-500 to-orange-600 flex items-center justify-center text-sm font-black text-white shadow-md shadow-orange-500/30">
                     {user?.name?.[0]?.toUpperCase()}
                   </div>
-                  <div className="absolute -bottom-0.5 -right-0.5 w-3 h-3 rounded-full bg-emerald-400 border-2 border-[#0a0618]" />
+                  <div className="absolute -bottom-0.5 -right-0.5 w-3 h-3 rounded-full bg-emerald-400 border-2 border-[#1b1726]" />
                 </div>
                 <div className="min-w-0 flex-1">
                   <p className="text-xs font-bold truncate text-white/90">{user?.name}</p>

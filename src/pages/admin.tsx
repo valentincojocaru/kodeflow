@@ -7,7 +7,7 @@ import {
   X, CheckCircle2, Clock, AlertCircle, Star, RefreshCw, Search,
   ArrowLeft, Send, DollarSign, Shield, Calendar, ExternalLink, Github,
   Activity, Receipt, ChevronRight, FileText, Sparkles, BarChart3,
-  CreditCard, Eye
+  CreditCard, Eye, MessageSquare, Download, Megaphone
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -28,7 +28,7 @@ const STATUS_META: Record<string, { label: string; color: string; bg: string }> 
   cancelled:   { label: "Cancelled",   color: "#f87171", bg: "rgba(248,113,113,0.1)" },
 };
 
-type View = "overview" | "projects" | "users" | "invoices" | "project_detail";
+type View = "overview" | "projects" | "users" | "invoices" | "messages" | "project_detail";
 
 export default function Admin() {
   const { user, token, logout, loading } = useAuth();
@@ -50,6 +50,9 @@ export default function Admin() {
   const [showInvoiceForm, setShowInvoiceForm] = useState(false);
   const [invoiceForm, setInvoiceForm] = useState({ amount: "", status: "pending", dueDate: "" });
   const [savingInvoice, setSavingInvoice] = useState(false);
+  const [broadcast, setBroadcast] = useState({ projectId: "", type: "update", message: "" });
+  const [broadcasting, setBroadcasting] = useState(false);
+  const [editingUser, setEditingUser] = useState<any | null>(null);
 
   useEffect(() => {
     if (!loading && !user) { setLocation("/login"); return; }
@@ -125,6 +128,18 @@ export default function Admin() {
     loadData();
   };
 
+  const sendBroadcast = async () => {
+    if (!broadcast.projectId || !broadcast.message.trim()) return;
+    setBroadcasting(true);
+    try {
+      await authFetch(`/api/projects/${broadcast.projectId}/updates`, token, {
+        method: "POST", body: JSON.stringify({ message: broadcast.message, type: broadcast.type }),
+      });
+      setBroadcast({ projectId: "", type: "update", message: "" });
+      loadData();
+    } catch { } finally { setBroadcasting(false); }
+  };
+
   const filteredProjects = projects.filter(p => {
     const matchSearch = p.title.toLowerCase().includes(search.toLowerCase()) || p.client_name?.toLowerCase().includes(search.toLowerCase());
     const matchStatus = statusFilter === "all" || p.status === statusFilter;
@@ -138,12 +153,13 @@ export default function Admin() {
   const navItems: { id: View; label: string; icon: React.ReactNode; badge?: number }[] = [
     { id: "overview", label: "Overview",  icon: <BarChart3 size={14} /> },
     { id: "projects", label: "Projects",  icon: <Layers size={14} /> },
+    { id: "messages", label: "Messages",  icon: <MessageSquare size={14} /> },
     { id: "invoices", label: "Invoices",  icon: <CreditCard size={14} />, badge: pendingInvoicesCount || undefined },
     { id: "users",    label: "Clients",   icon: <Users size={14} /> },
   ];
 
   return (
-    <div className="min-h-screen bg-[#07070e] text-foreground relative overflow-hidden">
+    <div className="min-h-screen bg-[#18181d] text-foreground relative overflow-hidden">
       <ThreeBackground />
       <div className="fixed inset-0 bg-[radial-gradient(ellipse_80%_50%_at_20%_-10%,rgba(147,51,234,0.09),transparent)] pointer-events-none" />
       <div className="fixed inset-0 bg-[radial-gradient(ellipse_40%_50%_at_90%_90%,rgba(249,115,22,0.05),transparent)] pointer-events-none" />
@@ -151,7 +167,7 @@ export default function Admin() {
 
       {/* Sidebar */}
       <aside className="fixed left-0 top-0 h-full w-60 z-30 flex flex-col">
-        <div className="absolute inset-0 bg-[#090910]/96 backdrop-blur-3xl border-r border-white/[0.07]" />
+        <div className="absolute inset-0 bg-[#1c1c22]/96 backdrop-blur-3xl border-r border-white/[0.07]" />
         <div className="absolute inset-y-0 right-0 w-px bg-gradient-to-b from-transparent via-violet-500/28 to-transparent" />
 
         <div className="relative flex flex-col h-full">
@@ -558,7 +574,13 @@ export default function Admin() {
           {/* ── INVOICES ── */}
           {view === "invoices" && (
             <Pane key="invoices">
-              <Header title="Invoices" subtitle={`${invoices.length} total invoice${invoices.length !== 1 ? "s" : ""}`} />
+              <Header title="Invoices" subtitle={`${invoices.length} total invoice${invoices.length !== 1 ? "s" : ""}`}>
+                <Button onClick={() => exportCSV("invoices.csv", ["Project", "Client", "Amount", "Due Date", "Status"], invoices.map(inv => [inv.project_title, inv.client_name, Number(inv.amount).toFixed(2), inv.due_date || "", inv.status]))}
+                  disabled={invoices.length === 0}
+                  className="bg-white/[0.04] hover:bg-white/[0.08] border border-white/[0.08] text-white text-xs h-9 font-bold disabled:opacity-40">
+                  <Download size={13} className="mr-1.5" /> Export CSV
+                </Button>
+              </Header>
               <div className="px-8 py-6 space-y-5">
                 <div className="grid grid-cols-3 gap-4">
                   {[
@@ -617,7 +639,13 @@ export default function Admin() {
           {/* ── CLIENTS ── */}
           {view === "users" && (
             <Pane key="users">
-              <Header title="Clients" subtitle={`${users.length} registered client${users.length !== 1 ? "s" : ""}`} />
+              <Header title="Clients" subtitle={`${users.length} registered client${users.length !== 1 ? "s" : ""}`}>
+                <Button onClick={() => exportCSV("clients.csv", ["Name", "Email", "Company", "Phone", "Projects"], users.map(u => [u.name, u.email, u.company || "", u.phone || "", u.project_count]))}
+                  disabled={users.length === 0}
+                  className="bg-white/[0.04] hover:bg-white/[0.08] border border-white/[0.08] text-white text-xs h-9 font-bold disabled:opacity-40">
+                  <Download size={13} className="mr-1.5" /> Export CSV
+                </Button>
+              </Header>
               <div className="px-8 py-6 space-y-2.5">
                 {users.map((u, i) => {
                   const clientProjects = projects.filter(p => p.client_id === u.id);
@@ -647,14 +675,105 @@ export default function Admin() {
                           </div>
                         )}
                       </div>
-                      <button onClick={() => { setSearch(u.name); setStatusFilter("all"); setView("projects"); }}
-                        className="p-2 rounded-xl text-muted-foreground/30 hover:text-primary hover:bg-primary/8 transition-all flex-shrink-0 opacity-0 group-hover:opacity-100">
-                        <ChevronRight size={14} />
-                      </button>
+                      <div className="flex items-center gap-1 flex-shrink-0">
+                        <button onClick={() => setEditingUser(u)}
+                          className="p-2 rounded-xl text-muted-foreground/30 hover:text-primary hover:bg-primary/8 transition-all opacity-0 group-hover:opacity-100">
+                          <Edit2 size={13} />
+                        </button>
+                        <button onClick={() => { setSearch(u.name); setStatusFilter("all"); setView("projects"); }}
+                          className="p-2 rounded-xl text-muted-foreground/30 hover:text-primary hover:bg-primary/8 transition-all opacity-0 group-hover:opacity-100">
+                          <ChevronRight size={14} />
+                        </button>
+                      </div>
                     </motion.div>
                   );
                 })}
                 {users.length === 0 && <p className="text-center text-muted-foreground/40 py-16 text-xs">No clients yet.</p>}
+              </div>
+              {editingUser && (
+                <EditClientModal user={editingUser} token={token}
+                  onClose={() => setEditingUser(null)}
+                  onSaved={() => { setEditingUser(null); loadData(); }} />
+              )}
+            </Pane>
+          )}
+
+          {/* ── MESSAGES ── */}
+          {view === "messages" && (
+            <Pane key="messages">
+              <Header title="Messages" subtitle="Broadcast updates to clients and view the full activity log." />
+              <div className="px-8 py-6 grid lg:grid-cols-[minmax(0,380px)_1fr] gap-5 items-start">
+
+                {/* Composer */}
+                <div className="rounded-2xl border border-white/[0.07] bg-white/[0.02] overflow-hidden">
+                  <div className="px-5 py-3.5 border-b border-white/[0.05] bg-gradient-to-r from-white/[0.018] to-transparent flex items-center gap-2">
+                    <Megaphone size={13} className="text-primary" />
+                    <h3 className="text-[9px] font-black tracking-[0.14em] uppercase text-white/30">Post an update</h3>
+                  </div>
+                  <div className="p-4 space-y-3.5">
+                    <div>
+                      <label className="text-[9px] uppercase tracking-[0.12em] text-muted-foreground/40 mb-1.5 block font-black">Project</label>
+                      <select value={broadcast.projectId} onChange={e => setBroadcast(b => ({ ...b, projectId: e.target.value }))}
+                        className="w-full h-9 px-3 rounded-xl bg-white/[0.02] border border-white/[0.06] text-xs text-foreground focus:outline-none focus:border-primary/30">
+                        <option value="">Select project...</option>
+                        {projects.map(p => <option key={p.id} value={p.id}>{p.title} — {p.client_name}</option>)}
+                      </select>
+                    </div>
+                    <div>
+                      <label className="text-[9px] uppercase tracking-[0.12em] text-muted-foreground/40 mb-1.5 block font-black">Type</label>
+                      <div className="grid grid-cols-4 gap-1.5">
+                        {["update", "milestone", "note", "alert"].map(t => {
+                          const c = ({ update: "#818cf8", milestone: "#34d399", note: "#f472b6", alert: "#f59e0b" } as any)[t];
+                          const active = broadcast.type === t;
+                          return (
+                            <button key={t} type="button" onClick={() => setBroadcast(b => ({ ...b, type: t }))}
+                              className="text-[10px] font-bold py-1.5 rounded-lg border capitalize transition-all"
+                              style={active
+                                ? { background: c + "1a", color: c, borderColor: c + "55" }
+                                : { background: "rgba(255,255,255,0.02)", color: "rgba(255,255,255,0.4)", borderColor: "rgba(255,255,255,0.06)" }}>
+                              {t}
+                            </button>
+                          );
+                        })}
+                      </div>
+                    </div>
+                    <div>
+                      <label className="text-[9px] uppercase tracking-[0.12em] text-muted-foreground/40 mb-1.5 block font-black">Message</label>
+                      <Textarea value={broadcast.message} onChange={e => setBroadcast(b => ({ ...b, message: e.target.value }))}
+                        placeholder="Write an update the client will see..." rows={4}
+                        className="bg-white/[0.02] border-white/[0.06] focus:border-primary/30 resize-none text-xs" />
+                    </div>
+                    <Button onClick={sendBroadcast} disabled={broadcasting || !broadcast.projectId || !broadcast.message.trim()}
+                      className="w-full bg-gradient-to-r from-orange-500 to-orange-600 text-white text-xs font-bold shadow-lg shadow-orange-500/20 disabled:opacity-40">
+                      {broadcasting ? "Sending..." : <><Send size={12} className="mr-1.5" />Send Update</>}
+                    </Button>
+                  </div>
+                </div>
+
+                {/* Full activity feed */}
+                <div className="rounded-2xl border border-white/[0.07] bg-white/[0.02] overflow-hidden">
+                  <div className="px-5 py-3.5 border-b border-white/[0.05] bg-gradient-to-r from-white/[0.018] to-transparent flex items-center gap-2">
+                    <Activity size={13} className="text-primary" />
+                    <h3 className="text-[9px] font-black tracking-[0.14em] uppercase text-white/30">Activity Log</h3>
+                  </div>
+                  <div className="p-2 max-h-[62vh] overflow-y-auto">
+                    {activity.length === 0 && <p className="text-center text-muted-foreground/40 py-12 text-xs">No activity yet.</p>}
+                    {activity.map(a => {
+                      const c = ({ update: "#818cf8", milestone: "#34d399", note: "#f472b6", alert: "#f59e0b" } as any)[a.type] || "#818cf8";
+                      return (
+                        <div key={a.id} className="flex gap-3 px-3 py-2.5 rounded-xl hover:bg-white/[0.02] transition-colors">
+                          <div className="w-1.5 h-1.5 rounded-full mt-1.5 flex-shrink-0" style={{ background: c, boxShadow: `0 0 6px ${c}` }} />
+                          <div className="flex-1 min-w-0">
+                            <p className="text-xs text-foreground/75 leading-relaxed">{a.message}</p>
+                            <p className="text-[9px] text-muted-foreground/35 mt-0.5">
+                              <span className="capitalize font-bold" style={{ color: c }}>{a.type}</span> · {a.project_title} · {new Date(a.created_at).toLocaleDateString("en-GB", { day: "2-digit", month: "short", hour: "2-digit", minute: "2-digit" })}
+                            </p>
+                          </div>
+                        </div>
+                      );
+                    })}
+                  </div>
+                </div>
               </div>
             </Pane>
           )}
@@ -690,7 +809,7 @@ function Pane({ children }: { children: React.ReactNode }) {
 
 function Header({ title, subtitle, children }: { title: string; subtitle: string; children?: React.ReactNode }) {
   return (
-    <div className="px-8 py-5 border-b border-white/[0.05] bg-[#07070e]/92 backdrop-blur-2xl sticky top-0 z-20 flex items-center justify-between gap-4">
+    <div className="px-8 py-5 border-b border-white/[0.05] bg-[#18181d]/92 backdrop-blur-2xl sticky top-0 z-20 flex items-center justify-between gap-4">
       <div>
         <h1 className="text-xl font-black tracking-tight">{title}</h1>
         {subtitle && <p className="text-xs text-muted-foreground/45 mt-0.5">{subtitle}</p>}
@@ -897,6 +1016,79 @@ function ProjectForm({ users, initial, token, onSuccess }: { users: any[]; initi
         </div>
       </div>
     </form>
+  );
+}
+
+function exportCSV(filename: string, headers: string[], rows: (string | number)[][]) {
+  const escape = (v: any) => `"${String(v ?? "").replace(/"/g, '""')}"`;
+  const csv = [headers.map(escape).join(","), ...rows.map(r => r.map(escape).join(","))].join("\n");
+  const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url; a.download = filename; a.click();
+  URL.revokeObjectURL(url);
+}
+
+function EditClientModal({ user, token, onClose, onSaved }: {
+  user: any; token: string | null; onClose: () => void; onSaved: () => void;
+}) {
+  const [form, setForm] = useState({ name: user.name || "", company: user.company || "", phone: user.phone || "" });
+  const [saving, setSaving] = useState(false);
+  const [error, setError] = useState("");
+
+  const save = async () => {
+    if (!form.name.trim()) { setError("Name is required."); return; }
+    setSaving(true); setError("");
+    try {
+      await authFetch(`/api/admin/users/${user.id}`, token, { method: "PUT", body: JSON.stringify(form) });
+      onSaved();
+    } catch (err: any) { setError(err.message || "Failed to save."); setSaving(false); }
+  };
+
+  const inputCls = "bg-white/[0.02] border-white/[0.06] focus:border-primary/30 h-10 text-xs";
+  return (
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+      <div className="absolute inset-0 bg-black/60 backdrop-blur-sm" onClick={onClose} />
+      <motion.div initial={{ opacity: 0, scale: 0.96, y: 10 }} animate={{ opacity: 1, scale: 1, y: 0 }}
+        className="relative w-full max-w-md rounded-2xl border border-white/[0.08] bg-[#1c1c22] shadow-2xl overflow-hidden">
+        <div className="px-5 py-4 border-b border-white/[0.06] flex items-center justify-between">
+          <h3 className="text-sm font-black">Edit Client</h3>
+          <button onClick={onClose} className="p-1.5 rounded-lg text-muted-foreground/40 hover:text-white hover:bg-white/[0.05] transition-all"><X size={15} /></button>
+        </div>
+        <div className="p-5 space-y-4">
+          {error && (
+            <div className="flex items-center gap-2 p-3 rounded-xl bg-red-500/8 border border-red-500/20 text-red-400 text-xs">
+              <AlertCircle size={12} />{error}
+            </div>
+          )}
+          <div>
+            <label className="text-[9px] uppercase tracking-[0.12em] text-muted-foreground/40 mb-1.5 block font-black">Full Name</label>
+            <Input value={form.name} onChange={e => setForm(f => ({ ...f, name: e.target.value }))} className={inputCls} />
+          </div>
+          <div>
+            <label className="text-[9px] uppercase tracking-[0.12em] text-muted-foreground/40 mb-1.5 block font-black">Email (read-only)</label>
+            <Input value={user.email} disabled className={inputCls + " opacity-50"} />
+          </div>
+          <div className="grid grid-cols-2 gap-4">
+            <div>
+              <label className="text-[9px] uppercase tracking-[0.12em] text-muted-foreground/40 mb-1.5 block font-black">Company</label>
+              <Input value={form.company} onChange={e => setForm(f => ({ ...f, company: e.target.value }))} className={inputCls} />
+            </div>
+            <div>
+              <label className="text-[9px] uppercase tracking-[0.12em] text-muted-foreground/40 mb-1.5 block font-black">Phone</label>
+              <Input value={form.phone} onChange={e => setForm(f => ({ ...f, phone: e.target.value }))} className={inputCls} />
+            </div>
+          </div>
+          <div className="flex gap-2 pt-1">
+            <Button onClick={save} disabled={saving}
+              className="flex-1 bg-gradient-to-r from-orange-500 to-orange-600 text-white text-xs font-bold shadow-lg shadow-orange-500/20">
+              {saving ? "Saving..." : <><CheckCircle2 size={12} className="mr-1.5" />Save Changes</>}
+            </Button>
+            <Button onClick={onClose} variant="outline" className="text-xs border-white/[0.1] bg-white/[0.02] hover:bg-white/[0.05]">Cancel</Button>
+          </div>
+        </div>
+      </motion.div>
+    </div>
   );
 }
 
