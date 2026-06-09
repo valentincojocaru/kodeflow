@@ -13,7 +13,7 @@ import {
   Code, Smartphone
 } from "lucide-react";
 import ScrollProgress from "@/components/ScrollProgress";
-import HeroScene3D from "@/components/HeroScene3D";
+import AiRobotScene from "@/components/AiRobotScene";
 
 // ─── Magnetic Button ──────────────────────────────────────────────────────
 
@@ -452,7 +452,7 @@ const Hero = () => {
         transition={{ duration: 1.5, delay: 0.4, ease: [0.16, 1, 0.3, 1] }}
         className="hidden lg:block relative h-[560px] xl:h-[640px]"
       >
-        <HeroScene3D className="w-full h-full" />
+        <AiRobotScene className="w-full h-full" />
         <div className="absolute inset-0 pointer-events-none" style={{ background: "radial-gradient(ellipse 82% 82% at 50% 50%, transparent 18%, #080808 100%)" }} />
       </motion.div>
       </div>
