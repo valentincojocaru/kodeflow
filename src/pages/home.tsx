@@ -453,7 +453,7 @@ const Hero = () => {
         className="hidden lg:block relative h-[560px] xl:h-[640px]"
       >
         <AiRobotScene className="w-full h-full" />
-        <div className="absolute inset-0 pointer-events-none" style={{ background: "radial-gradient(ellipse 82% 82% at 50% 50%, transparent 18%, #080808 100%)" }} />
+        <div className="absolute inset-0 pointer-events-none" style={{ background: "radial-gradient(ellipse 75% 75% at 50% 48%, transparent 55%, hsl(258 35% 11% / 0.55) 100%)" }} />
       </motion.div>
       </div>
 
