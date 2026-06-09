@@ -1,0 +1,43 @@
+uploads = []
+
+[[generated]]
+id = "vdLOGfVdcJlODQ6URPxne"
+uri = "file://src/assets/ai-robot.png"
+type = "image"
+title = "ai robot dark"
+
+[[generated]]
+id = "iAf8aVFzHa0DSpCOFG3ZL"
+uri = "file://src/assets/robot-a.png"
+type = "image"
+title = "robot visor"
+
+[[generated]]
+id = "f9yTBRBskQ07kPsHiatlE"
+uri = "file://src/assets/robot-b.png"
+type = "image"
+title = "robot chrome"
+
+[[generated]]
+id = "MZIVz6eNUAgvv-33gZ0Vy"
+uri = "file://src/assets/robot-c.png"
+type = "image"
+title = "robot minimal"
+
+[[outputs]]
+id = "WAEvYeERneTbNzynr05W5"
+uri = "file://src/assets/robot-a.png"
+type = "image"
+title = "A — Cască sci-fi cu vizieră"
+
+[[outputs]]
+id = "OnKPXMPGqWwx1tsLkNLIt"
+uri = "file://src/assets/robot-b.png"
+type = "image"
+title = "B — Android crom lucios"
+
+[[outputs]]
+id = "wTzfxMlMdCI3TS_ZXIK5O"
+uri = "file://src/assets/robot-c.png"
+type = "image"
+title = "C — Robot alb minimalist"
