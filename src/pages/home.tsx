@@ -255,7 +255,7 @@ const Navbar = () => {
       }}
       className="fixed top-0 left-0 right-0 z-50 border-b transition-all duration-300"
     >
-      <div className="max-w-6xl mx-auto px-6 h-20 flex items-center justify-between">
+      <div className="max-w-6xl mx-auto px-4 sm:px-6 h-16 sm:h-20 flex items-center justify-between">
         <motion.a
           href="#"
           initial={{ opacity: 0, x: -20 }}
@@ -311,7 +311,7 @@ const Navbar = () => {
             initial={{ opacity: 0, height: 0 }}
             animate={{ opacity: 1, height: "auto" }}
             exit={{ opacity: 0, height: 0 }}
-            className="md:hidden bg-[#1c1c1c] border-b border-white/[0.08] overflow-hidden"
+            className="md:hidden bg-[#0a0a0a] border-b border-white/[0.05] overflow-hidden"
           >
             <div className="flex flex-col px-6 py-4 gap-4">
               {links.map(item => (
@@ -349,7 +349,7 @@ const Hero = () => {
   const { x: btnX, y: btnY } = useMagnetic(btnRef as React.RefObject<HTMLElement>);
 
   return (
-    <section ref={heroRef} className="relative pt-40 pb-24 px-6 max-w-6xl mx-auto min-h-screen flex items-center z-10">
+    <section ref={heroRef} className="relative pt-28 sm:pt-36 md:pt-40 pb-16 sm:pb-24 px-5 sm:px-6 max-w-6xl mx-auto min-h-screen flex items-center z-10">
       <motion.div style={{ y: heroY, opacity: heroOpacity }} className="max-w-4xl w-full">
 
         <motion.div
@@ -365,7 +365,7 @@ const Hero = () => {
           Available for new projects
         </motion.div>
 
-        <h1 className="text-6xl md:text-[5.5rem] lg:text-[6.5rem] font-black tracking-[-0.03em] leading-[1.0] mb-8">
+        <h1 className="text-[2.4rem] sm:text-5xl md:text-[5.5rem] lg:text-[6.5rem] font-black tracking-[-0.03em] leading-[1.05] mb-8">
           {["Build Faster.", "Build Smarter.", null].map((line, i) => (
             <div key={i} className="overflow-hidden">
               <motion.div
@@ -491,8 +491,8 @@ const StatsBar = () => {
     { num: 99, suffix: ".9%", label: "Uptime Average", icon: <TrendingUp size={18} /> },
   ];
   return (
-    <div className="bg-[#060606] py-16 px-6 relative z-10 border-y border-white/[0.04]">
-      <div className="max-w-6xl mx-auto grid grid-cols-2 lg:grid-cols-4 gap-8">
+    <div className="bg-[#060606] py-12 md:py-16 px-5 sm:px-6 relative z-10 border-y border-white/[0.04]">
+      <div className="max-w-6xl mx-auto grid grid-cols-2 lg:grid-cols-4 gap-6 md:gap-8">
         {stats.map((s, i) => (
           <motion.div key={i}
             initial={{ opacity: 0, y: 24 }}
@@ -598,8 +598,8 @@ function LiveTerminal() {
 }
 
 const About = () => (
-  <section id="about" className="py-32 px-6 max-w-6xl mx-auto relative z-10">
-    <div className="grid md:grid-cols-2 gap-20 items-center">
+  <section id="about" className="py-20 md:py-32 px-5 sm:px-6 max-w-6xl mx-auto relative z-10">
+    <div className="grid md:grid-cols-2 gap-12 md:gap-20 items-center">
       <motion.div
         initial={{ opacity: 0, y: 50 }}
         whileInView={{ opacity: 1, y: 0 }}
@@ -660,7 +660,7 @@ const Process = () => {
   ];
 
   return (
-    <section id="process" className="py-32 px-6 bg-[#050505] relative z-10">
+    <section id="process" className="py-20 md:py-32 px-5 sm:px-6 bg-[#050505] relative z-10">
       <div className="max-w-6xl mx-auto">
         <motion.div
           initial={{ opacity: 0, y: 30 }}
@@ -727,7 +727,7 @@ const Services = () => {
   ];
 
   return (
-    <section id="services" className="py-32 px-6 relative z-10 bg-[#080808]">
+    <section id="services" className="py-20 md:py-32 px-5 sm:px-6 relative z-10 bg-[#080808]">
       <div className="max-w-6xl mx-auto">
         <motion.div
           initial={{ opacity: 0, y: 30 }}
@@ -775,7 +775,7 @@ const Work = () => {
   ];
 
   return (
-    <section id="work" className="py-32 px-6 bg-[#050505] relative z-10">
+    <section id="work" className="py-20 md:py-32 px-5 sm:px-6 bg-[#050505] relative z-10">
       <div className="max-w-6xl mx-auto">
         <motion.div
           initial={{ opacity: 0, y: 30 }}
@@ -850,7 +850,7 @@ const Comparison = () => {
   ];
 
   return (
-    <section className="py-32 px-6 bg-[#0a0a0a] relative z-10">
+    <section className="py-20 md:py-32 px-5 sm:px-6 bg-[#0a0a0a] relative z-10">
       <div className="max-w-4xl mx-auto">
         <motion.div
           initial={{ opacity: 0, y: 30 }}
@@ -868,48 +868,73 @@ const Comparison = () => {
         </motion.div>
 
         <motion.div initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}>
-          <div className="grid grid-cols-3 gap-0 mb-2">
-            <div className="px-5 py-3" />
-            <div className="px-5 py-3 text-center text-sm font-bold text-gray-500 rounded-t-xl"
-              style={{ background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.08)", borderBottom: "none" }}>
-              Agency / Freelancer
-            </div>
-            <div className="px-5 py-3 text-center rounded-t-xl relative"
-              style={{ background: "linear-gradient(135deg, rgba(249,115,22,0.15), rgba(234,88,12,0.08))", border: "1px solid rgba(249,115,22,0.35)", borderBottom: "none" }}>
-              <span className="text-sm font-bold text-orange-600">pyKode</span>
-              <div className="absolute -top-3 left-1/2 -translate-x-1/2 bg-orange-600 text-white text-[9px] font-black px-3 py-0.5 rounded-full tracking-widest uppercase whitespace-nowrap shadow-lg shadow-orange-500/30">
-                Best Choice
-              </div>
-            </div>
+          {/* Mobile: card stacks */}
+          <div className="md:hidden space-y-3">
+            {rows.map((row, i) => (
+              <motion.div key={i} initial={{ opacity: 0, y: 16 }} whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }} transition={{ delay: i * 0.05 }}
+                className="rounded-xl border border-white/[0.06] overflow-hidden">
+                <div className="px-4 py-2.5 bg-white/[0.02] text-xs font-semibold text-white/50 uppercase tracking-wider border-b border-white/[0.06]">{row.label}</div>
+                <div className="grid grid-cols-2">
+                  <div className="px-4 py-3 text-xs text-white/30 border-r border-white/[0.06]">
+                    <div className="flex items-center gap-1.5 mb-1"><Minus size={10} className="text-red-400 shrink-0" /><span className="text-[10px] text-white/25 uppercase tracking-wide">Agency</span></div>
+                    {row.agency}
+                  </div>
+                  <div className="px-4 py-3 text-xs text-orange-400 font-medium" style={{ background: "rgba(249,115,22,0.05)" }}>
+                    <div className="flex items-center gap-1.5 mb-1"><CheckCircle2 size={10} className="text-orange-500 shrink-0" /><span className="text-[10px] text-orange-400/60 uppercase tracking-wide">pyKode</span></div>
+                    {row.me}
+                  </div>
+                </div>
+              </motion.div>
+            ))}
+            <a href="#contact" className="w-full bg-orange-500 text-white text-sm font-semibold py-3.5 rounded-xl flex items-center justify-center gap-2 shadow-[0_0_30px_rgba(249,115,22,0.25)] mt-4">
+              Choose pyKode <ArrowRight className="w-4 h-4" />
+            </a>
           </div>
 
-          {rows.map((row, i) => (
-            <motion.div key={i} className="grid grid-cols-3 gap-0"
-              initial={{ opacity: 0, x: -20 }} whileInView={{ opacity: 1, x: 0 }}
-              viewport={{ once: true }} transition={{ delay: i * 0.07 }}>
-              <div className="px-5 py-4 text-sm font-medium text-gray-300 border-b border-white/[0.06]">{row.label}</div>
-              <div className="px-5 py-4 text-center text-sm text-gray-500 border-b border-x border-white/[0.06]"
-                style={{ background: "rgba(255,255,255,0.02)" }}>
-                <div className="flex items-center justify-center gap-1.5">
-                  <Minus size={12} className="text-red-400" />{row.agency}
+          {/* Desktop: table */}
+          <div className="hidden md:block">
+            <div className="grid grid-cols-3 gap-0 mb-2">
+              <div className="px-5 py-3" />
+              <div className="px-5 py-3 text-center text-sm font-bold text-gray-500 rounded-t-xl"
+                style={{ background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.08)", borderBottom: "none" }}>
+                Agency / Freelancer
+              </div>
+              <div className="px-5 py-3 text-center rounded-t-xl relative"
+                style={{ background: "linear-gradient(135deg, rgba(249,115,22,0.15), rgba(234,88,12,0.08))", border: "1px solid rgba(249,115,22,0.35)", borderBottom: "none" }}>
+                <span className="text-sm font-bold text-orange-600">pyKode</span>
+                <div className="absolute -top-3 left-1/2 -translate-x-1/2 bg-orange-600 text-white text-[9px] font-black px-3 py-0.5 rounded-full tracking-widest uppercase whitespace-nowrap shadow-lg shadow-orange-500/30">
+                  Best Choice
                 </div>
               </div>
-              <div className="px-5 py-4 text-center text-sm font-semibold border-b border-x"
-                style={{ background: "rgba(249,115,22,0.06)", borderColor: "rgba(249,115,22,0.2)", color: "#fb923c" }}>
-                <div className="flex items-center justify-center gap-1.5">
-                  <CheckCircle2 size={13} className="text-orange-500" />{row.me}
+            </div>
+            {rows.map((row, i) => (
+              <motion.div key={i} className="grid grid-cols-3 gap-0"
+                initial={{ opacity: 0, x: -20 }} whileInView={{ opacity: 1, x: 0 }}
+                viewport={{ once: true }} transition={{ delay: i * 0.07 }}>
+                <div className="px-5 py-4 text-sm font-medium text-gray-300 border-b border-white/[0.06]">{row.label}</div>
+                <div className="px-5 py-4 text-center text-sm text-gray-500 border-b border-x border-white/[0.06]"
+                  style={{ background: "rgba(255,255,255,0.02)" }}>
+                  <div className="flex items-center justify-center gap-1.5">
+                    <Minus size={12} className="text-red-400" />{row.agency}
+                  </div>
                 </div>
+                <div className="px-5 py-4 text-center text-sm font-semibold border-b border-x"
+                  style={{ background: "rgba(249,115,22,0.06)", borderColor: "rgba(249,115,22,0.2)", color: "#fb923c" }}>
+                  <div className="flex items-center justify-center gap-1.5">
+                    <CheckCircle2 size={13} className="text-orange-500" />{row.me}
+                  </div>
+                </div>
+              </motion.div>
+            ))}
+            <div className="grid grid-cols-3 gap-0">
+              <div />
+              <div className="px-5 py-4 rounded-b-xl" style={{ background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.07)", borderTop: "none" }} />
+              <div className="px-5 py-4 rounded-b-xl" style={{ background: "rgba(249,115,22,0.08)", border: "1px solid rgba(249,115,22,0.3)", borderTop: "none" }}>
+                <a href="#contact" className="w-full bg-orange-600 hover:bg-orange-700 text-white text-xs font-bold py-2 px-4 rounded-xl transition-all flex items-center justify-center gap-1 shadow-md shadow-orange-500/20">
+                  Choose pyKode <ArrowRight className="w-3 h-3" />
+                </a>
               </div>
-            </motion.div>
-          ))}
-
-          <div className="grid grid-cols-3 gap-0">
-            <div />
-            <div className="px-5 py-4 rounded-b-xl" style={{ background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.07)", borderTop: "none" }} />
-            <div className="px-5 py-4 rounded-b-xl" style={{ background: "rgba(249,115,22,0.08)", border: "1px solid rgba(249,115,22,0.3)", borderTop: "none" }}>
-              <a href="#contact" className="w-full bg-orange-600 hover:bg-orange-700 text-white text-xs font-bold py-2 px-4 rounded-xl transition-all flex items-center justify-center gap-1 shadow-md shadow-orange-500/20">
-                Choose pyKode <ArrowRight className="w-3 h-3" />
-              </a>
             </div>
           </div>
         </motion.div>
@@ -943,7 +968,7 @@ const Pricing = () => {
   ];
 
   return (
-    <section id="pricing" className="py-32 px-6 bg-[#060606] relative z-10">
+    <section id="pricing" className="py-20 md:py-32 px-5 sm:px-6 bg-[#060606] relative z-10">
       <div className="max-w-5xl mx-auto">
         <motion.div
           initial={{ opacity: 0, y: 30 }}
@@ -1108,7 +1133,7 @@ const Booking = () => {
   };
 
   return (
-    <section className="py-32 px-6 bg-[#0a0a0a] relative z-10">
+    <section className="py-20 md:py-32 px-5 sm:px-6 bg-[#0a0a0a] relative z-10">
       <div className="max-w-3xl mx-auto">
         <motion.div className="text-center mb-16"
           initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}>
@@ -1324,7 +1349,7 @@ const Contact = () => {
   };
 
   return (
-    <section id="contact" className="py-32 bg-[#040404] text-white px-6 relative z-10 overflow-hidden">
+    <section id="contact" className="py-20 md:py-32 bg-[#040404] text-white px-5 sm:px-6 relative z-10 overflow-hidden">
       <div className="absolute top-0 right-0 w-[700px] h-[700px] bg-orange-500/[0.04] rounded-full blur-[140px] pointer-events-none -translate-y-1/2 translate-x-1/2" />
 
       <div className="max-w-5xl mx-auto grid md:grid-cols-2 gap-20 relative z-10">
@@ -1448,7 +1473,7 @@ const FAQ_ITEMS = [
 const FAQ = () => {
   const [openIdx, setOpenIdx] = useState<number | null>(null);
   return (
-    <section id="faq" className="py-32 px-6 bg-[#080808] relative z-10">
+    <section id="faq" className="py-20 md:py-32 px-5 sm:px-6 bg-[#080808] relative z-10">
       <div className="max-w-3xl mx-auto">
         <motion.div
           initial={{ opacity: 0, y: 30 }}
@@ -1549,7 +1574,7 @@ export default function Home() {
   return (
     <HireModalCtx.Provider value={() => setHireOpen(true)}>
       <HireModal open={hireOpen} onClose={() => setHireOpen(false)} />
-      <div className="min-h-screen bg-[#080808] text-white" style={{ fontFeatureSettings: '"ss01","ss02"' }}>
+      <div className="min-h-screen bg-[#080808] text-white overflow-x-hidden" style={{ fontFeatureSettings: '"ss01","ss02"' }}>
         <ScrollProgress />
         <AmbientBlobs />
         <div className="relative z-10">
