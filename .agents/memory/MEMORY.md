@@ -1,5 +1,6 @@
 - [KodeFlow deploy setup](kodeflow-deploy.md) — push.sh + GitHub Actions + VPS, tot fluxul de deploy configurat
 - [KodeFlow prod 502 on /api](kodeflow-prod-502.md) — 502 = backend Express picat pe VPS; pm2 delete+start din ecosystem, .env via --env-file; diagnostic din Actions logs
 - [Git restrictions in agent](git-restrictions.md) — git remote add/set-url/reset sunt blocate pentru agent, doar userul le poate rula în Shell
+- [KodeFlow hero direction](kodeflow-hero-direction.md) — hero = mockup-uri reale de site în rame browser/telefon; roboții AI au fost respinși, nu-i readuce
 - [3D hero scene approach](hero-3d-approach.md) — three.js blocat de firewall, folosim Canvas 2D pseudo-3D cu proiecție perspectivă, icosahedron + inele + particule
 - [Admin premium redesign](admin-redesign.md) — ThreeBackground înlocuiește CodeBackground, bg #07070e, RingProgress SVG înainte de Pane (hoisted)

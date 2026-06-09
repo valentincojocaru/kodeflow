@@ -24,6 +24,36 @@ uri = "file://src/assets/robot-c.png"
 type = "image"
 title = "robot minimal"
 
+[[generated]]
+id = "CKSgAqYKCEaPweDZFRKit"
+uri = "file://src/assets/work/work-dashboard.png"
+type = "image"
+title = "saas dashboard"
+
+[[generated]]
+id = "p4o36E8F-oZXnh_zFs12I"
+uri = "file://src/assets/work/hero-desktop.png"
+type = "image"
+title = "hero saas desktop"
+
+[[generated]]
+id = "WVHqYhUsTqfuPcw4PFIX4"
+uri = "file://src/assets/work/hero-mobile.png"
+type = "image"
+title = "hero fintech mobile"
+
+[[generated]]
+id = "D2JMPs0B8XA308EcwDRHO"
+uri = "file://src/assets/work/work-ecommerce.png"
+type = "image"
+title = "ecommerce store"
+
+[[generated]]
+id = "nkibFTA9Cj8MRV7FVHmSk"
+uri = "file://src/assets/work/work-restaurant.png"
+type = "image"
+title = "restaurant site"
+
 [[outputs]]
 id = "WAEvYeERneTbNzynr05W5"
 uri = "file://src/assets/robot-a.png"

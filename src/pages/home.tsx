@@ -6,14 +6,18 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { useToast } from "@/hooks/use-toast";
 import {
-  Code2, Terminal, Cpu, Globe, Zap, Server, Layers, Rocket,
+  Code2, Terminal, Globe, Zap, Server, Layers, Rocket,
   CheckCircle2, Send, Github, Twitter, Linkedin, ArrowRight,
   Menu, X, Star, Shield, Clock, MessageSquare, Settings, Blocks,
-  TrendingUp, Award, Users, ExternalLink, ChevronRight, Minus,
-  Code, Smartphone
+  TrendingUp, Award, Users, ChevronRight, Minus,
+  Code, Smartphone, Quote
 } from "lucide-react";
 import ScrollProgress from "@/components/ScrollProgress";
-import AiRobotScene from "@/components/AiRobotScene";
+import heroDesktop from "@/assets/work/hero-desktop.png";
+import heroMobileCut from "@/assets/work/hero-mobile-cut.png";
+import workDashboard from "@/assets/work/work-dashboard.png";
+import workEcommerce from "@/assets/work/work-ecommerce.png";
+import workRestaurant from "@/assets/work/work-restaurant.png";
 
 // ─── Magnetic Button ──────────────────────────────────────────────────────
 
@@ -337,6 +341,46 @@ const Navbar = () => {
   );
 };
 
+// ─── Hero Showcase (animated website mockups) ──────────────────────────────
+
+const HeroShowcase = () => (
+  <motion.div
+    initial={{ opacity: 0, scale: 0.92, y: 24 }}
+    animate={{ opacity: 1, scale: 1, y: 0 }}
+    transition={{ duration: 1.2, delay: 0.4, ease: [0.16, 1, 0.3, 1] }}
+    className="hidden lg:block relative h-[520px] xl:h-[580px]"
+  >
+    <div className="absolute right-4 top-10 w-[440px] h-[300px] bg-orange-500/[0.13] blur-[90px] rounded-full -z-10" />
+
+    {/* Browser window mockup */}
+    <motion.div
+      animate={{ y: [0, -14, 0] }}
+      transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }}
+      className="absolute top-4 right-0 w-[92%] rounded-xl overflow-hidden border border-white/[0.1] bg-[#0d0d0d] shadow-[0_40px_90px_-25px_rgba(0,0,0,0.85)]"
+    >
+      <div className="flex items-center gap-2 px-4 h-9 bg-[#161616] border-b border-white/[0.06]">
+        <span className="w-3 h-3 rounded-full bg-[#ff5f57]" />
+        <span className="w-3 h-3 rounded-full bg-[#febc2e]" />
+        <span className="w-3 h-3 rounded-full bg-[#28c840]" />
+        <div className="ml-3 flex items-center gap-1.5 h-5 px-3 rounded-md bg-white/[0.05] border border-white/[0.06]">
+          <Globe className="w-2.5 h-2.5 text-white/30" />
+          <span className="text-[10px] text-white/40 font-mono">app.client.com</span>
+        </div>
+      </div>
+      <img src={heroDesktop} alt="Website project preview" className="w-full block" />
+    </motion.div>
+
+    {/* Floating phone mockup */}
+    <motion.div
+      animate={{ y: [0, 16, 0] }}
+      transition={{ duration: 7, repeat: Infinity, ease: "easeInOut", delay: 0.5 }}
+      className="absolute -bottom-4 -left-2 w-[148px] xl:w-[166px] drop-shadow-[0_30px_55px_rgba(0,0,0,0.7)]"
+    >
+      <img src={heroMobileCut} alt="Mobile website preview" className="w-full block" />
+    </motion.div>
+  </motion.div>
+);
+
 // ─── Hero ─────────────────────────────────────────────────────────────────
 
 const Hero = () => {
@@ -443,18 +487,32 @@ const Hero = () => {
             <div className="text-sm text-gray-500 font-medium">Trusted by 50+ founders</div>
           </div>
         </motion.div>
+
+        {/* Website mockup — mobile / tablet only */}
+        <motion.div
+          initial={{ opacity: 0, y: 24 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 1, delay: 0.7, ease: [0.16, 1, 0.3, 1] }}
+          className="lg:hidden mt-14 relative max-w-md"
+        >
+          <div className="absolute -inset-4 bg-orange-500/[0.12] blur-[60px] rounded-full -z-10" />
+          <div className="rounded-xl overflow-hidden border border-white/[0.1] bg-[#0d0d0d] shadow-[0_30px_70px_-25px_rgba(0,0,0,0.85)]">
+            <div className="flex items-center gap-2 px-4 h-8 bg-[#161616] border-b border-white/[0.06]">
+              <span className="w-2.5 h-2.5 rounded-full bg-[#ff5f57]" />
+              <span className="w-2.5 h-2.5 rounded-full bg-[#febc2e]" />
+              <span className="w-2.5 h-2.5 rounded-full bg-[#28c840]" />
+              <div className="ml-2 flex items-center gap-1.5 h-4 px-2.5 rounded bg-white/[0.05] border border-white/[0.06]">
+                <Globe className="w-2 h-2 text-white/30" />
+                <span className="text-[9px] text-white/40 font-mono">app.client.com</span>
+              </div>
+            </div>
+            <img src={heroDesktop} alt="Website project preview" className="w-full block" />
+          </div>
+        </motion.div>
       </motion.div>
 
-      {/* 3D Scene — desktop only */}
-      <motion.div
-        initial={{ opacity: 0, scale: 0.92 }}
-        animate={{ opacity: 1, scale: 1 }}
-        transition={{ duration: 1.5, delay: 0.4, ease: [0.16, 1, 0.3, 1] }}
-        className="hidden lg:block relative h-[560px] xl:h-[640px]"
-      >
-        <AiRobotScene className="w-full h-full" />
-        <div className="absolute inset-0 pointer-events-none" style={{ background: "radial-gradient(ellipse 75% 75% at 50% 48%, transparent 55%, hsl(258 35% 11% / 0.55) 100%)" }} />
-      </motion.div>
+      {/* Website mockups — desktop only */}
+      <HeroShowcase />
       </div>
 
       <motion.div
@@ -787,9 +845,9 @@ const Services = () => {
 
 const Work = () => {
   const projects = [
-    { title: "Fintech Dashboard", tag: "SaaS · Full-Stack", gradient: "from-orange-400 to-amber-300", desc: "Real-time analytics SaaS with multi-tenant architecture, role-based access, Stripe billing, and live WebSocket data streaming. Shipped in 18 days.", tech: ["React", "Node.js", "PostgreSQL", "Redis", "Stripe"], stat: "18 days" },
-    { title: "AI Writing Assistant", tag: "AI Integration", gradient: "from-gray-800 to-gray-900", desc: "Enterprise AI document intelligence platform: GPT-4, vector search, streaming, function-calling — all production-ready.", tech: ["Python", "React", "OpenAI", "Pinecone", "FastAPI"], stat: "1M+ docs" },
-    { title: "E-Commerce Platform", tag: "Web App", gradient: "from-orange-100 to-stone-200", desc: "High-conversion storefront with AI recommendations, one-click checkout, abandoned cart recovery, and headless CMS integration.", tech: ["Next.js", "Postgres", "Stripe", "Sanity", "Vercel"], stat: "+34% CVR" },
+    { title: "Fintech SaaS Dashboard", tag: "SaaS · Full-Stack", image: workDashboard, desc: "Real-time analytics SaaS with multi-tenant architecture, role-based access, Stripe billing, and live WebSocket data streaming. Shipped in 18 days.", tech: ["React", "Node.js", "PostgreSQL", "Redis", "Stripe"], stat: "18 days" },
+    { title: "E-Commerce Storefront", tag: "Web App · Headless", image: workEcommerce, desc: "High-conversion fashion storefront with smart product filtering, one-click checkout, abandoned-cart recovery, and a headless CMS.", tech: ["Next.js", "Postgres", "Stripe", "Sanity", "Vercel"], stat: "+34% CVR" },
+    { title: "Restaurant & Reservations", tag: "Web App · Booking", image: workRestaurant, desc: "Elegant restaurant site with live table reservations, dynamic menu management, and an admin dashboard. Bookings tripled in month one.", tech: ["React", "Node.js", "PostgreSQL", "Tailwind"], stat: "3× bookings" },
   ];
 
   return (
@@ -823,15 +881,19 @@ const Work = () => {
               transition={{ duration: 0.5, delay: i * 0.08 }}
               className="group cursor-pointer"
             >
-              <div className="aspect-[4/3] rounded-2xl mb-7 overflow-hidden relative border border-white/[0.06] group-hover:border-white/[0.12] transition-all duration-500">
-                <div className={`absolute inset-0 bg-gradient-to-br ${project.gradient} opacity-60 transition-transform duration-700 group-hover:scale-105`} />
-                <div className="absolute inset-0 bg-[#080808]/40" />
-                <div className="absolute inset-0 flex items-center justify-center">
-                  <div className="w-3/4 h-3/4 bg-white/[0.06] backdrop-blur-xl rounded-xl border border-white/10 shadow-lg flex items-center justify-center transform group-hover:-translate-y-3 transition-transform duration-500">
-                    <span className="font-mono text-xs text-white/50 font-medium px-4 py-2 bg-white/[0.05] rounded-full border border-white/[0.08]">Coming Soon</span>
-                  </div>
+              <div className="aspect-[4/3] rounded-2xl mb-7 overflow-hidden relative border border-white/[0.06] group-hover:border-orange-500/25 transition-all duration-500 bg-[#0d0d0d]">
+                {/* browser chrome */}
+                <div className="flex items-center gap-1.5 px-3 h-7 bg-[#161616] border-b border-white/[0.06] relative z-10">
+                  <span className="w-2 h-2 rounded-full bg-[#ff5f57]" />
+                  <span className="w-2 h-2 rounded-full bg-[#febc2e]" />
+                  <span className="w-2 h-2 rounded-full bg-[#28c840]" />
                 </div>
-                <div className="absolute top-4 right-4 bg-black/60 backdrop-blur-sm text-white/60 text-[10px] font-bold px-3 py-1 rounded-full border border-white/[0.08]">
+                <div className="relative overflow-hidden h-[calc(100%-1.75rem)]">
+                  <img src={project.image} alt={project.title} loading="lazy"
+                    className="w-full h-full object-cover object-top transition-transform duration-[1200ms] ease-out group-hover:scale-[1.06]" />
+                  <div className="absolute inset-0 bg-gradient-to-t from-[#050505]/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+                </div>
+                <div className="absolute top-3.5 right-4 bg-black/65 backdrop-blur-sm text-orange-300 text-[10px] font-bold px-3 py-1 rounded-full border border-orange-500/20 z-20">
                   {project.stat}
                 </div>
               </div>
@@ -853,6 +915,63 @@ const Work = () => {
     </section>
   );
 };
+
+// ─── Testimonials ──────────────────────────────────────────────────────────
+
+const TESTIMONIALS = [
+  { name: "Andrei Marinescu", role: "Founder · FlowMetrics", initials: "AM", quote: "He turned our messy idea into a polished SaaS in under three weeks. Direct, fast, zero corporate nonsense — easily the best developer I've worked with." },
+  { name: "Sofia Lambert", role: "CEO · Maison Noir", initials: "SL", quote: "Our new store loads instantly and conversions jumped 34%. He cared about the result, not just shipping code. I'd hire him again in a heartbeat." },
+  { name: "David Okafor", role: "Co-founder · Tablo", initials: "DO", quote: "From the first call to launch felt effortless. Daily updates, a live preview from day one, and the final product looked better than the mockups." },
+];
+
+const Testimonials = () => (
+  <section id="testimonials" className="py-20 md:py-32 px-5 sm:px-6 bg-[#080808] relative z-10">
+    <div className="max-w-6xl mx-auto">
+      <motion.div
+        initial={{ opacity: 0, y: 30 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true }}
+        className="text-center mb-16"
+      >
+        <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/[0.04] border border-white/[0.08] text-white/40 text-[11px] font-semibold tracking-[0.15em] uppercase mb-6">
+          Testimonials
+        </div>
+        <h2 className="text-4xl md:text-5xl font-black mb-5 tracking-[-0.02em] text-white">
+          Loved by <span className="text-transparent bg-clip-text bg-gradient-to-r from-orange-400 to-amber-300">founders</span>
+        </h2>
+        <p className="text-base text-white/40 max-w-md mx-auto">Don't take my word for it — here's what clients say after launch.</p>
+      </motion.div>
+
+      <div className="grid md:grid-cols-3 gap-6">
+        {TESTIMONIALS.map((t, i) => (
+          <motion.div
+            key={i}
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, margin: "-50px" }}
+            transition={{ duration: 0.5, delay: i * 0.1 }}
+            className="relative p-8 rounded-2xl bg-white/[0.02] border border-white/[0.06] hover:border-orange-500/20 hover:bg-white/[0.04] transition-all duration-300 flex flex-col"
+          >
+            <Quote className="w-8 h-8 text-orange-500/30 mb-5" />
+            <div className="flex gap-1 text-orange-500 mb-5">
+              {[1, 2, 3, 4, 5].map(s => <Star key={s} className="w-3.5 h-3.5 fill-current" />)}
+            </div>
+            <p className="text-white/70 text-sm leading-[1.8] mb-8 flex-grow">"{t.quote}"</p>
+            <div className="flex items-center gap-3 pt-5 border-t border-white/[0.06]">
+              <div className="w-11 h-11 rounded-full bg-gradient-to-br from-orange-500/20 to-amber-500/10 border border-orange-500/20 flex items-center justify-center text-orange-300 font-bold text-sm">
+                {t.initials}
+              </div>
+              <div>
+                <div className="text-sm font-bold text-white">{t.name}</div>
+                <div className="text-xs text-white/40">{t.role}</div>
+              </div>
+            </div>
+          </motion.div>
+        ))}
+      </div>
+    </div>
+  </section>
+);
 
 // ─── Comparison ────────────────────────────────────────────────────────────
 
@@ -1655,6 +1774,7 @@ export default function Home() {
             <Process />
             <Services />
             <Work />
+            <Testimonials />
             <Comparison />
             <Pricing />
             <Booking />
