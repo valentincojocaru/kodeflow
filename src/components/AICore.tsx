@@ -40,22 +40,22 @@ export default function AICore() {
     const core = new THREE.Mesh(
       new THREE.IcosahedronGeometry(1.5, 1),
       new THREE.MeshStandardMaterial({
-        color: 0x7a3800, metalness: 0.6, roughness: 0.45,
-        emissive: 0xff7a18, emissiveIntensity: 0.48,
-        flatShading: true, transparent: true, opacity: 0.96,
+        color: 0x2a1200, metalness: 0.3, roughness: 0.65,
+        emissive: 0xff6010, emissiveIntensity: 0.06,
+        flatShading: true, transparent: true, opacity: 0.97,
       })
     );
     group.add(core);
 
     const wire = new THREE.Mesh(
       new THREE.IcosahedronGeometry(1.54, 1),
-      new THREE.MeshBasicMaterial({ color: 0xffb55a, wireframe: true, transparent: true, opacity: 0.62 })
+      new THREE.MeshBasicMaterial({ color: 0xffaa44, wireframe: true, transparent: true, opacity: 0.35 })
     );
     group.add(wire);
 
     const kernel = new THREE.Mesh(
       new THREE.IcosahedronGeometry(0.55, 0),
-      new THREE.MeshBasicMaterial({ color: 0xff9940, transparent: true, opacity: 0.95 })
+      new THREE.MeshBasicMaterial({ color: 0xff8020, transparent: true, opacity: 0.92 })
     );
     group.add(kernel);
 
@@ -109,10 +109,10 @@ export default function AICore() {
     scene.add(dust);
 
     // ── Lights ──
-    scene.add(new THREE.AmbientLight(0x7a3800, 1.8));
-    const p1 = new THREE.PointLight(0xff8030, 4.5, 30); p1.position.set(5, 4, 5); scene.add(p1);
-    const p2 = new THREE.PointLight(0x5a4bff, 1.2, 30); p2.position.set(-6, -3, 2); scene.add(p2);
-    const p3 = new THREE.PointLight(0xffc06a, 2.2, 30); p3.position.set(0, -5, 4); scene.add(p3);
+    scene.add(new THREE.AmbientLight(0x150800, 0.8));
+    const p1 = new THREE.PointLight(0xff6010, 18, 20); p1.position.set(4, 3, 4); scene.add(p1);
+    const p2 = new THREE.PointLight(0x6644ff, 4, 20); p2.position.set(-5, -4, 1); scene.add(p2);
+    const p3 = new THREE.PointLight(0xff9933, 3, 15); p3.position.set(-2, 4, 3); scene.add(p3);
 
     // ── Mouse parallax ──
     const target = { x: 0, y: 0 };
