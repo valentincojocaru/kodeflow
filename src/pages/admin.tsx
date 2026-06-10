@@ -12,7 +12,10 @@ import {
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import ThreeBackground from "@/components/ThreeBackground";
+import {
+  CommandPalette, type Command,
+  Donut, AreaChart, Ring as RingChart, Sparkline,
+} from "@/components/admin/AdminPrimitives";
 
 const STATUS_OPTIONS = ["pending", "planning", "in_progress", "review", "completed", "cancelled"];
 const PRIORITY_OPTIONS = ["low", "normal", "high", "urgent"];
@@ -53,11 +56,22 @@ export default function Admin() {
   const [broadcast, setBroadcast] = useState({ projectId: "", type: "update", message: "" });
   const [broadcasting, setBroadcasting] = useState(false);
   const [editingUser, setEditingUser] = useState<any | null>(null);
+  const [cmdOpen, setCmdOpen] = useState(false);
 
   useEffect(() => {
     if (!loading && !user) { setLocation("/login"); return; }
     if (user && user.role !== "admin") { setLocation("/dashboard"); return; }
   }, [user, loading]);
+
+  useEffect(() => {
+    const h = (e: KeyboardEvent) => {
+      if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === "k") {
+        e.preventDefault(); setCmdOpen(o => !o);
+      }
+    };
+    window.addEventListener("keydown", h);
+    return () => window.removeEventListener("keydown", h);
+  }, []);
 
   const loadData = useCallback(async () => {
     if (!token) return;
@@ -158,12 +172,26 @@ export default function Admin() {
     { id: "users",    label: "Clients",   icon: <Users size={14} /> },
   ];
 
+  const cmdCommands: Command[] = [
+    { id: "n1", label: "Go to Overview",  kind: "Navigate", run: () => { setView("overview"); setShowProjectForm(false); setSelectedProject(null); } },
+    { id: "n2", label: "Go to Projects",  kind: "Navigate", run: () => { setView("projects"); setShowProjectForm(false); setSelectedProject(null); } },
+    { id: "n3", label: "Go to Invoices",  kind: "Navigate", run: () => { setView("invoices"); setShowProjectForm(false); setSelectedProject(null); } },
+    { id: "n4", label: "Go to Clients",   kind: "Navigate", run: () => { setView("users"); setShowProjectForm(false); setSelectedProject(null); } },
+    { id: "n5", label: "Go to Messages",  kind: "Navigate", run: () => { setView("messages"); setShowProjectForm(false); setSelectedProject(null); } },
+    { id: "a1", label: "New Project",     kind: "Action",   run: () => { setEditingProject(null); setShowProjectForm(true); setView("projects"); } },
+    { id: "a2", label: "Refresh Data",    kind: "Action",   run: () => loadData() },
+    ...projects.map(p => ({ id: "p" + p.id, label: p.title, kind: "Project", sub: p.client_name, run: () => loadProject(p.id) })),
+  ];
+
   return (
-    <div className="min-h-screen bg-[#18181d] text-foreground relative overflow-hidden">
-      <ThreeBackground />
-      <div className="fixed inset-0 bg-[radial-gradient(ellipse_80%_50%_at_20%_-10%,rgba(147,51,234,0.09),transparent)] pointer-events-none" />
-      <div className="fixed inset-0 bg-[radial-gradient(ellipse_40%_50%_at_90%_90%,rgba(249,115,22,0.05),transparent)] pointer-events-none" />
-      <div className="fixed inset-0 bg-[linear-gradient(rgba(147,51,234,0.014)_1px,transparent_1px),linear-gradient(90deg,rgba(147,51,234,0.014)_1px,transparent_1px)] bg-[size:80px_80px] pointer-events-none" />
+    <div className="kfa-root min-h-screen text-foreground relative overflow-hidden">
+      {/* kfa atmosphere */}
+      <div className="kfa-atmos" style={{ position: "fixed", inset: 0, pointerEvents: "none", zIndex: 0 }}>
+        <div className="base" />
+        <div className="orb a" />
+        <div className="orb b" />
+        <div className="grid" />
+      </div>
 
       {/* Sidebar */}
       <aside className="fixed left-0 top-0 h-full w-60 z-30 flex flex-col">
@@ -199,6 +227,16 @@ export default function Admin() {
                 <span className="text-[8px] font-black px-1.5 py-0.5 rounded-full bg-orange-600 text-white flex-shrink-0">ADMIN</span>
               </div>
             </div>
+          </div>
+
+          {/* ⌘K search trigger */}
+          <div className="px-4 pb-3">
+            <button onClick={() => setCmdOpen(true)}
+              className="w-full flex items-center gap-2.5 h-9 px-3 rounded-xl border border-white/[0.07] bg-white/[0.02] text-muted-foreground/50 hover:border-orange-500/30 hover:text-white/70 transition-all text-xs">
+              <Search size={12} />
+              <span className="flex-1 text-left">Quick search…</span>
+              <span className="text-[9px] px-1.5 py-0.5 rounded bg-white/[0.06] border border-white/[0.08] font-mono">⌘K</span>
+            </button>
           </div>
 
           {/* Nav */}
@@ -297,6 +335,19 @@ export default function Admin() {
                         <p className="text-xs text-white/40 mt-1.5 font-semibold">{r.label}</p>
                       </motion.div>
                     ))}
+                  </div>
+                </div>
+
+                {/* Revenue area chart */}
+                <div>
+                  <p className="text-[9px] font-black tracking-[0.15em] uppercase text-muted-foreground/30 mb-3">Revenue Trend</p>
+                  <div className="p-5 rounded-2xl border border-white/[0.07] bg-white/[0.02]">
+                    <AreaChart
+                      data={[0.8, 1.2, 2.1, 1.6, 3.4, 2.8, 4.1, 3.9, 5.2, 4.8, 6.1, stats?.totalPaid != null ? Math.max(parseFloat(stats.totalPaid) / 1000, 0.1) : 5.5]}
+                      labels={["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"]}
+                      color="#f97316"
+                      height={130}
+                    />
                   </div>
                 </div>
 
@@ -449,7 +500,27 @@ export default function Admin() {
                 </button>
               </Header>
 
-              <div className="px-8 py-6 grid lg:grid-cols-3 gap-5">
+              {/* Progress hero with Donut */}
+              <div className="px-8 pt-2 pb-4">
+                <div className="flex items-center gap-6 p-5 rounded-2xl border border-white/[0.07] bg-white/[0.02]">
+                  <Donut pct={selectedProject.progress ?? 0} color={STATUS_META[selectedProject.status]?.color ?? "#f97316"} size={110} label="complete" />
+                  <div className="flex-1 grid grid-cols-2 sm:grid-cols-4 gap-3">
+                    {[
+                      { l: "Status",   v: STATUS_META[selectedProject.status]?.label ?? selectedProject.status },
+                      { l: "Priority", v: selectedProject.priority ?? "—" },
+                      { l: "Budget",   v: selectedProject.budget ?? "—" },
+                      { l: "Deadline", v: selectedProject.deadline ? new Date(selectedProject.deadline).toLocaleDateString("en-GB", { day:"2-digit", month:"short", year:"numeric" }) : "—" },
+                    ].map(x => (
+                      <div key={x.l} className="p-3 rounded-xl bg-white/[0.025] border border-white/[0.05]">
+                        <p className="text-[9px] font-black tracking-[0.12em] uppercase text-muted-foreground/35 mb-1">{x.l}</p>
+                        <p className="text-sm font-bold">{x.v}</p>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </div>
+
+              <div className="px-8 pb-6 grid lg:grid-cols-3 gap-5">
                 <div className="lg:col-span-2 space-y-5">
 
                   <GlassCard title="Quick Controls">
@@ -779,6 +850,12 @@ export default function Admin() {
           )}
         </AnimatePresence>
       </main>
+
+      <CommandPalette
+        open={cmdOpen}
+        onClose={() => setCmdOpen(false)}
+        commands={cmdCommands}
+      />
     </div>
   );
 }
