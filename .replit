@@ -3,6 +3,8 @@ modules = ["nodejs-20", "web", "bash", "python-3.11"]
 [deployment]
 router = "application"
 deploymentTarget = "autoscale"
+run = ["node", "./dist/index.cjs"]
+build = ["npm", "run", "build"]
 
 [deployment.postBuild]
 args = ["pnpm", "store", "prune"]
@@ -66,7 +68,7 @@ waitForPort = 3001
 outputType = "console"
 
 [agent]
-stack = "BEST_EFFORT_FALLBACK"
+stack = "GAMESTACK_JS"
 expertMode = true
 
 [postMerge]
