@@ -40,22 +40,22 @@ export default function AICore() {
     const core = new THREE.Mesh(
       new THREE.IcosahedronGeometry(1.5, 1),
       new THREE.MeshStandardMaterial({
-        color: 0x1c150d, metalness: 0.9, roughness: 0.28,
-        emissive: 0xff7a18, emissiveIntensity: 0.18,
-        flatShading: true, transparent: true, opacity: 0.92,
+        color: 0x7a3800, metalness: 0.6, roughness: 0.45,
+        emissive: 0xff7a18, emissiveIntensity: 0.48,
+        flatShading: true, transparent: true, opacity: 0.96,
       })
     );
     group.add(core);
 
     const wire = new THREE.Mesh(
-      new THREE.IcosahedronGeometry(1.53, 1),
-      new THREE.MeshBasicMaterial({ color: 0xffae5a, wireframe: true, transparent: true, opacity: 0.32 })
+      new THREE.IcosahedronGeometry(1.54, 1),
+      new THREE.MeshBasicMaterial({ color: 0xffb55a, wireframe: true, transparent: true, opacity: 0.62 })
     );
     group.add(wire);
 
     const kernel = new THREE.Mesh(
       new THREE.IcosahedronGeometry(0.55, 0),
-      new THREE.MeshBasicMaterial({ color: 0xffd9a0, transparent: true, opacity: 0.9 })
+      new THREE.MeshBasicMaterial({ color: 0xff9940, transparent: true, opacity: 0.95 })
     );
     group.add(kernel);
 
@@ -109,10 +109,10 @@ export default function AICore() {
     scene.add(dust);
 
     // ── Lights ──
-    scene.add(new THREE.AmbientLight(0x402810, 1.1));
-    const p1 = new THREE.PointLight(0xff7a18, 2.4, 30); p1.position.set(5, 4, 5); scene.add(p1);
-    const p2 = new THREE.PointLight(0x5a4bff, 1.4, 30); p2.position.set(-6, -3, 2); scene.add(p2);
-    const p3 = new THREE.PointLight(0xffc06a, 1.2, 30); p3.position.set(0, -5, 4); scene.add(p3);
+    scene.add(new THREE.AmbientLight(0x7a3800, 1.8));
+    const p1 = new THREE.PointLight(0xff8030, 4.5, 30); p1.position.set(5, 4, 5); scene.add(p1);
+    const p2 = new THREE.PointLight(0x5a4bff, 1.2, 30); p2.position.set(-6, -3, 2); scene.add(p2);
+    const p3 = new THREE.PointLight(0xffc06a, 2.2, 30); p3.position.set(0, -5, 4); scene.add(p3);
 
     // ── Mouse parallax ──
     const target = { x: 0, y: 0 };
