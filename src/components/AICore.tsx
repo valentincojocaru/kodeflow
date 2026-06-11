@@ -134,6 +134,24 @@ export default function AICore() {
     };
     window.addEventListener("pointermove", onMove);
 
+    // ── Touch swipe (mobile) ──
+    const swipe = { vx: 0, vy: 0 };
+    let lastTouch = { x: 0, y: 0, t: 0 };
+    const onTouchStart = (e: TouchEvent) => {
+      const t = e.touches[0];
+      lastTouch = { x: t.clientX, y: t.clientY, t: Date.now() };
+      swipe.vx = 0; swipe.vy = 0;
+    };
+    const onTouchMove = (e: TouchEvent) => {
+      const touch = e.touches[0];
+      const dt = Math.max(Date.now() - lastTouch.t, 1);
+      swipe.vx = (touch.clientX - lastTouch.x) / dt * 0.018;
+      swipe.vy = (touch.clientY - lastTouch.y) / dt * 0.012;
+      lastTouch = { x: touch.clientX, y: touch.clientY, t: Date.now() };
+    };
+    mount.addEventListener("touchstart", onTouchStart, { passive: true });
+    mount.addEventListener("touchmove", onTouchMove, { passive: true });
+
     const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
     let raf = 0, t = 0;
     const animate = () => {
@@ -143,8 +161,12 @@ export default function AICore() {
       cur.y += (target.y - cur.y) * 0.05;
       const sp = reduce ? 0.2 : 1;
 
-      group.rotation.y += 0.0024 * sp;
-      group.rotation.x = cur.y * 0.4;
+      // Decelerate swipe momentum
+      swipe.vx *= 0.91;
+      swipe.vy *= 0.91;
+
+      group.rotation.y += (0.0024 + swipe.vx) * sp;
+      group.rotation.x = cur.y * 0.4 + swipe.vy * sp;
       group.rotation.z = cur.x * 0.08;
       wire.rotation.y -= 0.004 * sp;
       wire.rotation.x += 0.002 * sp;
@@ -196,6 +218,8 @@ export default function AICore() {
       clearTimeout(t0); clearTimeout(t1); clearTimeout(t2);
       ro.disconnect();
       window.removeEventListener("pointermove", onMove);
+      mount.removeEventListener("touchstart", onTouchStart);
+      mount.removeEventListener("touchmove", onTouchMove);
       window.removeEventListener("resize", resize);
       renderer.dispose();
       if (renderer.domElement.parentNode) renderer.domElement.parentNode.removeChild(renderer.domElement);
