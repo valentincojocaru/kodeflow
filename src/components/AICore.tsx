@@ -24,14 +24,15 @@ export default function AICore() {
     const camera = new THREE.PerspectiveCamera(45, W() / H(), 0.1, 100);
     camera.position.set(0, 0, 7.2);
 
-    let renderer: THREE.WebGLRenderer;
-    try {
-      renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
-    } catch {
-      return;
-    }
+    const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
     renderer.setSize(W(), H());
     renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+    // Match the preview's lighting across Three.js versions. r152+ switched to
+    // physically-based lights (much dimmer), which makes the crystal look flat.
+    // These flags restore the original lit/metallic look regardless of version.
+    const r = renderer as unknown as { useLegacyLights?: boolean; physicallyCorrectLights?: boolean; outputColorSpace?: unknown };
+    if ("useLegacyLights" in renderer) r.useLegacyLights = true;
+    if ("physicallyCorrectLights" in renderer) r.physicallyCorrectLights = false;
     renderer.domElement.style.display = "block";
     renderer.domElement.style.width = "100%";
     renderer.domElement.style.height = "100%";
@@ -113,10 +114,15 @@ export default function AICore() {
     scene.add(dust);
 
     // ── Lights ──
-    scene.add(new THREE.AmbientLight(0x402810, 1.1));
-    const p1 = new THREE.PointLight(0xff7a18, 2.4, 30); p1.position.set(5, 4, 5); scene.add(p1);
-    const p2 = new THREE.PointLight(0x5a4bff, 1.4, 30); p2.position.set(-6, -3, 2); scene.add(p2);
-    const p3 = new THREE.PointLight(0xffc06a, 1.2, 30); p3.position.set(0, -5, 4); scene.add(p3);
+    // r155+ uses physically-based light units (≈ /Math.PI dimmer than legacy).
+    // If we couldn't force legacy mode above, scale intensities up to compensate.
+    const legacyOn = ("useLegacyLights" in renderer) || ("physicallyCorrectLights" in renderer);
+    const rev = parseInt((THREE as unknown as { REVISION?: string }).REVISION || "128", 10);
+    const k = (!legacyOn && rev >= 155) ? Math.PI : 1;
+    scene.add(new THREE.AmbientLight(0x402810, 1.1 * k));
+    const p1 = new THREE.PointLight(0xff7a18, 2.4 * k, 30); p1.position.set(5, 4, 5); scene.add(p1);
+    const p2 = new THREE.PointLight(0x5a4bff, 1.4 * k, 30); p2.position.set(-6, -3, 2); scene.add(p2);
+    const p3 = new THREE.PointLight(0xffc06a, 1.2 * k, 30); p3.position.set(0, -5, 4); scene.add(p3);
 
     // ── Mouse parallax ──
     const target = { x: 0, y: 0 };
