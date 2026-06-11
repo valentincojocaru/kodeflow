@@ -45,8 +45,8 @@ export default function AICore() {
     const core = new THREE.Mesh(
       new THREE.IcosahedronGeometry(1.5, 1),
       new THREE.MeshStandardMaterial({
-        color: 0x1c150d, metalness: 0.9, roughness: 0.28,
-        emissive: 0xff7a18, emissiveIntensity: 0.18,
+        color: 0x0a0806, metalness: 0.92, roughness: 0.15,
+        emissive: 0x000000, emissiveIntensity: 0,
         flatShading: true, transparent: true, opacity: 0.92,
       })
     );
@@ -119,10 +119,10 @@ export default function AICore() {
     const legacyOn = ("useLegacyLights" in renderer) || ("physicallyCorrectLights" in renderer);
     const rev = parseInt((THREE as unknown as { REVISION?: string }).REVISION || "128", 10);
     const k = (!legacyOn && rev >= 155) ? Math.PI : 1;
-    scene.add(new THREE.AmbientLight(0x402810, 1.1 * k));
-    const p1 = new THREE.PointLight(0xff7a18, 2.4 * k, 30); p1.position.set(5, 4, 5); scene.add(p1);
-    const p2 = new THREE.PointLight(0x5a4bff, 1.4 * k, 30); p2.position.set(-6, -3, 2); scene.add(p2);
-    const p3 = new THREE.PointLight(0xffc06a, 1.2 * k, 30); p3.position.set(0, -5, 4); scene.add(p3);
+    scene.add(new THREE.AmbientLight(0x080402, 0.08 * k));
+    const p1 = new THREE.PointLight(0xff7a18, 12 * k, 22); p1.position.set(5, 4, 5); scene.add(p1);
+    const p2 = new THREE.PointLight(0x5a4bff, 4 * k, 22); p2.position.set(-6, -3, 2); scene.add(p2);
+    const p3 = new THREE.PointLight(0xffc06a, 0.6 * k, 20); p3.position.set(0, -5, 4); scene.add(p3);
 
     // ── Mouse parallax ──
     const target = { x: 0, y: 0 };
