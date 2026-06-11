@@ -16,21 +16,25 @@ export default function AICore() {
     const mount = mountRef.current;
     if (!mount) return;
 
-    const W = () => mount.clientWidth;
-    const H = () => mount.clientHeight;
-
-    // Gracefully skip if WebGL is unavailable (e.g. sandboxed environments)
-    const testCanvas = document.createElement("canvas");
-    const gl = testCanvas.getContext("webgl") || testCanvas.getContext("experimental-webgl");
-    if (!gl) return;
+    // Robust sizing: never return 0 (avoids NaN aspect / 0px canvas on real builds)
+    const W = () => mount.clientWidth || mount.parentElement?.clientWidth || window.innerWidth || 1;
+    const H = () => mount.clientHeight || mount.parentElement?.clientHeight || Math.round(window.innerHeight * 0.7) || 1;
 
     const scene = new THREE.Scene();
     const camera = new THREE.PerspectiveCamera(45, W() / H(), 0.1, 100);
     camera.position.set(0, 0, 7.2);
 
-    const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+    let renderer: THREE.WebGLRenderer;
+    try {
+      renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+    } catch {
+      return;
+    }
     renderer.setSize(W(), H());
     renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+    renderer.domElement.style.display = "block";
+    renderer.domElement.style.width = "100%";
+    renderer.domElement.style.height = "100%";
     mount.appendChild(renderer.domElement);
 
     const group = new THREE.Group();
@@ -40,26 +44,22 @@ export default function AICore() {
     const core = new THREE.Mesh(
       new THREE.IcosahedronGeometry(1.5, 1),
       new THREE.MeshStandardMaterial({
-        color: 0x0f0600, metalness: 0.85, roughness: 0.18,
-        emissive: 0x000000, emissiveIntensity: 0,
-        flatShading: true, transparent: true, opacity: 0.98,
+        color: 0x1c150d, metalness: 0.9, roughness: 0.28,
+        emissive: 0xff7a18, emissiveIntensity: 0.18,
+        flatShading: true, transparent: true, opacity: 0.92,
       })
     );
     group.add(core);
 
     const wire = new THREE.Mesh(
-      new THREE.IcosahedronGeometry(1.54, 1),
-      new THREE.MeshBasicMaterial({ color: 0xffaa44, wireframe: true, transparent: true, opacity: 0.30 })
+      new THREE.IcosahedronGeometry(1.53, 1),
+      new THREE.MeshBasicMaterial({ color: 0xffae5a, wireframe: true, transparent: true, opacity: 0.32 })
     );
     group.add(wire);
 
     const kernel = new THREE.Mesh(
-      new THREE.IcosahedronGeometry(0.52, 0),
-      new THREE.MeshStandardMaterial({
-        color: 0x220066, metalness: 0.5, roughness: 0.3,
-        emissive: 0x7755ff, emissiveIntensity: 0.9,
-        flatShading: true,
-      })
+      new THREE.IcosahedronGeometry(0.55, 0),
+      new THREE.MeshBasicMaterial({ color: 0xffd9a0, transparent: true, opacity: 0.9 })
     );
     group.add(kernel);
 
@@ -113,10 +113,10 @@ export default function AICore() {
     scene.add(dust);
 
     // ── Lights ──
-    scene.add(new THREE.AmbientLight(0x080300, 0.4));
-    const p1 = new THREE.PointLight(0xff7020, 40, 18); p1.position.set(4.5, 3.5, 4); scene.add(p1);
-    const p2 = new THREE.PointLight(0x5533ff, 6, 16); p2.position.set(-5, -4, 1); scene.add(p2);
-    const p3 = new THREE.PointLight(0xff9940, 5, 12); p3.position.set(0, 5, 2); scene.add(p3);
+    scene.add(new THREE.AmbientLight(0x402810, 1.1));
+    const p1 = new THREE.PointLight(0xff7a18, 2.4, 30); p1.position.set(5, 4, 5); scene.add(p1);
+    const p2 = new THREE.PointLight(0x5a4bff, 1.4, 30); p2.position.set(-6, -3, 2); scene.add(p2);
+    const p3 = new THREE.PointLight(0xffc06a, 1.2, 30); p3.position.set(0, -5, 4); scene.add(p3);
 
     // ── Mouse parallax ──
     const target = { x: 0, y: 0 };
@@ -168,21 +168,33 @@ export default function AICore() {
     };
     animate();
 
-    const onResize = () => {
-      camera.aspect = W() / H();
+    const resize = () => {
+      const w = W(), h = H();
+      camera.aspect = w / h;
       camera.updateProjectionMatrix();
-      renderer.setSize(W(), H());
+      renderer.setSize(w, h);
     };
-    window.addEventListener("resize", onResize);
+    // ResizeObserver re-sizes the moment the container actually gets a size
+    // (fixes blank / distorted canvas on real builds where height is 0 at mount)
+    const ro = new ResizeObserver(resize);
+    ro.observe(mount);
+    if (mount.parentElement) ro.observe(mount.parentElement);
+    window.addEventListener("resize", resize);
+    // a few delayed re-syncs cover late layout / font / CSS load
+    const t0 = setTimeout(resize, 60);
+    const t1 = setTimeout(resize, 300);
+    const t2 = setTimeout(resize, 1000);
 
     return () => {
       cancelAnimationFrame(raf);
+      clearTimeout(t0); clearTimeout(t1); clearTimeout(t2);
+      ro.disconnect();
       window.removeEventListener("pointermove", onMove);
-      window.removeEventListener("resize", onResize);
+      window.removeEventListener("resize", resize);
       renderer.dispose();
       if (renderer.domElement.parentNode) renderer.domElement.parentNode.removeChild(renderer.domElement);
     };
   }, []);
 
-  return <div ref={mountRef} style={{ position: "absolute", inset: 0 }} aria-hidden="true" />;
+  return <div ref={mountRef} style={{ position: "absolute", inset: 0, width: "100%", height: "100%" }} aria-hidden="true" />;
 }

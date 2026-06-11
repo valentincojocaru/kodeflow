@@ -37,6 +37,7 @@ function SectionHead({ kicker, title, sub, center }: { kicker: string; title: Re
 // ── NAVBAR ───────────────────────────────────────────────────────────
 function Navbar({ onHire }: { onHire: () => void }) {
   const [scrolled, setScrolled] = useState(false);
+  const [open, setOpen] = useState(false);
   useEffect(() => {
     const h = () => setScrolled(window.scrollY > 40);
     window.addEventListener("scroll", h, { passive: true });
@@ -63,7 +64,30 @@ function Navbar({ onHire }: { onHire: () => void }) {
             <a href="/login" className="portal-link" style={{ fontSize: 13, color: "var(--ink-soft)", textDecoration: "none", padding: "9px 15px", borderRadius: 999, border: "1px solid var(--glass-brd-soft)", display: "inline-flex", alignItems: "center", gap: 7 }}>
               <span className="mono" style={{ fontSize: 11 }}>↗</span> Client Portal
             </a>
-            <button onClick={onHire} className="btn-primary" style={{ padding: "11px 20px", fontSize: 14 }}>Start a Project</button>
+            <button onClick={onHire} className="btn-primary nav-cta" style={{ padding: "11px 20px", fontSize: 14 }}>Start a Project</button>
+            <button onClick={() => setOpen((o) => !o)} className="nav-burger" aria-label="Menu" style={{ display: "none", width: 42, height: 42, borderRadius: 12, alignItems: "center", justifyContent: "center", cursor: "pointer", background: "var(--glass-bg)", border: "1px solid var(--glass-brd-soft)", color: "var(--ink)" }}>
+              <div style={{ position: "relative", width: 18, height: 12 }}>
+                <span style={{ position: "absolute", left: 0, top: open ? 5 : 0, width: 18, height: 2, borderRadius: 2, background: "currentColor", transition: "all .3s", transform: open ? "rotate(45deg)" : "none" }} />
+                <span style={{ position: "absolute", left: 0, top: 5, width: 18, height: 2, borderRadius: 2, background: "currentColor", transition: "opacity .2s", opacity: open ? 0 : 1 }} />
+                <span style={{ position: "absolute", left: 0, top: open ? 5 : 10, width: 18, height: 2, borderRadius: 2, background: "currentColor", transition: "all .3s", transform: open ? "rotate(-45deg)" : "none" }} />
+              </div>
+            </button>
+          </div>
+        </div>
+
+        {/* Mobile menu */}
+        <div className="nav-mobile" style={{ display: "none", overflow: "hidden", maxHeight: open ? 460 : 0, opacity: open ? 1 : 0, transition: "max-height .42s cubic-bezier(.16,1,.3,1), opacity .3s, margin .3s", marginTop: open ? 10 : 0 }}>
+          <div className="glass-2" style={{ borderRadius: 22, padding: 14, display: "flex", flexDirection: "column", gap: 4 }}>
+            {links.map((l, i) => (
+              <a key={l} href={"#" + ids[i]} onClick={() => setOpen(false)} style={{ fontSize: 16, color: "var(--ink-soft)", textDecoration: "none", fontWeight: 500, padding: "13px 16px", borderRadius: 13, display: "flex", alignItems: "center", justifyContent: "space-between" }}>
+                {l} <span className="mono" style={{ fontSize: 12, color: "var(--ink-faint)" }}>0{i + 1}</span>
+              </a>
+            ))}
+            <div style={{ height: 1, margin: "6px 8px", background: "var(--glass-brd-soft)" }} />
+            <a href="/login" onClick={() => setOpen(false)} style={{ fontSize: 15, color: "var(--ink-soft)", textDecoration: "none", fontWeight: 500, padding: "13px 16px", borderRadius: 13, display: "inline-flex", alignItems: "center", gap: 9 }}>
+              <span className="mono" style={{ fontSize: 12 }}>↗</span> Client Portal
+            </a>
+            <button onClick={() => { setOpen(false); onHire(); }} className="btn-primary" style={{ width: "100%", justifyContent: "center", marginTop: 4 }}>Start a Project →</button>
           </div>
         </div>
       </div>
@@ -93,16 +117,17 @@ function Hero({ onHire }: { onHire: () => void }) {
               <button onClick={onHire} className="btn-primary">Start a Project <span style={{ fontSize: 17 }}>→</span></button>
               <a href="#work" className="btn-ghost">View My Work</a>
             </div>
-            <div className="reveal" style={{ marginTop: 46, display: "flex", alignItems: "center", gap: 18 }}>
-              <div style={{ display: "flex" }}>
-                {["A", "M", "R", "T"].map((c, i) => (
-                  <div key={i} style={{ width: 38, height: 38, borderRadius: "50%", marginLeft: i ? -12 : 0, border: "2px solid var(--bg-0)", background: "var(--glass-bg-2)", backdropFilter: "blur(6px)", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 11, color: "var(--ink-mute)", fontWeight: 600 }}>{c}</div>
-                ))}
-              </div>
-              <div>
-                <div style={{ color: "var(--amber)", fontSize: 14, letterSpacing: 2 }}>★★★★★</div>
-                <div style={{ fontSize: 13, color: "var(--ink-mute)" }}>Trusted by 50+ founders</div>
-              </div>
+            <div className="reveal" style={{ marginTop: 46, display: "flex", alignItems: "center", gap: 14, flexWrap: "wrap" }}>
+              {[
+                { v: "10×", l: "faster with AI" },
+                { v: "24h", l: "reply time" },
+                { v: "100%", l: "you own the code" },
+              ].map((s, i) => (
+                <div key={i} className="glass" style={{ borderRadius: 14, padding: "10px 16px" }}>
+                  <span className="serif grad-orange" style={{ fontSize: 22, lineHeight: 1, marginRight: 8 }}>{s.v}</span>
+                  <span style={{ fontSize: 12, color: "var(--ink-mute)" }}>{s.l}</span>
+                </div>
+              ))}
             </div>
           </div>
           <div className="hero-core" style={{ position: "relative", height: "min(74vh, 620px)" }}>
@@ -165,10 +190,10 @@ function Counter({ to, suffix }: { to: number; suffix: string }) {
 
 function Stats() {
   const stats = [
-    { n: 47, s: "+", l: "Projects shipped" },
-    { n: 10, s: "×", l: "Faster than an agency" },
-    { n: 12, s: "+", l: "Happy founders" },
-    { n: 99, s: ".9%", l: "Average uptime" },
+    { n: 10, s: "×", l: "Faster with AI" },
+    { n: 24, s: "h", l: "Reply time" },
+    { n: 100, s: "%", l: "You own the code" },
+    { n: 99, s: ".9%", l: "Uptime target" },
   ];
   return (
     <section style={{ padding: "60px 0" }}>
@@ -332,45 +357,73 @@ import workRestaurant from "@/assets/work/work-restaurant.png";
 
 function Work() {
   const projects = [
-    { t: "Fintech SaaS Dashboard", tag: "SaaS · Full-Stack", img: workDashboard, d: "Real-time analytics, multi-tenant, RBAC, Stripe billing and WebSocket streaming. Shipped in 18 days.", tech: ["React", "Node", "Postgres", "Redis"], stat: "18 days" },
-    { t: "E-Commerce Storefront", tag: "Headless · Web App", img: workEcommerce, d: "Fashion storefront with smart filtering, one-click checkout, cart recovery and a headless CMS.", tech: ["Next.js", "Stripe", "Sanity"], stat: "+34% CVR" },
-    { t: "Restaurant & Bookings", tag: "Booking · Web App", img: workRestaurant, d: "Elegant site with live table reservations, dynamic menu and an admin dashboard. Bookings tripled in month one.", tech: ["React", "Node", "Postgres"], stat: "3× bookings" },
+    { n: "01", t: "Fintech SaaS Dashboard", tag: "SaaS Platform", img: workDashboard, kind: "Example concept", d: "The kind of product I build: a real-time analytics platform with multi-tenant architecture, role-based access, Stripe billing and live WebSocket streaming.", tech: ["React", "Node", "Postgres", "Redis"], metrics: [{ v: "Realtime", l: "data sync" }, { v: "Multi", l: "tenant" }, { v: "Stripe", l: "billing" }] },
+    { n: "02", t: "E-Commerce Storefront", tag: "Headless Commerce", img: workEcommerce, kind: "Example concept", d: "A headless storefront concept — smart filtering, one-click checkout, automated cart recovery and a fully custom CMS, built to convert and scale.", tech: ["Next.js", "Stripe", "Sanity"], metrics: [{ v: "1-click", l: "checkout" }, { v: "Headless", l: "CMS" }, { v: "<1s", l: "load target" }] },
+    { n: "03", t: "Restaurant & Bookings", tag: "Booking System", img: workRestaurant, kind: "Example concept", d: "A booking experience concept — live table reservations, a dynamic menu and a full admin dashboard, wrapped in an elegant, fast interface.", tech: ["React", "Node", "Postgres"], metrics: [{ v: "Live", l: "reservations" }, { v: "Admin", l: "dashboard" }, { v: "24/7", l: "self-serve" }] },
   ];
   return (
     <section id="work" style={{ padding: "100px 0" }}>
       <div className="container">
-        <div className="reveal" style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-end", flexWrap: "wrap", gap: 20, marginBottom: 52 }}>
+        <div className="reveal" style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-end", flexWrap: "wrap", gap: 20, marginBottom: 28 }}>
           <div>
-            <div className="eyebrow" style={{ marginBottom: 18 }}>04 — Work</div>
-            <h2 className="serif text-balance" style={{ fontSize: "clamp(2.2rem, 4.4vw, 3.6rem)", lineHeight: 1.04 }}>Things I've <span className="serif-i grad-orange">shipped</span></h2>
+            <div className="eyebrow" style={{ marginBottom: 18 }}>04 — What I Can Build</div>
+            <h2 className="serif text-balance" style={{ fontSize: "clamp(2.2rem, 4.4vw, 3.6rem)", lineHeight: 1.04 }}>Examples of what's <span className="serif-i grad-orange">possible</span></h2>
           </div>
           <a href="https://github.com/valentincojocaru" className="btn-ghost" style={{ fontSize: 14 }}>View GitHub →</a>
         </div>
-        <div className="work-grid" style={{ display: "grid", gridTemplateColumns: "repeat(3,1fr)", gap: 26 }}>
-          {projects.map((p, i) => (
-            <div key={i} className="reveal work-card" style={{ transition: "transform .4s" }}>
-              <div className="glass" style={{ borderRadius: 20, overflow: "hidden", marginBottom: 20, position: "relative" }}>
-                <div style={{ display: "flex", alignItems: "center", gap: 6, padding: "0 12px", height: 32, borderBottom: "1px solid var(--glass-brd-soft)", background: "rgba(0,0,0,0.2)" }}>
-                  <span style={{ width: 8, height: 8, borderRadius: "50%", background: "#ff5f57" }} />
-                  <span style={{ width: 8, height: 8, borderRadius: "50%", background: "#febc2e" }} />
-                  <span style={{ width: 8, height: 8, borderRadius: "50%", background: "#28c840" }} />
-                  <span className="mono" style={{ marginLeft: "auto", fontSize: 9.5, color: "var(--amber)", border: "1px solid rgba(255,122,24,0.3)", padding: "2px 8px", borderRadius: 999, background: "rgba(0,0,0,0.4)" }}>{p.stat}</span>
+        <p className="reveal text-pretty" style={{ fontSize: 15, color: "var(--ink-faint)", maxWidth: 520, marginBottom: 64 }}>
+          Concept builds that show the kind of products, polish and engineering I bring to a project — not client work.
+        </p>
+
+        <div style={{ display: "flex", flexDirection: "column", gap: 110 }}>
+          {projects.map((p, i) => {
+            const flip = i % 2 === 1;
+            return (
+              <div key={i} className="reveal work-row" style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 56, alignItems: "center" }}>
+                <div className="work-visual" style={{ order: flip ? 2 : 1, position: "relative" }}>
+                  <div style={{ position: "absolute", inset: "8% 6%", borderRadius: "50%", background: "radial-gradient(circle, rgba(255,122,24,0.18), transparent 65%)", filter: "blur(40px)", pointerEvents: "none" }} />
+                  <div className="glass-2 work-frame" style={{ position: "relative", borderRadius: 18, overflow: "hidden", transition: "transform .5s cubic-bezier(.16,1,.3,1)" }}>
+                    <div style={{ display: "flex", alignItems: "center", gap: 6, padding: "0 14px", height: 38, borderBottom: "1px solid var(--glass-brd-soft)", background: "rgba(0,0,0,0.25)" }}>
+                      <span style={{ width: 9, height: 9, borderRadius: "50%", background: "#ff5f57" }} />
+                      <span style={{ width: 9, height: 9, borderRadius: "50%", background: "#febc2e" }} />
+                      <span style={{ width: 9, height: 9, borderRadius: "50%", background: "#28c840" }} />
+                      <span className="mono" style={{ margin: "0 auto", fontSize: 11, color: "var(--ink-faint)", display: "inline-flex", alignItems: "center", gap: 6 }}>
+                        <span style={{ width: 5, height: 5, borderRadius: "50%", background: "#3ad17a" }} />preview
+                      </span>
+                    </div>
+                    <div style={{ overflow: "hidden" }}>
+                      <img src={p.img} alt={p.t} loading="lazy" className="work-shot" style={{ width: "100%", display: "block", objectFit: "cover", objectPosition: "top", transition: "transform 1.2s cubic-bezier(.16,1,.3,1)" }} />
+                    </div>
+                  </div>
                 </div>
-                <div style={{ aspectRatio: "4/3", overflow: "hidden" }}>
-                  <img src={p.img} alt={p.t} loading="lazy" className="work-img" style={{ width: "100%", height: "100%", objectFit: "cover", objectPosition: "top", transition: "transform 1.1s ease" }} />
+
+                <div style={{ order: flip ? 1 : 2 }}>
+                  <div style={{ display: "flex", alignItems: "center", gap: 16, marginBottom: 20 }}>
+                    <span className="serif" style={{ fontSize: 56, lineHeight: 1, color: "rgba(255,255,255,0.10)", flexShrink: 0 }}>{p.n}</span>
+                    <div style={{ minWidth: 0 }}>
+                      <div className="mono" style={{ fontSize: 10, letterSpacing: "0.16em", textTransform: "uppercase", color: "var(--orange-bright)", marginBottom: 5, whiteSpace: "nowrap" }}>{p.tag}</div>
+                      <span className="mono" style={{ fontSize: 9, letterSpacing: "0.08em", textTransform: "uppercase", color: "var(--ink-faint)", padding: "2px 8px", borderRadius: 999, border: "1px solid var(--glass-brd-soft)" }}>{p.kind}</span>
+                    </div>
+                  </div>
+                  <h3 className="serif text-balance" style={{ fontSize: "clamp(1.8rem, 2.6vw, 2.5rem)", lineHeight: 1.08, marginBottom: 16 }}>{p.t}</h3>
+                  <p className="text-pretty" style={{ fontSize: 16, color: "var(--ink-mute)", lineHeight: 1.7, marginBottom: 28, maxWidth: 460 }}>{p.d}</p>
+                  <div style={{ display: "flex", gap: 28, marginBottom: 28, flexWrap: "wrap" }}>
+                    {p.metrics.map((m, j) => (
+                      <div key={j}>
+                        <div className="serif grad-orange" style={{ fontSize: 26, lineHeight: 1 }}>{m.v}</div>
+                        <div className="mono" style={{ fontSize: 9.5, letterSpacing: "0.08em", textTransform: "uppercase", color: "var(--ink-faint)", marginTop: 5 }}>{m.l}</div>
+                      </div>
+                    ))}
+                  </div>
+                  <div style={{ display: "flex", alignItems: "center", gap: 16, flexWrap: "wrap" }}>
+                    <div style={{ display: "flex", gap: 7, flexWrap: "wrap" }}>
+                      {p.tech.map((t) => <span key={t} className="mono" style={{ fontSize: 10.5, color: "var(--ink-soft)", border: "1px solid var(--glass-brd-soft)", padding: "4px 10px", borderRadius: 8 }}>{t}</span>)}
+                    </div>
+                  </div>
                 </div>
               </div>
-              <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 8 }}>
-                <span style={{ width: 22, height: 1, background: "var(--orange)" }} />
-                <span className="mono" style={{ fontSize: 10, letterSpacing: "0.15em", textTransform: "uppercase", color: "var(--orange-bright)" }}>{p.tag}</span>
-              </div>
-              <h3 style={{ fontSize: 19, fontWeight: 600, marginBottom: 8 }}>{p.t}</h3>
-              <p style={{ fontSize: 14, color: "var(--ink-mute)", lineHeight: 1.6, marginBottom: 14 }}>{p.d}</p>
-              <div style={{ display: "flex", gap: 7, flexWrap: "wrap" }}>
-                {p.tech.map((t) => <span key={t} className="mono" style={{ fontSize: 10.5, color: "var(--ink-soft)", border: "1px solid var(--glass-brd-soft)", padding: "3px 9px", borderRadius: 7 }}>{t}</span>)}
-              </div>
-            </div>
-          ))}
+            );
+          })}
         </div>
       </div>
     </section>
@@ -417,26 +470,22 @@ function Pricing({ onHire }: { onHire: () => void }) {
 // ── TESTIMONIALS ─────────────────────────────────────────────────────
 function Testimonials() {
   const items = [
-    { q: "He delivered in 3 weeks what two agencies couldn't in 4 months. Senior quality, startup speed.", a: "Andrei M.", r: "Founder, Atlas" },
-    { q: "Direct communication, zero bureaucracy. I had a live preview from day one and always knew where we stood.", a: "Raluca T.", r: "CEO, Lumen" },
-    { q: "The AI agents show in the speed, but the code is clean and documented. Exactly what I was after.", a: "Mihai V.", r: "CTO, Northwind" },
+    { ic: "M13 2L3 14h7l-1 8 10-12h-7z", t: "AI-accelerated, senior-led", d: "Agents handle the repetitive work so I can focus on architecture, quality and the details that matter. You get senior-level output at startup speed." },
+    { ic: "M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z", t: "Direct, no bureaucracy", d: "You talk to the person building your product — not an account manager. Live preview from day one, so you always know where things stand." },
+    { ic: "M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z", t: "Clean code, you own it", d: "Documented, maintainable code that's yours from day one. No lock-in, no black boxes — built to scale long after launch." },
   ];
   return (
     <section style={{ padding: "100px 0" }}>
       <div className="container">
-        <SectionHead kicker="06 — Testimonials" title={<span>What <span className="serif-i grad-orange">founders</span> say</span>} center />
+        <SectionHead kicker="06 — How I Work" title={<span>What you can <span className="serif-i grad-orange">expect</span></span>} center />
         <div className="testi-grid" style={{ display: "grid", gridTemplateColumns: "repeat(3,1fr)", gap: 20 }}>
           {items.map((t, i) => (
-            <div key={i} className="glass reveal" style={{ borderRadius: 22, padding: 30 }}>
-              <div className="serif" style={{ fontSize: 56, lineHeight: 0.6, color: "rgba(255,122,24,0.4)", height: 30 }}>&ldquo;</div>
-              <p className="text-pretty" style={{ fontSize: 16, lineHeight: 1.65, color: "var(--ink-soft)", marginBottom: 24 }}>{t.q}</p>
-              <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
-                <div className="glass-2" style={{ width: 40, height: 40, borderRadius: "50%", display: "flex", alignItems: "center", justifyContent: "center", fontWeight: 600, fontSize: 14, color: "var(--amber)" }}>{t.a[0]}</div>
-                <div>
-                  <div style={{ fontSize: 14, fontWeight: 600 }}>{t.a}</div>
-                  <div style={{ fontSize: 12.5, color: "var(--ink-mute)" }}>{t.r}</div>
-                </div>
+            <div key={i} className="glass reveal" style={{ borderRadius: 22, padding: 32 }}>
+              <div className="glass-2" style={{ width: 48, height: 48, borderRadius: 14, display: "flex", alignItems: "center", justifyContent: "center", marginBottom: 22 }}>
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="var(--orange-bright)" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round"><path d={t.ic} /></svg>
               </div>
+              <h3 className="serif" style={{ fontSize: 22, marginBottom: 12, lineHeight: 1.15 }}>{t.t}</h3>
+              <p className="text-pretty" style={{ fontSize: 14.5, lineHeight: 1.65, color: "var(--ink-mute)" }}>{t.d}</p>
             </div>
           ))}
         </div>
@@ -545,13 +594,23 @@ const STYLE = `
 .kf-root .serv-card:hover{ transform: translateY(-5px); border-color: rgba(255,122,24,0.4) !important; }
 .kf-root .work-card:hover{ transform: translateY(-6px); }
 .kf-root .work-card:hover .work-img{ transform: scale(1.06); }
+.kf-root .work-row:hover .work-frame{ transform: translateY(-6px); }
+.kf-root .work-row:hover .work-shot{ transform: scale(1.04); }
+.kf-root .work-link:hover{ gap: 11px; }
+@media (max-width: 880px){
+  .kf-root .work-row{ grid-template-columns: 1fr !important; gap: 32px !important; }
+  .kf-root .work-visual{ order: 1 !important; }
+  .kf-root .work-row > div:last-child{ order: 2 !important; }
+}
 @media (max-width: 920px){
   .kf-root .hero-grid{ grid-template-columns: 1fr !important; }
   .kf-root .hero-core{ height: 380px !important; order:-1; }
   .kf-root .hud-chip{ display:none !important; }
 }
 @media (max-width: 900px){
-  .kf-root .nav-links, .kf-root .portal-link{ display:none !important; }
+  .kf-root .nav-links, .kf-root .portal-link, .kf-root .nav-cta{ display:none !important; }
+  .kf-root .nav-burger{ display:inline-flex !important; }
+  .kf-root .nav-mobile{ display:block !important; }
   .kf-root .proc-grid{ grid-template-columns: 1fr 1fr !important; }
   .kf-root .work-grid{ grid-template-columns: 1fr !important; max-width:460px; margin:0 auto; }
   .kf-root .price-grid{ grid-template-columns: 1fr !important; max-width:420px; margin:0 auto; }
