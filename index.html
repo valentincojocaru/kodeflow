@@ -1,403 +1,78 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>Kode — Premium web engineering, delivered in weeks</title>
-<meta name="description" content="Independent senior full-stack engineer building premium, fast, scalable web products. You own the code. Delivered in weeks, not months." />
-<meta name="theme-color" content="#0a0908" />
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1" />
 
-<!-- Open Graph / social share -->
-<meta property="og:type" content="website" />
-<meta property="og:title" content="Kode — Premium web engineering" />
-<meta property="og:description" content="Premium, fast, scalable web products from one senior engineer. You own the code. Delivered in weeks, not months." />
-<meta property="og:url" content="https://kodeflow.dev" />
-<meta property="og:image" content="https://kodeflow.dev/og.png" />
-<meta property="og:site_name" content="Kode" />
-<meta name="twitter:card" content="summary_large_image" />
-<meta name="twitter:title" content="Kode — Premium web engineering" />
-<meta name="twitter:description" content="Premium, fast, scalable web products from one senior engineer. You own the code." />
-<meta name="twitter:image" content="https://kodeflow.dev/og.png" />
+    <!-- Primary SEO -->
+    <title>pyKode | Full-Stack Web Developer — Modern websites, web apps & client portals</title>
+    <meta name="description" content="I'm Kode, a full-stack developer specializing in React, Node.js and PostgreSQL. I build premium websites, web apps and client portals at 10x the speed of a traditional agency." />
+    <meta name="keywords" content="web developer, full stack developer, react developer, nodejs, professional website, web application, client portal, freelancer web design, AI-powered development" />
+    <meta name="author" content="pyKode" />
+    <meta name="robots" content="index, follow" />
+    <link rel="canonical" href="https://kodeflow.dev/" />
 
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Space+Grotesk:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <!-- Open Graph (Facebook, LinkedIn, WhatsApp) -->
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://kodeflow.dev/" />
+    <meta property="og:title" content="pyKode | Full-Stack Web Developer — Modern websites & web apps" />
+    <meta property="og:description" content="Premium websites, web apps and client portals. React, Node.js, PostgreSQL — delivered fast, at agency quality." />
+    <meta property="og:image" content="https://kodeflow.dev/opengraph.jpg" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:locale" content="en_US" />
+    <meta property="og:site_name" content="pyKode" />
 
-<style>
-  :root {
-    /* warm charcoal base */
-    --bg-0: #0a0908;
-    --bg-1: #100e0c;
-    --bg-2: #16130f;
-    --ink: #f6f1ea;
-    --ink-soft: #cfc7bd;
-    --ink-mute: #8b837a;
-    --ink-faint: #59524b;
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:url" content="https://kodeflow.dev/" />
+    <meta name="twitter:title" content="pyKode | Full-Stack Web Developer" />
+    <meta name="twitter:description" content="Premium websites and web apps. React, Node.js, PostgreSQL — 10x faster than a traditional agency." />
+    <meta name="twitter:image" content="https://kodeflow.dev/opengraph.jpg" />
 
-    /* brand */
-    --orange: #ff7a18;
-    --orange-bright: #ff9542;
-    --amber: #ffc06a;
-    --orange-deep: #e05e00;
+    <!-- Favicon -->
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg?v=3" />
 
-    /* cool counter-glow for depth (background only) */
-    --cool: #5a4bff;
+    <!-- JSON-LD Structured Data -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "Person",
+      "name": "pyKode",
+      "url": "https://kodeflow.dev",
+      "image": "https://kodeflow.dev/hero-avatar.png",
+      "jobTitle": "Full-Stack Web Developer",
+      "description": "Full-stack developer specializing in React, Node.js and PostgreSQL. I build premium websites and web apps powered by AI agents.",
+      "knowsAbout": ["React", "Node.js", "PostgreSQL", "TypeScript", "Web Design", "Full-Stack Development", "AI Agents"],
+      "sameAs": [],
+      "offers": {
+        "@type": "Offer",
+        "name": "Web Development Services",
+        "url": "https://kodeflow.dev/#services"
+      }
+    }
+    </script>
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "WebSite",
+      "name": "pyKode",
+      "url": "https://kodeflow.dev",
+      "description": "Portfolio and web services — modern websites, web applications, client portals",
+      "potentialAction": {
+        "@type": "ContactAction",
+        "target": "https://kodeflow.dev/#contact"
+      }
+    }
+    </script>
 
-    /* glass */
-    --glass-bg: rgba(255,255,255,0.038);
-    --glass-bg-2: rgba(255,255,255,0.06);
-    --glass-brd: rgba(255,255,255,0.10);
-    --glass-brd-soft: rgba(255,255,255,0.07);
-
-    --serif: 'Instrument Serif', Georgia, serif;
-    --sans: 'Space Grotesk', system-ui, sans-serif;
-    --mono: 'JetBrains Mono', monospace;
-
-    --maxw: 1200px;
-  }
-
-  * { margin: 0; padding: 0; box-sizing: border-box; }
-
-  html { scroll-behavior: smooth; -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; text-rendering: optimizeLegibility; }
-
-  body {
-    background: var(--bg-0);
-    color: var(--ink);
-    font-family: var(--sans);
-    overflow-x: hidden;
-    line-height: 1.5;
-  }
-
-  ::selection { background: rgba(255,122,24,0.26); color: #ffd9b0; }
-
-  ::-webkit-scrollbar { width: 6px; }
-  ::-webkit-scrollbar-track { background: #0c0a08; }
-  ::-webkit-scrollbar-thumb { background: rgba(255,122,24,0.30); border-radius: 10px; }
-  ::-webkit-scrollbar-thumb:hover { background: rgba(255,122,24,0.55); }
-
-  /* ── Fixed background atmosphere ─────────────────────────── */
-  .bg-atmos { position: fixed; inset: 0; z-index: 0; pointer-events: none; overflow: hidden; }
-  .bg-base {
-    position: absolute; inset: 0;
-    background:
-      radial-gradient(120% 90% at 50% -10%, #1a1510 0%, var(--bg-1) 38%, var(--bg-0) 75%);
-  }
-  .orb { display: none; }
-  .orb-a { display: none; }
-  .orb-b { display: none; }
-  .orb-c { display: none; }
-  @keyframes float-a { 0%,100%{transform:translate(0,0) scale(1)} 50%{transform:translate(60px,40px) scale(1.12)} }
-  @keyframes float-b { 0%,100%{transform:translate(0,0) scale(1)} 50%{transform:translate(-50px,60px) scale(1.18)} }
-  @keyframes float-c { 0%,100%{transform:translate(0,0) scale(1)} 50%{transform:translate(40px,-50px) scale(1.1)} }
-
-  .bg-grid {
-    position: absolute; inset: 0;
-    background-image:
-      linear-gradient(rgba(255,255,255,0.022) 1px, transparent 1px),
-      linear-gradient(90deg, rgba(255,255,255,0.022) 1px, transparent 1px);
-    background-size: 84px 84px;
-    mask-image: radial-gradient(ellipse 90% 80% at 50% 30%, #000 20%, transparent 90%);
-    -webkit-mask-image: radial-gradient(ellipse 90% 80% at 50% 30%, #000 20%, transparent 90%);
-  }
-  .bg-aurora {
-    position: absolute; top: -10%; left: 8%; right: 8%; height: 52%;
-    pointer-events: none; opacity: 0.5; mix-blend-mode: screen;
-    background:
-      conic-gradient(from 210deg at 50% 0%, transparent 0deg, rgba(255,122,24,0.14) 30deg, rgba(255,176,90,0.08) 52deg, transparent 80deg, transparent 280deg, rgba(255,122,24,0.12) 320deg, transparent 360deg);
-    -webkit-mask-image: radial-gradient(90% 100% at 50% 0%, #000 14%, transparent 64%);
-    mask-image: radial-gradient(90% 100% at 50% 0%, #000 14%, transparent 64%);
-    animation: aurora 14s ease-in-out infinite;
-  }
-  @keyframes aurora { 0%,100% { opacity: 0.42; transform: scaleX(1); } 50% { opacity: 0.7; transform: scaleX(1.08); } }
-  @media (prefers-reduced-motion: reduce) { .bg-aurora { animation: none; } }
-
-  .bg-grain {
-    position: absolute; inset: 0; opacity: 0.5; mix-blend-mode: overlay;
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.4'/%3E%3C/svg%3E");
-  }
-
-  /* ── Glass primitives ────────────────────────────────────── */
-  .glass {
-    background: var(--glass-bg);
-    backdrop-filter: blur(22px) saturate(150%);
-    -webkit-backdrop-filter: blur(22px) saturate(150%);
-    border: 1px solid var(--glass-brd-soft);
-    box-shadow:
-      0 16px 50px -20px rgba(0,0,0,0.7),
-      inset 0 1px 0 rgba(255,255,255,0.09),
-      inset 0 -1px 0 rgba(0,0,0,0.25);
-  }
-  .glass-2 {
-    background: var(--glass-bg-2);
-    backdrop-filter: blur(28px) saturate(160%);
-    -webkit-backdrop-filter: blur(28px) saturate(160%);
-    border: 1px solid var(--glass-brd);
-    box-shadow:
-      0 24px 70px -24px rgba(0,0,0,0.78),
-      inset 0 1px 0 rgba(255,255,255,0.12),
-      inset 0 -1px 0 rgba(0,0,0,0.3);
-  }
-
-  /* sheen sweep on hover */
-  .sheen { position: relative; overflow: hidden; }
-  .sheen::after {
-    content: ""; position: absolute; inset: 0; border-radius: inherit; pointer-events: none;
-    background: linear-gradient(115deg, transparent 30%, rgba(255,255,255,0.10) 48%, transparent 62%);
-    transform: translateX(-120%); transition: transform 0.9s cubic-bezier(.2,.7,.2,1);
-  }
-  .sheen:hover::after { transform: translateX(120%); }
-
-  /* ── Type helpers ────────────────────────────────────────── */
-  .serif { font-family: var(--serif); font-weight: 400; letter-spacing: -0.005em; }
-  .serif-i { font-family: var(--serif); font-style: italic; }
-  .mono { font-family: var(--mono); }
-  .eyebrow {
-    font-family: var(--mono); font-size: 11px; letter-spacing: 0.32em; text-transform: uppercase;
-    color: var(--ink-mute);
-  }
-  .grad-orange {
-    background: linear-gradient(100deg, var(--amber), var(--orange-bright) 55%, var(--orange));
-    -webkit-background-clip: text; background-clip: text; color: transparent;
-  }
-  .text-balance { text-wrap: balance; }
-  .text-pretty { text-wrap: pretty; }
-
-  /* pill */
-  .pill {
-    display: inline-flex; align-items: center; gap: 8px;
-    padding: 7px 14px; border-radius: 999px;
-    font-size: 12px; letter-spacing: 0.04em;
-    background: var(--glass-bg); border: 1px solid var(--glass-brd-soft);
-    backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
-  }
-
-  .dot-live { position: relative; display: inline-flex; width: 7px; height: 7px; }
-  .dot-live::before { content:""; position:absolute; inset:0; border-radius:50%; background: var(--orange); animation: ping 1.8s cubic-bezier(0,0,.2,1) infinite; }
-  .dot-live::after { content:""; position:relative; width:7px; height:7px; border-radius:50%; background: var(--orange-bright); }
-  @keyframes ping { 75%,100% { transform: scale(2.6); opacity: 0; } }
-
-  /* buttons */
-  .btn-primary {
-    display: inline-flex; align-items: center; gap: 10px;
-    padding: 15px 26px; border-radius: 999px; border: 0; cursor: pointer;
-    font-family: var(--sans); font-weight: 600; font-size: 15px; color: #1a0d02;
-    background: linear-gradient(100deg, var(--amber), var(--orange));
-    box-shadow: 0 0 0 1px rgba(255,180,90,0.4), 0 14px 40px -10px rgba(255,122,24,0.6);
-    transition: transform .25s cubic-bezier(.2,.7,.2,1), box-shadow .25s, filter .25s;
-  }
-  .btn-primary:hover { transform: translateY(-2px); filter: brightness(1.05); box-shadow: 0 0 0 1px rgba(255,180,90,0.6), 0 20px 56px -10px rgba(255,122,24,0.8); }
-  .btn-ghost {
-    display: inline-flex; align-items: center; gap: 9px;
-    padding: 15px 22px; border-radius: 999px; cursor: pointer;
-    font-family: var(--sans); font-weight: 500; font-size: 15px; color: var(--ink-soft);
-    background: var(--glass-bg); border: 1px solid var(--glass-brd-soft);
-    backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
-    transition: border-color .25s, color .25s, background .25s;
-  }
-  .btn-ghost:hover { color: var(--ink); border-color: rgba(255,122,24,0.5); background: var(--glass-bg-2); }
-
-  .container { max-width: var(--maxw); margin: 0 auto; padding: 0 24px; }
-  section { position: relative; z-index: 1; }
-
-  /* reveal on scroll */
-  .reveal { opacity: 0; transform: translateY(28px); transition: opacity .9s cubic-bezier(.16,1,.3,1), transform .9s cubic-bezier(.16,1,.3,1); }
-  .reveal.in { opacity: 1; transform: none; }
-
-  @media (prefers-reduced-motion: reduce) {
-    .reveal { opacity: 1 !important; transform: none !important; }
-    .orb { animation: none !important; }
-  }
-
-  #root { position: relative; z-index: 1; }
-
-  /* scroll progress + back-to-top */
-  .scroll-prog { position: fixed; top: 0; left: 0; height: 2.5px; width: 0; z-index: 9000; pointer-events: none;
-    background: linear-gradient(90deg, var(--amber), var(--orange) 60%, var(--orange-deep));
-    box-shadow: 0 0 10px rgba(255,122,24,0.7); transition: width .12s linear; }
-  .to-top { position: fixed; right: 24px; bottom: 92px; z-index: 39; width: 44px; height: 44px; border-radius: 12px;
-    display: grid; place-items: center; cursor: pointer; color: var(--ink-soft);
-    background: rgba(20,16,12,0.72); backdrop-filter: blur(14px); border: 1px solid var(--glass-brd);
-    box-shadow: 0 12px 32px -12px rgba(0,0,0,0.7); opacity: 0; transform: translateY(10px) scale(.9); pointer-events: none;
-    transition: opacity .3s, transform .3s, color .2s, border-color .2s; }
-  .to-top.show { opacity: 1; transform: none; pointer-events: auto; }
-  .to-top:hover { color: var(--ink); border-color: rgba(255,122,24,0.4); }
-  @media (max-width: 480px){ .to-top { right: 16px; bottom: 84px; } }
-
-  /* ── engineering parallax canvas ──────────────────── */
-  .fx-bg { position: absolute; inset: 0; width: 100%; height: 100%; z-index: 1; pointer-events: none; opacity: 0.8; mix-blend-mode: screen; }
-
-  /* ── PREMIUM LAYER ─────────────────────────────────────── */
-  /* cinematic vignette + top sheen */
-  .vignette { position: fixed; inset: 0; z-index: 2; pointer-events: none;
-    box-shadow: inset 0 0 240px 40px rgba(0,0,0,0.55), inset 0 90px 120px -60px rgba(255,122,24,0.06); }
-
-  /* scroll progress */
-  .scroll-prog { position: fixed; top: 0; left: 0; height: 2px; width: 0%; z-index: 60;
-    background: linear-gradient(90deg, var(--amber), var(--orange), var(--orange-deep));
-    box-shadow: 0 0 12px rgba(255,122,24,0.8); transition: width .1s linear; }
-
-  /* custom cursor */
-  @media (hover: hover) and (pointer: fine) {
-    /* (custom cursor removed — using native cursor) */
-  }
-
-  /* intro reveal */
-  .intro { position: fixed; inset: 0; z-index: 9000; background: var(--bg-0);
-    display: flex; align-items: center; justify-content: center; overflow: hidden; }
-  .intro.done { animation: introLift 1s cubic-bezier(.76,0,.24,1) forwards; }
-  @keyframes introLift { to { transform: translateY(-100%); } }
-  .intro-word { font-family: var(--serif); font-size: clamp(3rem,9vw,7rem); letter-spacing: -0.02em; position: relative; }
-  .intro-word span { display: inline-block; opacity: 0; transform: translateY(120%); animation: introUp .8s cubic-bezier(.16,1,.3,1) forwards; }
-  @keyframes introUp { to { opacity: 1; transform: none; } }
-  .intro-bar { position: absolute; bottom: 16%; left: 50%; transform: translateX(-50%); width: 200px; height: 2px; background: rgba(255,255,255,0.08); border-radius: 999px; overflow: hidden; }
-  .intro-bar i { position: absolute; inset: 0; width: 0; background: linear-gradient(90deg, var(--amber), var(--orange)); animation: introLoad 1.4s cubic-bezier(.6,0,.2,1) forwards; }
-  @keyframes introLoad { to { width: 100%; } }
-
-  /* glare on premium cards */
-  .glare { position: absolute; inset: 0; border-radius: inherit; pointer-events: none; opacity: 0;
-    background: radial-gradient(160px circle at var(--gx,50%) var(--gy,50%), rgba(255,255,255,0.14), transparent 60%);
-    transition: opacity .3s; mix-blend-mode: overlay; }
-  .kf-ripple { position: absolute; border-radius: 50%; pointer-events: none; transform: scale(0); z-index: 0;
-    background: radial-gradient(circle, rgba(255,255,255,0.5), rgba(255,255,255,0.12) 55%, transparent 72%);
-    animation: kfRipple .62s cubic-bezier(.2,.7,.2,1) forwards; mix-blend-mode: overlay; }
-  .btn-primary > *, .btn-ghost > * { position: relative; z-index: 1; }
-  @keyframes kfRipple { to { transform: scale(1); opacity: 0; } }
-
-  @media (prefers-reduced-motion: reduce) {
-    .intro { display: none !important; }
-    .intro-word span { opacity: 1 !important; transform: none !important; }
-  }
-
-  /* ── AI ASSISTANT (Kai) ─────────────────────────────────── */
-  #assistant-root { position: fixed; z-index: 8000; }
-  .kai-fab { position: fixed; right: 24px; bottom: 24px; z-index: 8001;
-    display: inline-flex; align-items: center; gap: 10px; padding: 10px 18px 10px 12px;
-    border: 1px solid var(--glass-brd); border-radius: 999px; cursor: pointer;
-    background: rgba(20,16,12,0.72); backdrop-filter: blur(16px) saturate(160%); -webkit-backdrop-filter: blur(16px) saturate(160%);
-    box-shadow: 0 14px 40px -12px rgba(0,0,0,0.7), 0 0 0 1px rgba(255,122,24,0.12), inset 0 1px 0 rgba(255,255,255,0.08);
-    color: var(--ink); transition: transform .3s cubic-bezier(.2,.7,.2,1), box-shadow .3s; }
-  .kai-fab:hover { transform: translateY(-2px); box-shadow: 0 20px 52px -12px rgba(0,0,0,0.8), 0 0 0 1px rgba(255,122,24,0.3); }
-  .kai-fab--open { padding: 0; width: 52px; height: 52px; justify-content: center; }
-  .kai-fab-glow { position: absolute; inset: -2px; border-radius: inherit; pointer-events: none;
-    background: radial-gradient(circle at 30% 30%, rgba(255,122,24,0.35), transparent 70%); filter: blur(10px); opacity: .8; }
-  .kai-fab-ic { font-size: 18px; color: var(--ink-soft); position: relative; }
-  .kai-fab-orb { position: relative; width: 30px; height: 30px; border-radius: 50%; flex-shrink: 0;
-    background: radial-gradient(circle at 34% 30%, var(--amber), var(--orange) 55%, var(--orange-deep));
-    box-shadow: 0 0 16px rgba(255,122,24,0.7), inset 0 -2px 5px rgba(120,50,0,0.5); display: grid; place-items: center; }
-  .kai-fab-core { width: 9px; height: 9px; border-radius: 50%; background: #fff6e6; box-shadow: 0 0 10px #fff; animation: kaiPulse 1.8s ease-in-out infinite; }
-  @keyframes kaiPulse { 0%,100% { transform: scale(.8); opacity: .85; } 50% { transform: scale(1.15); opacity: 1; } }
-  .kai-fab-label { position: relative; font-weight: 600; font-size: 14.5px; letter-spacing: .01em; }
-  .kai-fab-dot { position: absolute; top: 6px; right: 12px; width: 8px; height: 8px; border-radius: 50%;
-    background: var(--orange-bright); box-shadow: 0 0 0 2px rgba(20,16,12,0.9), 0 0 10px var(--orange); }
-
-  .kai-panel { position: fixed; right: 24px; bottom: 90px; z-index: 8001;
-    width: min(380px, calc(100vw - 32px)); height: min(600px, calc(100vh - 130px));
-    display: flex; flex-direction: column; overflow: hidden;
-    border: 1px solid var(--glass-brd); border-radius: 22px;
-    background: linear-gradient(180deg, rgba(24,19,14,0.86), rgba(14,11,8,0.92));
-    backdrop-filter: blur(28px) saturate(160%); -webkit-backdrop-filter: blur(28px) saturate(160%);
-    box-shadow: 0 30px 80px -24px rgba(0,0,0,0.85), inset 0 1px 0 rgba(255,255,255,0.1), 0 0 0 1px rgba(255,122,24,0.08);
-    transform-origin: bottom right; opacity: 0; transform: translateY(18px) scale(.94); pointer-events: none;
-    transition: opacity .32s cubic-bezier(.16,1,.3,1), transform .32s cubic-bezier(.16,1,.3,1); }
-  .kai-panel--open { opacity: 1; transform: none; pointer-events: auto; }
-
-  .kai-head { display: flex; align-items: center; justify-content: space-between; gap: 10px;
-    padding: 16px 16px 14px; border-bottom: 1px solid var(--glass-brd-soft);
-    background: linear-gradient(180deg, rgba(255,122,24,0.07), transparent); }
-  .kai-head-l { display: flex; align-items: center; gap: 12px; }
-  .kai-avatar { width: 38px; height: 38px; border-radius: 12px; flex-shrink: 0; display: grid; place-items: center;
-    background: radial-gradient(circle at 34% 28%, var(--amber), var(--orange) 58%, var(--orange-deep));
-    box-shadow: 0 0 18px rgba(255,122,24,0.5), inset 0 -2px 6px rgba(120,50,0,0.5); }
-  .kai-avatar-core { width: 11px; height: 11px; border-radius: 50%; background: #fff6e6; box-shadow: 0 0 10px #fff; animation: kaiPulse 1.8s ease-in-out infinite; }
-  .kai-name { font-weight: 600; font-size: 15px; display: flex; align-items: center; gap: 8px; }
-  .kai-badge { font-family: var(--mono); font-size: 9px; letter-spacing: .12em; padding: 2px 6px; border-radius: 999px;
-    color: var(--amber); background: rgba(255,122,24,0.14); border: 1px solid rgba(255,122,24,0.25); }
-  .kai-status { font-size: 11.5px; color: var(--ink-mute); display: flex; align-items: center; gap: 6px; margin-top: 2px; }
-  .kai-status-dot { width: 6px; height: 6px; border-radius: 50%; background: #3ad17a; box-shadow: 0 0 8px #3ad17a; }
-  .kai-x { width: 30px; height: 30px; border-radius: 9px; cursor: pointer; flex-shrink: 0;
-    background: var(--glass-bg); border: 1px solid var(--glass-brd-soft); color: var(--ink-mute); font-size: 13px; transition: all .2s; }
-  .kai-x:hover { color: var(--ink); border-color: var(--glass-brd); }
-
-  .kai-scroll { flex: 1; overflow-y: auto; padding: 18px 16px; display: flex; flex-direction: column; gap: 14px; }
-  .kai-scroll::-webkit-scrollbar { width: 5px; }
-  .kai-msg { display: flex; gap: 9px; align-items: flex-end; max-width: 100%; }
-  .kai-msg--user { flex-direction: row-reverse; }
-  .kai-msg-av { width: 24px; height: 24px; border-radius: 8px; flex-shrink: 0;
-    background: radial-gradient(circle at 34% 28%, var(--amber), var(--orange) 60%, var(--orange-deep));
-    box-shadow: 0 0 10px rgba(255,122,24,0.45); }
-  .kai-bubble { font-size: 14px; line-height: 1.55; padding: 11px 14px; border-radius: 16px; white-space: pre-wrap; word-wrap: break-word; }
-  .kai-msg--assistant .kai-bubble { background: var(--glass-bg-2); border: 1px solid var(--glass-brd-soft); border-bottom-left-radius: 5px; color: var(--ink-soft); }
-  .kai-msg--user .kai-bubble { background: linear-gradient(100deg, var(--orange), var(--orange-deep)); color: #1a0d02; font-weight: 500; border-bottom-right-radius: 5px; }
-  .kai-typing { display: flex; gap: 4px; align-items: center; }
-  .kai-typing i { width: 6px; height: 6px; border-radius: 50%; background: var(--ink-mute); animation: kaiBounce 1.2s infinite; }
-  .kai-typing i:nth-child(2) { animation-delay: .15s; } .kai-typing i:nth-child(3) { animation-delay: .3s; }
-  @keyframes kaiBounce { 0%,60%,100% { transform: translateY(0); opacity: .4; } 30% { transform: translateY(-5px); opacity: 1; } }
-
-  .kai-suggest { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 4px; padding-left: 33px; }
-  .kai-chip { font-size: 12.5px; padding: 8px 13px; border-radius: 999px; cursor: pointer; color: var(--ink-soft);
-    background: var(--glass-bg); border: 1px solid var(--glass-brd-soft); transition: all .2s; }
-  .kai-chip:hover { color: var(--ink); border-color: rgba(255,122,24,0.45); background: rgba(255,122,24,0.08); transform: translateY(-1px); }
-
-  .kai-input { display: flex; align-items: flex-end; gap: 8px; padding: 12px 14px 6px; border-top: 1px solid var(--glass-brd-soft); }
-  .kai-input textarea { flex: 1; resize: none; max-height: 90px; padding: 11px 14px; border-radius: 14px;
-    background: rgba(0,0,0,0.3); border: 1px solid var(--glass-brd-soft); color: var(--ink); font-family: var(--sans);
-    font-size: 14px; line-height: 1.4; outline: none; transition: border-color .2s; }
-  .kai-input textarea:focus { border-color: rgba(255,122,24,0.45); }
-  .kai-input textarea::placeholder { color: var(--ink-faint); }
-  .kai-send { width: 40px; height: 40px; flex-shrink: 0; border-radius: 12px; cursor: pointer; border: 0; font-size: 18px; color: #1a0d02;
-    background: linear-gradient(100deg, var(--amber), var(--orange)); box-shadow: 0 6px 18px -6px rgba(255,122,24,0.6);
-    transition: transform .2s, filter .2s, opacity .2s; }
-  .kai-send:hover:not(:disabled) { transform: translateY(-1px); filter: brightness(1.05); }
-  .kai-send:disabled { opacity: .4; cursor: not-allowed; }
-  .kai-foot { text-align: center; font-size: 10.5px; color: var(--ink-faint); padding: 4px 0 10px; }
-
-  @media (max-width: 480px) {
-    .kai-fab { right: 16px; bottom: 16px; }
-    .kai-panel { right: 12px; left: 12px; width: auto; bottom: 82px; height: min(560px, calc(100vh - 110px)); }
-  }
-</style>
-</head>
-<body>
-  <div class="bg-atmos">
-    <div class="bg-base"></div>
-    <div class="orb orb-a"></div>
-    <div class="orb orb-b"></div>
-    <div class="orb orb-c"></div>
-    <canvas class="fx-bg" id="fxbg" aria-hidden="true"></canvas>
-    <div class="bg-grid"></div>
-    <div class="bg-grain"></div>
-  </div>
-
-  <div class="scroll-prog" id="scrollProg" aria-hidden="true"></div>
-  <button class="to-top" id="toTop" aria-label="Back to top"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 19V5M5 12l7-7 7 7"/></svg></button>
-
-  <div id="root"></div>
-  <div id="assistant-root"></div>
-
-  <div class="vignette"></div>
-  <div class="scroll-prog" id="scrollProg"></div>
-
-  <div class="intro" id="intro">
-    <div class="intro-word">
-      <span style="animation-delay:.05s">p</span><span style="animation-delay:.1s">y</span><span style="animation-delay:.18s; font-style:italic" class="grad-orange">K</span><span style="animation-delay:.24s; font-style:italic" class="grad-orange">o</span><span style="animation-delay:.3s; font-style:italic" class="grad-orange">d</span><span style="animation-delay:.36s; font-style:italic" class="grad-orange">e</span>
-    </div>
-    <div class="intro-bar"><i></i></div>
-  </div>
-
-  <script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
-  <script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
-  <script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
-
-  <script type="text/babel" src="hero3d.jsx"></script>
-  <script type="text/babel" src="sections.jsx"></script>
-  <script type="text/babel" src="sections2.jsx"></script>
-  <script type="text/babel" src="addons.jsx"></script>
-  <script type="text/babel" src="showcase.jsx"></script>
-  <script type="text/babel" src="app.jsx"></script>
-  <script type="text/babel" src="assistant.jsx"></script>
-  <script src="premium.js"></script>
-  <script src="fx.js"></script>
-  <script src="bg.js"></script>
-</body>
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Space+Grotesk:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
 </html>
