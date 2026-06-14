@@ -1,0 +1,76 @@
+/* ===================================================================
+   Kodeflow Admin — premium theme (scoped under .kfa-root)
+   Wrap your admin page in <div className="kfa-root"> … </div>.
+   Tokens are prefixed --kfa-* so they never clash with your app.
+   Pairs with AdminPrimitives.tsx.
+   =================================================================== */
+
+.kfa-root {
+  --kfa-bg-0: #0a0908; --kfa-bg-1: #100e0c;
+  --kfa-ink: #f6f1ea; --kfa-ink-soft: #cfc7bd; --kfa-ink-mute: #8b837a; --kfa-ink-faint: #59524b;
+  --kfa-orange: #ff7a18; --kfa-orange-bright: #ff9542; --kfa-amber: #ffc06a; --kfa-orange-deep: #e05e00;
+  --kfa-green: #3ad17a; --kfa-red: #f87171; --kfa-yellow: #f5b942; --kfa-indigo: #818cf8; --kfa-pink: #f472b6;
+  --kfa-glass-bg: rgba(255,255,255,0.038); --kfa-glass-bg-2: rgba(255,255,255,0.06);
+  --kfa-glass-brd: rgba(255,255,255,0.10); --kfa-glass-brd-soft: rgba(255,255,255,0.07);
+  --kfa-serif: 'Instrument Serif', Georgia, serif;
+  --kfa-sans: 'Space Grotesk', system-ui, sans-serif;
+  --kfa-mono: 'JetBrains Mono', monospace;
+
+  background: var(--kfa-bg-0);
+  color: var(--kfa-ink);
+  font-family: var(--kfa-sans);
+  min-height: 100vh;
+  position: relative;
+  -webkit-font-smoothing: antialiased;
+}
+.kfa-root *, .kfa-root *::before, .kfa-root *::after { box-sizing: border-box; }
+.kfa-root ::selection { background: rgba(255,122,24,0.26); color: #ffd9b0; }
+
+/* Background atmosphere — render as the first child of .kfa-root:
+   <div class="kfa-atmos"><div class="base"></div><div class="orb a"></div>
+   <div class="orb b"></div><div class="grid"></div></div>                  */
+.kfa-atmos { position: fixed; inset: 0; z-index: 0; pointer-events: none; overflow: hidden; }
+.kfa-atmos .base { position: absolute; inset: 0; background: radial-gradient(120% 80% at 15% -10%, #1a1510 0%, var(--kfa-bg-1) 40%, var(--kfa-bg-0) 78%); }
+.kfa-atmos .orb { position: absolute; border-radius: 50%; filter: blur(80px); }
+.kfa-atmos .orb.a { width: 620px; height: 620px; top: -260px; left: -80px; background: radial-gradient(circle, rgba(255,122,24,0.22), transparent 66%); }
+.kfa-atmos .orb.b { width: 520px; height: 520px; bottom: -200px; right: 8%; background: radial-gradient(circle, rgba(90,75,255,0.14), transparent 66%); }
+.kfa-atmos .grid { position: absolute; inset: 0;
+  background-image: linear-gradient(rgba(255,255,255,0.018) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.018) 1px, transparent 1px);
+  background-size: 80px 80px;
+  -webkit-mask-image: radial-gradient(ellipse 80% 70% at 40% 20%, #000 10%, transparent 80%);
+  mask-image: radial-gradient(ellipse 80% 70% at 40% 20%, #000 10%, transparent 80%); }
+
+/* Glass */
+.kfa-root .kfa-glass { background: var(--kfa-glass-bg); backdrop-filter: blur(20px) saturate(150%); -webkit-backdrop-filter: blur(20px) saturate(150%);
+  border: 1px solid var(--kfa-glass-brd-soft); box-shadow: 0 16px 50px -22px rgba(0,0,0,0.7), inset 0 1px 0 rgba(255,255,255,0.08); }
+.kfa-root .kfa-glass-2 { background: var(--kfa-glass-bg-2); backdrop-filter: blur(26px) saturate(160%); -webkit-backdrop-filter: blur(26px) saturate(160%);
+  border: 1px solid var(--kfa-glass-brd); box-shadow: 0 24px 70px -26px rgba(0,0,0,0.78), inset 0 1px 0 rgba(255,255,255,0.10); }
+
+/* Type helpers */
+.kfa-root .kfa-serif { font-family: var(--kfa-serif); font-weight: 400; letter-spacing: -0.005em; }
+.kfa-root .kfa-serif-i { font-family: var(--kfa-serif); font-style: italic; }
+.kfa-root .kfa-mono { font-family: var(--kfa-mono); }
+.kfa-root .kfa-eyebrow { font-family: var(--kfa-mono); font-size: 9px; letter-spacing: 0.2em; text-transform: uppercase; color: var(--kfa-ink-faint); }
+.kfa-root .kfa-grad { background: linear-gradient(100deg, var(--kfa-amber), var(--kfa-orange) 55%, var(--kfa-orange-deep)); -webkit-background-clip: text; background-clip: text; color: transparent; }
+
+/* Buttons */
+.kfa-root .kfa-btn { display: inline-flex; align-items: center; gap: 7px; height: 38px; padding: 0 16px; border-radius: 11px; border: 0; cursor: pointer; font-weight: 600; font-size: 13px; white-space: nowrap; color: #1a0d02; background: linear-gradient(100deg, var(--kfa-amber), var(--kfa-orange)); box-shadow: 0 8px 24px -8px rgba(255,122,24,0.6); }
+.kfa-root .kfa-btn-ghost { display: inline-flex; align-items: center; gap: 7px; height: 38px; padding: 0 14px; border-radius: 11px; cursor: pointer; font-weight: 500; font-size: 13px; white-space: nowrap; color: var(--kfa-ink-soft); background: var(--kfa-glass-bg); border: 1px solid var(--kfa-glass-brd-soft); transition: all .2s; }
+.kfa-root .kfa-btn-ghost:hover { color: var(--kfa-ink); border-color: rgba(255,122,24,0.4); }
+
+/* Inputs */
+.kfa-root input, .kfa-root select, .kfa-root textarea { font-family: inherit; }
+.kfa-root .kfa-input { width: 100%; height: 40px; padding: 0 14px; border-radius: 12px; background: var(--kfa-glass-bg); border: 1px solid var(--kfa-glass-brd-soft); color: var(--kfa-ink); font-size: 13px; outline: none; transition: all .2s; }
+.kfa-root .kfa-input:focus { border-color: rgba(255,122,24,0.45); box-shadow: 0 0 0 3px rgba(255,122,24,0.12); }
+
+/* Scrollbar */
+.kfa-root ::-webkit-scrollbar { width: 7px; height: 7px; }
+.kfa-root ::-webkit-scrollbar-thumb { background: rgba(255,122,24,0.25); border-radius: 10px; }
+.kfa-root ::-webkit-scrollbar-thumb:hover { background: rgba(255,122,24,0.5); }
+
+/* Keyframes used by primitives */
+@keyframes kfaDraw { to { stroke-dashoffset: 0; } }
+@keyframes kfaFadeUp { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: none; } }
+.kfa-root .kfa-fade-up { animation: kfaFadeUp .5s cubic-bezier(.16,1,.3,1) both; }
+
+@media (prefers-reduced-motion: reduce) { .kfa-root * { animation: none !important; } }
