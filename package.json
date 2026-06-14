@@ -7,7 +7,7 @@
     "dev": "vite --config vite.config.ts --host 0.0.0.0",
     "server": "PORT=3001 tsx server/index.ts",
     "dev:all": "concurrently --raw \"npm run server\" \"PORT=5000 npm run dev\"",
-    "build": "mkdir -p dist/public && cp -r public/. dist/public/ && cp index.html dist/public/index.html && cp admin.html dist/public/admin.html 2>/dev/null || true && cp og.png dist/public/og.png 2>/dev/null || true",
+    "build": "mkdir -p dist/public dist/public/assets && cp -r public/. dist/public/ && cp index.html admin.html og.png dist/public/ 2>/dev/null; cp *.jsx *.js dist/public/ 2>/dev/null; cp assets/* dist/public/assets/ 2>/dev/null; true",
     "serve": "vite preview --config vite.config.ts --host 0.0.0.0",
     "typecheck": "tsc -p tsconfig.json --noEmit"
   },
