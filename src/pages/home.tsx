@@ -604,8 +604,8 @@ const STYLE = `
 }
 @media (max-width: 920px){
   .kf-root .hero-grid{ grid-template-columns: 1fr !important; }
-  .kf-root .hero-core{ height: 380px !important; order:-1; }
-  .kf-root .hud-chip{ display:none !important; }
+  .kf-root .hero-core{ height: 420px !important; order:-1; }
+  .kf-root .hud-chip{ font-size: 12px !important; padding: 9px 12px !important; border-radius: 12px !important; }
 }
 @media (max-width: 900px){
   .kf-root .nav-links, .kf-root .portal-link, .kf-root .nav-cta{ display:none !important; }
